@@ -14,6 +14,8 @@ class UserPreferencesDataStore(private val context: Context) {
         val DARK_MODE = booleanPreferencesKey("dark_mode")
         val NOTIFICATIONS_ENABLED = booleanPreferencesKey("notifications_enabled")
         val LANGUAGE = stringPreferencesKey("language")
+        val SELECTED_CAUSES = stringSetPreferencesKey("selected_causes")
+        val SELECTED_SKILLS = stringSetPreferencesKey("selected_skills")
     }
 
     val darkModeFlow: Flow<Boolean> = context.dataStore.data
@@ -25,6 +27,12 @@ class UserPreferencesDataStore(private val context: Context) {
     val languageFlow: Flow<String> = context.dataStore.data
         .map { prefs -> prefs[LANGUAGE] ?: "en" }
 
+    val selectedCausesFlow: Flow<Set<String>> = context.dataStore.data
+        .map { prefs -> prefs[SELECTED_CAUSES] ?: emptySet() }
+
+    val selectedSkillsFlow: Flow<Set<String>> = context.dataStore.data
+        .map { prefs -> prefs[SELECTED_SKILLS] ?: emptySet() }
+
     suspend fun setDarkMode(enabled: Boolean) {
         context.dataStore.edit { it[DARK_MODE] = enabled }
     }
@@ -35,5 +43,12 @@ class UserPreferencesDataStore(private val context: Context) {
 
     suspend fun setLanguage(languageCode: String) {
         context.dataStore.edit { it[LANGUAGE] = languageCode }
+    }
+    suspend fun setSelectedCauses(causes: Set<String>) {
+        context.dataStore.edit { it[SELECTED_CAUSES] = causes }
+    }
+
+    suspend fun setSelectedSkills(skills: Set<String>) {
+        context.dataStore.edit { it[SELECTED_SKILLS] = skills }
     }
 }

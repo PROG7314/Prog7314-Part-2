@@ -18,6 +18,11 @@
         android:id="@+id/settingsFragment"
         android:name="com.example.app.ui.settings.SettingsFragment"
         android:label="Settings" />
+
+    <fragment
+        android:id="@+id/interestMatchingFragment"
+        android:name="com.example.app.ui.custom.InterestMatchingFragment"
+        android:label="Your Interests" />
    
 
 </navigation>
