@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "973559198654",
+    "project_id": "aegis-5d564",
+    "storage_bucket": "aegis-5d564.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:973559198654:android:acafdd6416df35c77a7fef",
+        "android_client_info": {
+          "package_name": "com.example.aegis"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "973559198654-7mm4bdus18hbp7r2onnaukv4id8vuoib.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.aegis",
+            "certificate_hash": "eea1fe26058f08d7e445ba5fb5d7ac42b9629ea0"
+          }
+        },
+        {
+          "client_id": "973559198654-etdnsnec60pgcaslb4s195p4np631atk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1OqYFdPQqrc6nbPVPx_cPQJO0PfLqaTI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "973559198654-etdnsnec60pgcaslb4s195p4np631atk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

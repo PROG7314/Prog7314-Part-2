@@ -6,12 +6,20 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.app.ui.auth.LoginFragment"
-        android:label="Login" />
+        android:name="com.example.aegis.ui.auth.LoginFragment"
+        android:label="Login">
+
+        <action
+            android:id="@+id/action_loginFragment_to_SettingsFragment"
+            app:destination="@+id/settingsFragment" />
+
+    </fragment>
+
+
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.app.ui.main.MainFragment"
+        android:name="com.example.aegis.main.MainFragment"
         android:label="Home" />
 
     <fragment
