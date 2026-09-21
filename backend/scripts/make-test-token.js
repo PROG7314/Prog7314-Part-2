@@ -21,9 +21,13 @@ if (!['volunteer', 'organization'].includes(role)) {
 }
 // Sensible defaults taken from the mockups (Julie Beckett, and the children's home organization).
 const defaults =
-  role === 'volunteer'
-    ? { name: 'Julie Beckett', interests: ['Children', 'Animals'], skills: ['Reading'] }
-    : { name: "Christine Revell Children's Home", interests: [], skills: [] };
+   role === 'volunteer'
+      ? {
+          name: 'Julie Beckett',
+          interests: ['Children & Youth', 'Environment & Conservation', 'Soup Kitchens'],
+          skills: ['Reading to Children', 'Manual Labour', 'Cooking or Food Prep'],
+        }
+      : { name: "Christine Revell Children's Home", interests: [], skills: [] };
 
 const cfg = loadConfig();
 const { db } = initFirebase();

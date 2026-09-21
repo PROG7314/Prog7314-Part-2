@@ -26,5 +26,12 @@ export const ACTIVE_SIGNUP_STATUSES = [SIGNUP_STATUS.CONFIRMED, SIGNUP_STATUS.CO
 export const MAX_IMAGES = 3;
 
 // Lists to store the cause categories and the skills.
-export const CAUSE_CATEGORIES = ['Children', 'Animals', 'Elderly Care', 'Environment'];
-export const SKILLS = ['Reading', 'Tutoring', 'Coaching', 'Admin', 'Manual Labour'];
+export const CAUSE_CATEGORIES = [
+  'Children & Youth', 'Elderly Care', 'Soup Kitchens', 'Animal Welfare', 'Homeless Shelters',
+  'Tutoring & Reading', 'Environment & Conservation', 'Health & Wellbeing', 'Disaster Relief',
+  'Community Development', 'Disability Support',
+];
+export const SKILLS = [
+  'Tutoring', 'Reading to Children', 'Manual Labour', 'Cooking or Food Prep', 'Admin & Organising',
+  'Fundraising', 'Marketing & Social Media', 'Translation or Multilingual', 'First Aid',
+];
