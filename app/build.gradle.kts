@@ -19,6 +19,16 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Full base URL including the version prefix and trailing slash.
+        //ToDo Add in the host API URL
+        buildConfigField("String", "API_BASE_URL", "\"https://<API-HOST>/api/v1/\"")
+    }
+
+    buildFeatures { buildConfig = true }
+    compileOptions {
+        // minSdk is 25 but the code uses java.time (API 26+), so desugar it.
+        isCoreLibraryDesugaringEnabled = true
     }
 
     buildTypes {
@@ -51,4 +61,10 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.android.gms:play-services-auth:21.2.0")
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.okhttp.logging)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
 }
