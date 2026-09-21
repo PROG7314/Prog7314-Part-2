@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.firebase.database.ktx)
     implementation(libs.material)
     implementation(libs.androidx.datastore.preferences)
     testImplementation(libs.junit)
