@@ -1,9 +1,9 @@
 package com.example.aegis.ui.auth
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -27,7 +27,12 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             val account = task.getResult(ApiException::class.java)
             authViewModel.firebaseAuthWithGoogle(account.idToken!!)
         } catch (e: ApiException) {
-            Log.e("AegisAuth", "Google sign-in failed: ${e.statusCode}")
+            val message = if (e.statusCode == 12501) {
+                "Sign-in was cancelled"
+            } else {
+                "Sign-in failed — please try again"
+            }
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -40,23 +45,34 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             .build()
         googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
 
-        view.findViewById<Button>(R.id.signInButton).setOnClickListener {
-            googleSignInClient.signInIntent.let { intent ->
-                signInLauncher.launch(intent)
-            }
+        val signInButton = view.findViewById<Button>(R.id.signInButton)
+
+        signInButton.setOnClickListener {
+            signInLauncher.launch(googleSignInClient.signInIntent)
         }
 
         authViewModel.authState.observe(viewLifecycleOwner) { state ->
             when (state) {
-                is AuthState.Success -> {
-                    Log.d("AegisAuth", "Sign-in successful")
-                    // Navigate to your Role Selection destination —
-                    // replace this ID with whatever Member 1 actually named it in nav_graph.xml
-                    findNavController().navigate(R.id.action_loginFragment_to_SettingsFragment)
+                is AuthState.Loading -> {
+                    signInButton.isEnabled = false
                 }
-                is AuthState.Error -> Log.e("AegisAuth", state.message)
+                is AuthState.Success -> {
+                    signInButton.isEnabled = true
+                    if (!state.hasRole) {
+                        findNavController().navigate(R.id.action_loginFragment_to_roleSelectionFragment)
+                    } else {
+                       // findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                    }
+                }
+                is AuthState.Error -> {
+                    signInButton.isEnabled = true
+                    Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
+                }
                 else -> {}
             }
         }
+
+
+        authViewModel.checkExistingSession()
     }
 }
