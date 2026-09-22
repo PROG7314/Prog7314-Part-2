@@ -12,7 +12,7 @@ import kotlinx.coroutines.tasks.await
 sealed class RoleSelectionState {
     object Idle : RoleSelectionState()
     object Saving : RoleSelectionState()
-    object Success : RoleSelectionState()
+    data class Success(val role: String) : RoleSelectionState()
     data class Error(val message: String) : RoleSelectionState()
 }
 
@@ -42,7 +42,7 @@ class RoleSelectionViewModel : ViewModel() {
                         "onboardingComplete" to false
                     ), com.google.firebase.firestore.SetOptions.merge())
                     .await()
-                _state.value = RoleSelectionState.Success
+                _state.value = RoleSelectionState.Success(role)
             } catch (e: Exception) {
                 _state.value = RoleSelectionState.Error(e.message ?: "Failed to save role")
             }
