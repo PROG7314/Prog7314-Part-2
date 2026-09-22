@@ -1,4 +1,18 @@
 <resources>
     <string name="app_name">Aegis</string>
     <string name="default_web_client_id" translatable="false">973559198654-etdnsnec60pgcaslb4s195p4np631atk.apps.googleusercontent.com</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="i_d_like_to_help">I\'d like to help</string>
+    <string name="listing_image_description">Listing photo</string>
+    <string name="find_a_way_to_help">Find a way to help</string>
+    <string name="no_listings_right_now">No opportunities to show right now. Check back soon.</string>
+    <string name="retry">Retry</string>
+    <string name="welcome_back">Welcome back, %1$s</string>
+    <string name="new_listings_count">There are %1$d listings for you</string>
+    <string name="people_signed_up_for_this_event">People Signed up for this event</string>
+    <string name="view_details">View Details</string>
+    <string name="status_upcoming">UPCOMING</string>
+    <string name="status_ended">ENDED</string>
+    <string name="no_listings_yet">You haven\'t created any listings yet.</string>
 </resources>
