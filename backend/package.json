@@ -1,0 +1,23 @@
+{
+  "name": "aegis-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Aegis REST API (Node.js + Express + Firestore)",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch --env-file=.env src/server.js",
+    "test": "node --test",
+    "token": "node --env-file=.env scripts/make-test-token.js",
+    "seed": "node --env-file=.env scripts/seed.js"
+  },
+  "engines": {
+    "node": ">=20.6"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "firebase-admin": "^14.4.0",
+    "jsonwebtoken": "^9.0.3"
+  }
+}
