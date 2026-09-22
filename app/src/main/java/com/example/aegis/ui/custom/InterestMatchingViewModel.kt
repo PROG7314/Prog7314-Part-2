@@ -10,11 +10,15 @@ import kotlinx.coroutines.launch
 class InterestMatchingViewModel(private val prefsStore: UserPreferencesDataStore) : ViewModel() {
 
     val availableCauses = listOf(
-        "Children", "Animals", "Elderly Care", "Environment"
+        "Children & Youth", "Elderly Care", "Soup Kitchens", "Animal Welfare",
+        "Homeless Shelters", "Tutoring & Reading", "Environment & Conservation",
+        "Health & Wellbeing", "Disaster Relief", "Community Development", "Disability Support"
     )
 
     val availableSkills = listOf(
-        "Reading", "Tutoring", "Coaching", "Admin", "Manual Labour"
+        "Tutoring", "Reading to Children", "Manual Labour", "Cooking or Food Prep",
+        "Admin & Organising", "Fundraising", "Marketing & Social Media",
+        "Translation or Multilingual", "First Aid"
     )
 
     private val _selectedCauses = MutableStateFlow<Set<String>>(emptySet())
