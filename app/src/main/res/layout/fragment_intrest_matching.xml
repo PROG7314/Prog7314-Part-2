@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -26,7 +27,70 @@
             android:layout_height="wrap_content"
             app:chipSpacingHorizontal="10dp"
             app:chipSpacingVertical="10dp"
-            app:singleLine="false" />
+            app:singleLine="false">
+
+            <!-- Preview-only samples: real chips are added in Kotlin at runtime -->
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible"
+                tools:text="Children &amp; Youth"
+                app:chipBackgroundColor="@android:color/transparent"
+                app:chipStrokeColor="@color/brand_green"
+                app:chipStrokeWidth="1.5dp"
+                app:chipCornerRadius="20dp"
+                android:textColor="@color/brand_green" />
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible"
+                tools:text="Elderly Care"
+                app:chipBackgroundColor="@color/brand_green"
+                app:chipStrokeColor="@color/brand_green"
+                app:chipStrokeWidth="1.5dp"
+                app:chipCornerRadius="20dp"
+                android:textColor="@color/white" />
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible"
+                tools:text="Soup Kitchens"
+                app:chipBackgroundColor="@android:color/transparent"
+                app:chipStrokeColor="@color/brand_green"
+                app:chipStrokeWidth="1.5dp"
+                app:chipCornerRadius="20dp"
+                android:textColor="@color/brand_green" />
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible"
+                tools:text="Animal Welfare"
+                app:chipBackgroundColor="@android:color/transparent"
+                app:chipStrokeColor="@color/brand_green"
+                app:chipStrokeWidth="1.5dp"
+                app:chipCornerRadius="20dp"
+                android:textColor="@color/brand_green" />
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible"
+                tools:text="Homeless Shelters"
+                app:chipBackgroundColor="@android:color/transparent"
+                app:chipStrokeColor="@color/brand_green"
+                app:chipStrokeWidth="1.5dp"
+                app:chipCornerRadius="20dp"
+                android:textColor="@color/brand_green" />
+
+        </com.google.android.material.chip.ChipGroup>
 
     </ScrollView>
 
