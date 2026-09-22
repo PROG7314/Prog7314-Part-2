@@ -10,7 +10,6 @@
     <string name="retry">Retry</string>
     <string name="welcome_back">Welcome back, %1$s</string>
     <string name="new_listings_count">There are %1$d listings for you</string>
-    <string name="my_commitments">My Commitments</string>
     <string name="your_hours">Your Hours</string>
     <string name="total_hours_completed">You\'ve completed %1$s hours</string>
     <string name="no_hours_yet">No completed hours yet — they\'ll show up here once an organisation marks a sign-up as complete.</string>

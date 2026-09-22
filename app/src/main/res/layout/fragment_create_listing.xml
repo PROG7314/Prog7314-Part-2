@@ -258,7 +258,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         android:background="@drawable/bg_rounded_input"
-                        android:hint="e.g. Teaching, First Aid, Cooking"
+                        android:hint="e.g. Tutoring, First Aid, Manual Labour"
                         android:inputType="textCapWords"
                         android:paddingHorizontal="14dp"
                         android:paddingVertical="12dp"

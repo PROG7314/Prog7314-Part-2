@@ -10,9 +10,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
-    // Only these two tabs have a real screen behind them right now - Listings and Profile
-    // are still being built by other team members.
-    private val tabDestinations = setOf(R.id.mainFragment, R.id.hoursFragment)
+    // Profile is still being built by another team member.
+    private val tabDestinations = setOf(R.id.mainFragment, R.id.commitmentsFragment, R.id.hoursFragment)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +26,10 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_home -> {
                     navController.navigate(R.id.mainFragment, null, tabNavOptions())
+                    true
+                }
+                R.id.nav_listings -> {
+                    navController.navigate(R.id.commitmentsFragment, null, tabNavOptions())
                     true
                 }
                 R.id.nav_hours -> {
@@ -44,6 +47,7 @@ class MainActivity : AppCompatActivity() {
             bottomNav.visibility = if (destination.id in tabDestinations) View.VISIBLE else View.GONE
             when (destination.id) {
                 R.id.mainFragment -> bottomNav.menu.findItem(R.id.nav_home)?.isChecked = true
+                R.id.commitmentsFragment -> bottomNav.menu.findItem(R.id.nav_listings)?.isChecked = true
                 R.id.hoursFragment -> bottomNav.menu.findItem(R.id.nav_hours)?.isChecked = true
             }
         }

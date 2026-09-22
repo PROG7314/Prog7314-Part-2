@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.aegis.R
-import com.google.android.material.snackbar.Snackbar
 
 class RoleSelectionFragment : Fragment(R.layout.fragment_role_selection) {
 
@@ -30,7 +29,7 @@ class RoleSelectionFragment : Fragment(R.layout.fragment_role_selection) {
             when (state) {
                 is RoleSelectionState.Success -> {
                     if (state.role == "organization") {
-                        Snackbar.make(view, "Organisation account set up — dashboard coming soon", Snackbar.LENGTH_LONG).show()
+                        findNavController().navigate(R.id.action_roleSelectionFragment_to_orgHomeFragment)
                     } else {
                         findNavController().navigate(R.id.action_roleSelectionFragment_to_interestMatchingFragment)
                     }

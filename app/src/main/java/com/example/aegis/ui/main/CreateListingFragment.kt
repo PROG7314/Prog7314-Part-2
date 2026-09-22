@@ -42,8 +42,12 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
     }
 
     private fun setupSpinners() {
-        // Cause Category Spinner
-        val categories = arrayOf("Volunteering", "Education", "Community Outreach", "Fundraiser")
+        // Cause Category Spinner - must match the backend's fixed CAUSE_CATEGORIES list exactly.
+        val categories = arrayOf(
+            "Children & Youth", "Elderly Care", "Soup Kitchens", "Animal Welfare", "Homeless Shelters",
+            "Tutoring & Reading", "Environment & Conservation", "Health & Wellbeing", "Disaster Relief",
+            "Community Development", "Disability Support"
+        )
         val categoryAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,

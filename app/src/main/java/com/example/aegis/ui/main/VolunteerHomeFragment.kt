@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.aegis.R
 import com.example.aegis.core.AegisBaseFragment
@@ -43,9 +42,6 @@ class VolunteerHomeFragment : AegisBaseFragment() {
         binding.listingsRecyclerView.adapter = adapter
 
         binding.retryButton.setOnClickListener { viewModel.loadFeed() }
-        binding.commitmentsButton.setOnClickListener {
-            findNavController().navigate(R.id.action_mainFragment_to_commitmentsFragment)
-        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
