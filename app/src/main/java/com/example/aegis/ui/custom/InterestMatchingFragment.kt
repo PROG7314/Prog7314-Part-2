@@ -5,9 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.aegis.core.AegisBaseFragment
-import com.example.app.data.local.UserPreferencesDataStore
-import com.example.app.ui.custom.InterestMatchingViewModel
-
+import com.example.aegis.data.local.UserPreferencesDataStore
 
 class InterestMatchingFragment : AegisBaseFragment() {
 

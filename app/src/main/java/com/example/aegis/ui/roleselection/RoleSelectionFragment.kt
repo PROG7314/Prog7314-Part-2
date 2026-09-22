@@ -2,12 +2,12 @@ package com.example.aegis.ui.roleselection
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.aegis.R
+import com.google.android.material.snackbar.Snackbar
 
 class RoleSelectionFragment : Fragment(R.layout.fragment_role_selection) {
 
@@ -29,7 +29,11 @@ class RoleSelectionFragment : Fragment(R.layout.fragment_role_selection) {
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is RoleSelectionState.Success -> {
-                    findNavController().navigate(R.id.action_roleSelectionFragment_to_interestMatchingFragment)
+                    if (state.role == "organisation") {
+                        Snackbar.make(view, "Organisation account set up — dashboard coming soon", Snackbar.LENGTH_LONG).show()
+                    } else {
+                        findNavController().navigate(R.id.action_roleSelectionFragment_to_interestMatchingFragment)
+                    }
                 }
                 is RoleSelectionState.Error -> {
                     Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()

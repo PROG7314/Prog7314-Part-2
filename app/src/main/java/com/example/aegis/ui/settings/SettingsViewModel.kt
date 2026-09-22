@@ -2,7 +2,7 @@ package com.example.aegis.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.app.data.local.UserPreferencesDataStore
+import com.example.aegis.data.local.UserPreferencesDataStore
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(private val prefsStore: UserPreferencesDataStore) : ViewModel() {

@@ -16,6 +16,13 @@
             app:popUpToInclusive="true" />
 
         <action
+            android:id="@+id/action_splashFragment_to_roleSelectionFragment"
+            app:destination="@id/roleSelectionFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+
+        <!-- RESERVED: not called from SplashFragment.kt yet — wire this to the real destination once Member 3's MainFragment exists -->
+        <action
             android:id="@+id/action_splashFragment_to_mainFragment"
             app:destination="@id/mainFragment"
             app:popUpTo="@id/splashFragment"
@@ -88,5 +95,10 @@
         android:id="@+id/interestMatchingFragment"
         android:name="com.example.aegis.ui.custom.InterestMatchingFragment"
         android:label="Your Interests" />
+
+    <!-- Global: reachable from any destination, e.g. a settings icon on the eventual home screen -->
+    <action
+        android:id="@+id/action_global_settingsFragment"
+        app:destination="@id/settingsFragment" />
 
 </navigation>
