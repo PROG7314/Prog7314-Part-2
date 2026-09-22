@@ -4,7 +4,7 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 
-abstract class AegisBaseFragment : Fragment() {
+abstract class AegisBaseFragment(fragmentCreateListing: Int) : Fragment() {
     private val tag: String = this::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {

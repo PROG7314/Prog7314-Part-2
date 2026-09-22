@@ -6,8 +6,14 @@ plugins {
 android {
     namespace = "com.example.aegis"
     compileSdk {
-        version = release(37) {
+        version = release(37)
+        {
             minorApiLevel = 1
+
+            buildFeatures {
+                viewBinding = true
+            }
+
         }
     }
 
@@ -51,7 +57,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-    implementation(libs.firebase.database.ktx)
+
     implementation(libs.material)
     implementation(libs.androidx.datastore.preferences)
     testImplementation(libs.junit)
@@ -61,6 +67,8 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-database")
+    implementation("com.google.firebase:firebase-storage")
     implementation("com.google.android.gms:play-services-auth:21.2.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
     coreLibraryDesugaring(libs.desugar.jdk.libs)

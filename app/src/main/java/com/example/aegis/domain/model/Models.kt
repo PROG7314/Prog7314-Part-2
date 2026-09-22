@@ -2,6 +2,7 @@ package com.example.aegis.domain.model
 
 import java.time.Instant
 
+
 /*
  * Domain models - what ViewModels and screens work with.
  */
