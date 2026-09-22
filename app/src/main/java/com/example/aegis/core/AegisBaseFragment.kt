@@ -6,7 +6,7 @@ import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 
-abstract class AegisBaseFragment(@LayoutRes contentLayoutId: Int = 0) : Fragment(contentLayoutId) {
+abstract class AegisBaseFragment(@LayoutRes layoutId: Int = 0) : Fragment(layoutId) {
     private val tag: String = this::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,4 +1,4 @@
-package com.example.aegis.ui.main
+package com.example.aegis.ui.listing
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -38,13 +38,16 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
 
         setupSpinners()
         setupDateTimePickers()
-        setupBottomNavigation()
         setupClickListeners()
     }
 
     private fun setupSpinners() {
-        // Cause Category Spinner
-        val categories = arrayOf("Volunteering", "Education", "Community Outreach", "Fundraiser")
+        // Cause Category Spinner - must match the backend's fixed CAUSE_CATEGORIES list exactly.
+        val categories = arrayOf(
+            "Children & Youth", "Elderly Care", "Soup Kitchens", "Animal Welfare", "Homeless Shelters",
+            "Tutoring & Reading", "Environment & Conservation", "Health & Wellbeing", "Disaster Relief",
+            "Community Development", "Disability Support"
+        )
         val categoryAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
@@ -104,18 +107,6 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
             ).show()
         }
     }
-    private fun setupBottomNavigation() {
-        binding.bottomNavigation.selectedItemId = R.id.nav_home
-        binding.bottomNavigation.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_home -> true
-                R.id.nav_listings -> true
-                R.id.nav_profile -> true
-                else -> false
-            }
-        }
-    }
-
     private fun setupClickListeners() {
         binding.btnSave.setOnClickListener {
             submitListing()

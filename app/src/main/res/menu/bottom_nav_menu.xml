@@ -9,6 +9,10 @@
         android:icon="@drawable/list"
         android:title="Listings" />
     <item
+        android:id="@+id/nav_hours"
+        android:icon="@drawable/hour"
+        android:title="Hours" />
+    <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/profile"
         android:title="Profile" />

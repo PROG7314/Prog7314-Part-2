@@ -1,6 +1,7 @@
 package com.example.aegis.ui.auth
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
@@ -27,6 +28,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             val account = task.getResult(ApiException::class.java)
             authViewModel.firebaseAuthWithGoogle(account.idToken!!)
         } catch (e: ApiException) {
+            Log.e("AegisAuth", "Sign-in failed, status code: ${e.statusCode}")
             val message = if (e.statusCode == 12501) {
                 "Sign-in was cancelled"
             } else {
@@ -58,10 +60,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 }
                 is AuthState.Success -> {
                     signInButton.isEnabled = true
-                    if (!state.hasRole) {
-                        findNavController().navigate(R.id.action_loginFragment_to_roleSelectionFragment)
-                    } else {
-                       findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                    when (state.role) {
+                        null -> findNavController().navigate(R.id.action_loginFragment_to_roleSelectionFragment)
+                        "volunteer" -> findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
+                        "organization" -> findNavController().navigate(R.id.action_loginFragment_to_orgHomeFragment)
                     }
                 }
                 is AuthState.Error -> {

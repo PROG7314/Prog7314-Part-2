@@ -6,14 +6,8 @@ plugins {
 android {
     namespace = "com.example.aegis"
     compileSdk {
-        version = release(37)
-        {
+        version = release(37) {
             minorApiLevel = 1
-
-            buildFeatures {
-                viewBinding = true
-            }
-
         }
     }
 
@@ -28,7 +22,7 @@ android {
 
         // Full base URL including the version prefix and trailing slash.
         //ToDo Add in the host API URL
-        buildConfigField("String", "API_BASE_URL", "\"https://<API-HOST>/api/v1/\"")
+        buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:3000/api/v1/\"")
     }
 
     buildFeatures { buildConfig = true
@@ -79,4 +73,7 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation("androidx.security:security-crypto:1.1.0")
+    implementation("io.coil-kt:coil:2.7.0")
+    implementation("androidx.cardview:cardview:1.0.0")
 }

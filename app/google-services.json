@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "973559198654-5u5sfnp9s0pq0m35ql1o09jsb2o4dk08.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.aegis",
+            "certificate_hash": "26a18b7ae2396eaee8ec565f06848b5b3441cb22"
+          }
+        },
+        {
           "client_id": "973559198654-7mm4bdus18hbp7r2onnaukv4id8vuoib.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
