@@ -1,4 +1,4 @@
-package com.example.app.data.local
+package com.example.aegis.data.local
 
 import android.content.Context
 import androidx.datastore.preferences.core.*

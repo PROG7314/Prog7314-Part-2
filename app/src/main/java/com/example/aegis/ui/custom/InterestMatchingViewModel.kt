@@ -1,8 +1,8 @@
-package com.example.app.ui.custom
+package com.example.aegis.ui.custom
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.app.data.local.UserPreferencesDataStore
+import com.example.aegis.data.local.UserPreferencesDataStore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
