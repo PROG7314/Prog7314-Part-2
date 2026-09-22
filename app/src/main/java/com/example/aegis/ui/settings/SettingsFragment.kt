@@ -16,7 +16,7 @@ import com.example.aegis.data.local.UserPreferencesDataStore
 import com.google.android.material.materialswitch.MaterialSwitch
 import kotlinx.coroutines.launch
 
-class SettingsFragment : AegisBaseFragment(R.layout.fragment_create_listing) {
+class SettingsFragment : AegisBaseFragment() {
 
     private lateinit var viewModel: SettingsViewModel
 
