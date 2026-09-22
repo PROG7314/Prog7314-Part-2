@@ -15,4 +15,8 @@
     <string name="status_upcoming">UPCOMING</string>
     <string name="status_ended">ENDED</string>
     <string name="no_listings_yet">You haven\'t created any listings yet.</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="your_commitments">Your Commitments</string>
+    <string name="commitments_subtitle">Manage your commitments and reminders to make sure you don\'t miss out on the chance to help</string>
+    <string name="no_commitments_yet">You haven\'t signed up for anything yet.</string>
 </resources>

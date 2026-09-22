@@ -25,7 +25,9 @@ android {
         buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:3000/api/v1/\"")
     }
 
-    buildFeatures { buildConfig = true }
+    buildFeatures {
+        viewBinding = true
+        buildConfig = true }
     compileOptions {
         // minSdk is 25 but the code uses java.time (API 26+), so desugar it.
         isCoreLibraryDesugaringEnabled = true
@@ -69,6 +71,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation("androidx.security:security-crypto:1.1.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
-    implementation(libs.coil)
+    implementation("io.coil-kt:coil:2.7.0")
+    implementation("androidx.cardview:cardview:1.0.0")
 }

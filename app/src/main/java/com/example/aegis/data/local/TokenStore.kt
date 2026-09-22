@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 
+
 /**
  * Stores the backend-issued JWT in EncryptedSharedPreferences
  * AuthViewModel writes to this after login;
