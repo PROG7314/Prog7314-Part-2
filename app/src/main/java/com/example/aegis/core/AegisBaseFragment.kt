@@ -17,6 +17,11 @@ abstract class AegisBaseFragment : Fragment() {
         Log.d(tag, "onViewCreated")
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.d(tag, "onStart")
+    }
+
     override fun onResume() {
         super.onResume()
         Log.d(tag, "onResume")
@@ -27,8 +32,18 @@ abstract class AegisBaseFragment : Fragment() {
         Log.d(tag, "onPause")
     }
 
+    override fun onStop() {
+        super.onStop()
+        Log.d(tag, "onStop")
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         Log.d(tag, "onDestroyView")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(tag, "onDestroy")
     }
 }
