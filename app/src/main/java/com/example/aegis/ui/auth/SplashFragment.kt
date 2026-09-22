@@ -20,11 +20,8 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
                     findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
                 }
                 is AuthState.Success -> {
-                    if (!state.hasRole) {
-                        findNavController().navigate(R.id.action_splashFragment_to_roleSelectionFragment)
-                    } else {
-                        findNavController().navigate(R.id.action_splashFragment_to_roleSelectionFragment)
-                    }
+
+                    findNavController().navigate(R.id.action_splashFragment_to_mainFragment)
                 }
                 is AuthState.Error -> {
                     // Fallback — treat as not logged in if something goes wrong

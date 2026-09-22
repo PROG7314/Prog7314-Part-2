@@ -15,15 +15,10 @@
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
 
-        <action
-            android:id="@+id/action_splashFragment_to_roleSelectionFragment"
-            app:destination="@id/roleSelectionFragment"
-            app:popUpTo="@id/splashFragment"
-            app:popUpToInclusive="true" />
-
+        <!-- TEMPORARY: points to roleSelectionFragment until Member 3's MainFragment exists -->
         <action
             android:id="@+id/action_splashFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
+            app:destination="@id/roleSelectionFragment"
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
 
@@ -38,6 +33,11 @@
             android:id="@+id/action_loginFragment_to_roleSelectionFragment"
             app:destination="@id/roleSelectionFragment" />
 
+        <!-- TEMPORARY: points to roleSelectionFragment until Member 3's MainFragment exists -->
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/roleSelectionFragment" />
+
     </fragment>
 
     <fragment
@@ -50,11 +50,6 @@
             app:destination="@id/interestMatchingFragment" />
 
     </fragment>
-
-    <fragment
-        android:id="@+id/mainFragment"
-        android:name="com.example.aegis.main.MainFragment"
-        android:label="Home" />
 
     <fragment
         android:id="@+id/settingsFragment"

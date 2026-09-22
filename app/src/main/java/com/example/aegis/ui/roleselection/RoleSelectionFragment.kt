@@ -15,22 +15,23 @@ class RoleSelectionFragment : Fragment(R.layout.fragment_role_selection) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.findViewById<Button>(R.id.volunteerButton).setOnClickListener {
-            viewModel.selectRole("volunteer")
-        }
+        view.findViewById<com.google.android.material.card.MaterialCardView>(R.id.volunteerCard)
+            .setOnClickListener {
+                viewModel.selectRole("volunteer")
+            }
 
-        view.findViewById<Button>(R.id.organisationButton).setOnClickListener {
-            viewModel.selectRole("organisation")
-        }
+        view.findViewById<com.google.android.material.card.MaterialCardView>(R.id.organisationCard)
+            .setOnClickListener {
+                viewModel.selectRole("organisation")
+            }
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is RoleSelectionState.Success -> {
-
                     findNavController().navigate(R.id.action_roleSelectionFragment_to_interestMatchingFragment)
                 }
                 is RoleSelectionState.Error -> {
-                    // TODO: show error to user, e.g. a Toast
+                    // TODO: show error to user
                 }
                 else -> {}
             }

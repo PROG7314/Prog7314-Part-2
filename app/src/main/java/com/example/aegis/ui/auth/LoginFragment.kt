@@ -61,7 +61,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     if (!state.hasRole) {
                         findNavController().navigate(R.id.action_loginFragment_to_roleSelectionFragment)
                     } else {
-                       // findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                       findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
                     }
                 }
                 is AuthState.Error -> {
@@ -73,6 +73,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         }
 
 
-        authViewModel.checkExistingSession()
+
     }
 }

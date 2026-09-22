@@ -1,31 +1,112 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp">
+    android:padding="24dp"
+    android:gravity="center_horizontal">
 
     <TextView
-        android:id="@+id/roleSelectionTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Are you signing up as a Volunteer or an Organisation?"
-        android:textSize="20sp"
+        android:textSize="22sp"
+        android:textStyle="bold"
         android:gravity="center"
+        android:layout_marginTop="32dp"
         android:layout_marginBottom="32dp" />
 
-    <Button
-        android:id="@+id/volunteerButton"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/volunteerCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Volunteer"
-        android:layout_marginBottom="16dp" />
+        app:cardCornerRadius="24dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="#839449"
+        android:layout_marginBottom="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground">
 
-    <Button
-        android:id="@+id/organisationButton"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="14dp"
+            android:gravity="center_horizontal">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/volunteer_card" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Volunteer"
+                android:textSize="26sp"
+                android:textStyle="italic"
+                android:textColor="@color/white"
+                android:fontFamily="serif"
+                android:layout_marginTop="10dp" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/organisationCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Organisation" />
+        app:cardCornerRadius="24dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="#839449"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="14dp"
+            android:gravity="center_horizontal">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/organisation_card" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Organisation"
+                android:textSize="26sp"
+                android:textStyle="italic"
+                android:textColor="@color/white"
+                android:fontFamily="serif"
+                android:layout_marginTop="10dp" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>
