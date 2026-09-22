@@ -1,7 +1,9 @@
 package com.example.aegis.core
+
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 
 abstract class AegisBaseFragment(layoutId: Int = 0) : Fragment(layoutId) {
@@ -17,6 +19,11 @@ abstract class AegisBaseFragment(layoutId: Int = 0) : Fragment(layoutId) {
         Log.d(tag, "onViewCreated")
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.d(tag, "onStart")
+    }
+
     override fun onResume() {
         super.onResume()
         Log.d(tag, "onResume")
@@ -27,8 +34,18 @@ abstract class AegisBaseFragment(layoutId: Int = 0) : Fragment(layoutId) {
         Log.d(tag, "onPause")
     }
 
+    override fun onStop() {
+        super.onStop()
+        Log.d(tag, "onStop")
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         Log.d(tag, "onDestroyView")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(tag, "onDestroy")
     }
 }
