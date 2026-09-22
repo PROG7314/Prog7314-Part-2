@@ -79,12 +79,43 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.example.aegis.ui.main.VolunteerHomeFragment"
-        android:label="Home" />
+        android:label="Home">
+
+        <action
+            android:id="@+id/action_mainFragment_to_commitmentsFragment"
+            app:destination="@id/commitmentsFragment" />
+
+        <action
+            android:id="@+id/action_mainFragment_to_hoursFragment"
+            app:destination="@id/hoursFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/commitmentsFragment"
+        android:name="com.example.aegis.ui.main.CommitmentsFragment"
+        android:label="My Commitments" />
+
+    <fragment
+        android:id="@+id/hoursFragment"
+        android:name="com.example.aegis.ui.main.HoursFragment"
+        android:label="My Hours" />
 
     <fragment
         android:id="@+id/orgHomeFragment"
         android:name="com.example.aegis.ui.main.OrgHomeFragment"
-        android:label="Home" />
+        android:label="Home">
+
+        <action
+            android:id="@+id/action_orgHomeFragment_to_createListingFragment"
+            app:destination="@id/createListingFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/createListingFragment"
+        android:name="com.example.aegis.ui.main.CreateListingFragment"
+        android:label="Create Listing" />
 
     <fragment
         android:id="@+id/settingsFragment"

@@ -10,11 +10,16 @@
     <string name="retry">Retry</string>
     <string name="welcome_back">Welcome back, %1$s</string>
     <string name="new_listings_count">There are %1$d listings for you</string>
+    <string name="my_commitments">My Commitments</string>
+    <string name="your_hours">Your Hours</string>
+    <string name="total_hours_completed">You\'ve completed %1$s hours</string>
+    <string name="no_hours_yet">No completed hours yet — they\'ll show up here once an organisation marks a sign-up as complete.</string>
     <string name="people_signed_up_for_this_event">People Signed up for this event</string>
     <string name="view_details">View Details</string>
     <string name="status_upcoming">UPCOMING</string>
     <string name="status_ended">ENDED</string>
     <string name="no_listings_yet">You haven\'t created any listings yet.</string>
+    <string name="create_listing">Create listing</string>
     <string name="dismiss">Dismiss</string>
     <string name="your_commitments">Your Commitments</string>
     <string name="commitments_subtitle">Manage your commitments and reminders to make sure you don\'t miss out on the chance to help</string>

@@ -7,6 +7,18 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/createListingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/create_listing"
+        android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="@color/aegis_green"
+        app:tint="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listingsRecyclerView"
         android:layout_width="0dp"

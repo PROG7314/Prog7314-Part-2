@@ -6,14 +6,8 @@ plugins {
 android {
     namespace = "com.example.aegis"
     compileSdk {
-        version = release(37)
-        {
+        version = release(37) {
             minorApiLevel = 1
-
-            buildFeatures {
-                viewBinding = true
-            }
-
         }
     }
 

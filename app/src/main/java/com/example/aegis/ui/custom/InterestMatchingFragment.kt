@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.aegis.R
 import com.example.aegis.core.AegisBaseFragment
 import com.example.aegis.data.local.UserPreferencesDataStore
 
-class InterestMatchingFragment : AegisBaseFragment(R.layout.fragment_create_listing) {
+class InterestMatchingFragment : AegisBaseFragment() {
 
     private lateinit var viewModel: InterestMatchingViewModel
 

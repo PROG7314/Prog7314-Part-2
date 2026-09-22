@@ -26,19 +26,11 @@ class RoleSelectionViewModel : ViewModel() {
     fun selectRole(role: String) {
         _state.value = RoleSelectionState.Saving
         viewModelScope.launch {
-            try {
-                firestore.collection("users").document(uid)
-                    .set(mapOf(
-                        "uid" to uid,
-                        "email" to auth.currentUser?.email,
-                        "displayName" to auth.currentUser?.displayName,
-                        "role" to role,
-                        "onboardingComplete" to false
-                    ), com.google.firebase.firestore.SetOptions.merge())
-                    .await()
-                _state.value = RoleSelectionState.Success(role)
-            } catch (e: Exception) {
-                _state.value = RoleSelectionState.Error(e.message ?: "Failed to save role")
+            when (val result = safeApiCall("RoleSelectionVM") {
+                ServiceLocator.api().setRole(RoleRequest(role))
+            }) {
+                is ApiResult.Success -> _state.value = RoleSelectionState.Success(role)
+                is ApiResult.Failure -> _state.value = RoleSelectionState.Error(result.error.message)
             }
         }
     }

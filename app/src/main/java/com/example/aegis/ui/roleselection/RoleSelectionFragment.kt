@@ -29,7 +29,7 @@ class RoleSelectionFragment : Fragment(R.layout.fragment_role_selection) {
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is RoleSelectionState.Success -> {
-                    if (state.role == "organisation") {
+                    if (state.role == "organization") {
                         Snackbar.make(view, "Organisation account set up — dashboard coming soon", Snackbar.LENGTH_LONG).show()
                     } else {
                         findNavController().navigate(R.id.action_roleSelectionFragment_to_interestMatchingFragment)

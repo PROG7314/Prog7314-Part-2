@@ -38,7 +38,6 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
 
         setupSpinners()
         setupDateTimePickers()
-        setupBottomNavigation()
         setupClickListeners()
     }
 
@@ -104,18 +103,6 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
             ).show()
         }
     }
-    private fun setupBottomNavigation() {
-        binding.bottomNavigation.selectedItemId = R.id.nav_home
-        binding.bottomNavigation.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_home -> true
-                R.id.nav_listings -> true
-                R.id.nav_profile -> true
-                else -> false
-            }
-        }
-    }
-
     private fun setupClickListeners() {
         binding.btnSave.setOnClickListener {
             submitListing()
