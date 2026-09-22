@@ -2,7 +2,27 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.example.aegis.ui.auth.SplashFragment"
+        android:label="Splash">
+
+        <action
+            android:id="@+id/action_splashFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+
+        <!-- TEMPORARY: points to roleSelectionFragment until Member 3's MainFragment exists -->
+        <action
+            android:id="@+id/action_splashFragment_to_mainFragment"
+            app:destination="@id/roleSelectionFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/loginFragment"
@@ -10,27 +30,35 @@
         android:label="Login">
 
         <action
-            android:id="@+id/action_loginFragment_to_SettingsFragment"
-            app:destination="@+id/settingsFragment" />
+            android:id="@+id/action_loginFragment_to_roleSelectionFragment"
+            app:destination="@id/roleSelectionFragment" />
+
+        <!-- TEMPORARY: points to roleSelectionFragment until Member 3's MainFragment exists -->
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/roleSelectionFragment" />
 
     </fragment>
 
-
-
     <fragment
-        android:id="@+id/mainFragment"
-        android:name="com.example.aegis.main.MainFragment"
-        android:label="Home" />
+        android:id="@+id/roleSelectionFragment"
+        android:name="com.example.aegis.ui.roleselection.RoleSelectionFragment"
+        android:label="Role Selection">
+
+        <action
+            android:id="@+id/action_roleSelectionFragment_to_interestMatchingFragment"
+            app:destination="@id/interestMatchingFragment" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.app.ui.settings.SettingsFragment"
+        android:name="com.example.aegis.ui.settings.SettingsFragment"
         android:label="Settings" />
 
     <fragment
         android:id="@+id/interestMatchingFragment"
-        android:name="com.example.app.ui.custom.InterestMatchingFragment"
+        android:name="com.example.aegis.ui.custom.InterestMatchingFragment"
         android:label="Your Interests" />
-   
 
 </navigation>
