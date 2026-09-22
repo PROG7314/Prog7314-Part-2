@@ -22,7 +22,7 @@ android {
 
         // Full base URL including the version prefix and trailing slash.
         //ToDo Add in the host API URL
-        buildConfigField("String", "API_BASE_URL", "\"https://<API-HOST>/api/v1/\"")
+        buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:3000/api/v1/\"")
     }
 
     buildFeatures { buildConfig = true }
@@ -51,7 +51,6 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-    implementation(libs.firebase.database.ktx)
     implementation(libs.material)
     implementation(libs.androidx.datastore.preferences)
     testImplementation(libs.junit)
@@ -69,4 +68,7 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation("androidx.security:security-crypto:1.1.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
+    implementation(libs.coil)
 }

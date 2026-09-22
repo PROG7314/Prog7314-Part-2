@@ -1,4 +1,6 @@
-package com.example.app.ui.settings
+package com.example.aegis.ui.settings
+
+import com.example.app.ui.settings.SettingsViewModel
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.aegis.core.AegisBaseFragment
 import com.example.app.data.local.UserPreferencesDataStore
+import com.example.app.ui.settings.SettingsViewModel
 
 class SettingsFragment : AegisBaseFragment() {
 

@@ -15,9 +15,20 @@
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
 
-        <!-- TEMPORARY: points to roleSelectionFragment until Member 3's MainFragment exists -->
         <action
             android:id="@+id/action_splashFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_splashFragment_to_orgHomeFragment"
+            app:destination="@id/orgHomeFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_splashFragment_to_roleSelectionFragment"
             app:destination="@id/roleSelectionFragment"
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
@@ -30,12 +41,19 @@
         android:label="Login">
 
         <action
-            android:id="@+id/action_loginFragment_to_roleSelectionFragment"
-            app:destination="@id/roleSelectionFragment" />
+            android:id="@+id/action_loginFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
 
-        <!-- TEMPORARY: points to roleSelectionFragment until Member 3's MainFragment exists -->
         <action
-            android:id="@+id/action_loginFragment_to_homeFragment"
+            android:id="@+id/action_loginFragment_to_orgHomeFragment"
+            app:destination="@id/orgHomeFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_loginFragment_to_roleSelectionFragment"
             app:destination="@id/roleSelectionFragment" />
 
     </fragment>
@@ -50,6 +68,16 @@
             app:destination="@id/interestMatchingFragment" />
 
     </fragment>
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.aegis.ui.main.VolunteerHomeFragment"
+        android:label="Home" />
+
+    <fragment
+        android:id="@+id/orgHomeFragment"
+        android:name="com.example.aegis.ui.main.OrgHomeFragment"
+        android:label="Home" />
 
     <fragment
         android:id="@+id/settingsFragment"

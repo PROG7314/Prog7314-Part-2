@@ -58,10 +58,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 }
                 is AuthState.Success -> {
                     signInButton.isEnabled = true
-                    if (!state.hasRole) {
-                        findNavController().navigate(R.id.action_loginFragment_to_roleSelectionFragment)
-                    } else {
-                       findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                    when (state.role) {
+                        null -> findNavController().navigate(R.id.action_loginFragment_to_roleSelectionFragment)
+                        "volunteer" -> findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
+                        "organization" -> findNavController().navigate(R.id.action_loginFragment_to_orgHomeFragment)
                     }
                 }
                 is AuthState.Error -> {

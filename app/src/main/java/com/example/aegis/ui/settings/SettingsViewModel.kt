@@ -1,4 +1,4 @@
-package com.example.app.ui.settings
+package com.example.aegis.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
