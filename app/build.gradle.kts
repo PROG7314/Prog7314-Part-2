@@ -31,8 +31,10 @@ android {
         buildConfigField("String", "API_BASE_URL", "\"https://<API-HOST>/api/v1/\"")
     }
 
-    buildFeatures { buildConfig = true }
+    buildFeatures { buildConfig = true
+        viewBinding = true}
     compileOptions {
+
         // minSdk is 25 but the code uses java.time (API 26+), so desugar it.
         isCoreLibraryDesugaringEnabled = true
     }
