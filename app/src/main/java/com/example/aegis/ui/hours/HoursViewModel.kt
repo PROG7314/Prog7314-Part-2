@@ -1,4 +1,4 @@
-package com.example.aegis.ui.main
+package com.example.aegis.ui.hours
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -9,6 +9,7 @@ import com.example.aegis.data.ServiceLocator
 import com.example.aegis.domain.model.ApiResult
 import com.example.aegis.domain.model.HoursSummary
 import com.example.aegis.domain.repository.SignupRepository
+import com.example.aegis.ui.main.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

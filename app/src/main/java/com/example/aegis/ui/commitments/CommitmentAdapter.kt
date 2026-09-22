@@ -1,6 +1,7 @@
-package com.example.aegis.ui.main
+package com.example.aegis.ui.commitments
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -32,7 +33,7 @@ class CommitmentAdapter(
             commitmentArea.text = listing?.area ?: ""
             dateBadge.text = formatDateBadge(listing?.dateTime)
             timeBadge.text = formatTime(listing?.dateTime)
-            timeBadge.visibility = if (listing?.dateTime != null) android.view.View.VISIBLE else android.view.View.GONE
+            timeBadge.visibility = if (listing?.dateTime != null) View.VISIBLE else View.GONE
 
             dismissButton.setOnClickListener { onDismissClick(signup) }
         }

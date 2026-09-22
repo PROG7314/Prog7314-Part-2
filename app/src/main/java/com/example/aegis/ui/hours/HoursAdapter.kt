@@ -1,4 +1,4 @@
-package com.example.aegis.ui.main
+package com.example.aegis.ui.hours
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

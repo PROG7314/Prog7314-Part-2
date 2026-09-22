@@ -100,6 +100,8 @@ data class UserProfile(
     val id: String,
     val role: String?,
     val name: String,
+    val email: String?,
+    val profileImageUrl: String?,
     val bio: String?,
     val description: String?,
     val interests: List<String>,

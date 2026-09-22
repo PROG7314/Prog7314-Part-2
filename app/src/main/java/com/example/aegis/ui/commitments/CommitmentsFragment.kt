@@ -1,4 +1,4 @@
-package com.example.aegis.ui.main
+package com.example.aegis.ui.commitments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.aegis.core.AegisBaseFragment
 import com.example.aegis.databinding.FragmentCommitmentsBinding
 import com.example.aegis.domain.model.Signup
+import com.example.aegis.ui.commitments.CommitmentAdapter
+import com.example.aegis.ui.commitments.CommitmentsViewModel
+import com.example.aegis.ui.main.UiState
 import kotlinx.coroutines.launch
 
 class CommitmentsFragment : AegisBaseFragment() {
@@ -20,7 +23,7 @@ class CommitmentsFragment : AegisBaseFragment() {
     private var _binding: FragmentCommitmentsBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: CommitmentsViewModel by viewModels { CommitmentsViewModel.Factory }
+    private val viewModel: CommitmentsViewModel by viewModels { CommitmentsViewModel.Companion.Factory }
     private lateinit var adapter: CommitmentAdapter
 
     override fun onCreateView(

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.aegis.R
 import com.example.aegis.core.AegisBaseFragment
 import com.example.aegis.databinding.FragmentVolunteerHomeBinding
+import com.example.aegis.ui.listing.ListingAdapter
 import kotlinx.coroutines.launch
 
 class VolunteerHomeFragment : AegisBaseFragment() {

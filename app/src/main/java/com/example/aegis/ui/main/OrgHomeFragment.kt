@@ -15,6 +15,7 @@ import com.example.aegis.R
 import com.example.aegis.core.AegisBaseFragment
 import com.example.aegis.databinding.FragmentOrgHomeBinding
 import com.example.aegis.domain.model.Listing
+import com.example.aegis.ui.listing.OrgListingAdapter
 import kotlinx.coroutines.launch
 
 class OrgHomeFragment : AegisBaseFragment() {

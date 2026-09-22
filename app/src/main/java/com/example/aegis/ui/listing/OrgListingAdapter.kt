@@ -1,7 +1,9 @@
-package com.example.aegis.ui.main
+package com.example.aegis.ui.listing
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -30,14 +32,14 @@ class OrgListingAdapter(
             if (listing.isEnded()) {
                 statusBadge.text = root.context.getString(R.string.status_ended)
                 statusBadge.backgroundTintList =
-                    android.content.res.ColorStateList.valueOf(
-                        androidx.core.content.ContextCompat.getColor(root.context, R.color.aegis_badge_ended)
+                    ColorStateList.valueOf(
+                        ContextCompat.getColor(root.context, R.color.aegis_badge_ended)
                     )
             } else {
                 statusBadge.text = root.context.getString(R.string.status_upcoming)
                 statusBadge.backgroundTintList =
-                    android.content.res.ColorStateList.valueOf(
-                        androidx.core.content.ContextCompat.getColor(root.context, R.color.aegis_badge_background)
+                    ColorStateList.valueOf(
+                        ContextCompat.getColor(root.context, R.color.aegis_badge_background)
                     )
             }
 

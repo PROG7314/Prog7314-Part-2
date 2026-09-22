@@ -89,12 +89,12 @@
 
     <fragment
         android:id="@+id/commitmentsFragment"
-        android:name="com.example.aegis.ui.main.CommitmentsFragment"
+        android:name="com.example.aegis.ui.commitments.CommitmentsFragment"
         android:label="My Commitments" />
 
     <fragment
         android:id="@+id/hoursFragment"
-        android:name="com.example.aegis.ui.main.HoursFragment"
+        android:name="com.example.aegis.ui.hours.HoursFragment"
         android:label="My Hours" />
 
     <fragment
@@ -110,13 +110,26 @@
 
     <fragment
         android:id="@+id/createListingFragment"
-        android:name="com.example.aegis.ui.main.CreateListingFragment"
+        android:name="com.example.aegis.ui.listing.CreateListingFragment"
         android:label="Create Listing" />
 
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.aegis.ui.settings.SettingsFragment"
         android:label="Settings" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.aegis.ui.profile.ProfileFragment"
+        android:label="Profile">
+
+        <action
+            android:id="@+id/action_profileFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/interestMatchingFragment"
@@ -132,7 +145,15 @@
     <fragment
         android:id="@+id/skillsFragment"
         android:name="com.example.aegis.ui.custom.SkillsFragment"
-        android:label="Skills" />
+        android:label="Skills">
+
+        <action
+            android:id="@+id/action_skillsFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+
+    </fragment>
 
     <!-- Global: reachable from any destination, e.g. a settings icon on the eventual home screen -->
     <action

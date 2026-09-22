@@ -10,8 +10,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
-    // Profile is still being built by another team member.
-    private val tabDestinations = setOf(R.id.mainFragment, R.id.commitmentsFragment, R.id.hoursFragment)
+    // Which "home" the bottom nav's Home/Profile tabs return to - set whenever a home
+    // destination is reached. Listings/Hours only make sense for volunteers.
+    private var isOrgContext = false
+
+    private val tabDestinations = setOf(
+        R.id.mainFragment, R.id.commitmentsFragment, R.id.hoursFragment,
+        R.id.orgHomeFragment, R.id.profileFragment
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,17 +29,22 @@ class MainActivity : AppCompatActivity() {
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
         bottomNav.setOnItemSelectedListener { item ->
+            val home = if (isOrgContext) R.id.orgHomeFragment else R.id.mainFragment
             when (item.itemId) {
                 R.id.nav_home -> {
-                    navController.navigate(R.id.mainFragment, null, tabNavOptions())
+                    navController.navigate(home, null, tabNavOptions(home))
                     true
                 }
                 R.id.nav_listings -> {
-                    navController.navigate(R.id.commitmentsFragment, null, tabNavOptions())
+                    navController.navigate(R.id.commitmentsFragment, null, tabNavOptions(home))
                     true
                 }
                 R.id.nav_hours -> {
-                    navController.navigate(R.id.hoursFragment, null, tabNavOptions())
+                    navController.navigate(R.id.hoursFragment, null, tabNavOptions(home))
+                    true
+                }
+                R.id.nav_profile -> {
+                    navController.navigate(R.id.profileFragment, null, tabNavOptions(home))
                     true
                 }
                 else -> {
@@ -44,19 +55,30 @@ class MainActivity : AppCompatActivity() {
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            bottomNav.visibility = if (destination.id in tabDestinations) View.VISIBLE else View.GONE
             when (destination.id) {
-                R.id.mainFragment -> bottomNav.menu.findItem(R.id.nav_home)?.isChecked = true
+                R.id.mainFragment -> isOrgContext = false
+                R.id.orgHomeFragment -> isOrgContext = true
+            }
+
+            bottomNav.visibility = if (destination.id in tabDestinations) View.VISIBLE else View.GONE
+            // Listings/Hours are volunteer-only concepts - an organization already sees its
+            // own listings on Home, and doesn't log volunteer hours.
+            bottomNav.menu.findItem(R.id.nav_listings)?.isVisible = !isOrgContext
+            bottomNav.menu.findItem(R.id.nav_hours)?.isVisible = !isOrgContext
+
+            when (destination.id) {
+                R.id.mainFragment, R.id.orgHomeFragment -> bottomNav.menu.findItem(R.id.nav_home)?.isChecked = true
                 R.id.commitmentsFragment -> bottomNav.menu.findItem(R.id.nav_listings)?.isChecked = true
                 R.id.hoursFragment -> bottomNav.menu.findItem(R.id.nav_hours)?.isChecked = true
+                R.id.profileFragment -> bottomNav.menu.findItem(R.id.nav_profile)?.isChecked = true
             }
         }
     }
 
-    // Keeps mainFragment as the base of the tab back stack: reselecting a tab won't stack
-    // duplicates, and switching to Hours sits on top of Home rather than replacing it.
-    private fun tabNavOptions() = navOptions {
+    // Keeps the current role's home as the base of the tab back stack: reselecting a tab
+    // won't stack duplicates, and other tabs sit on top of Home rather than replacing it.
+    private fun tabNavOptions(home: Int) = navOptions {
         launchSingleTop = true
-        popUpTo(R.id.mainFragment) { inclusive = false }
+        popUpTo(home) { inclusive = false }
     }
 }

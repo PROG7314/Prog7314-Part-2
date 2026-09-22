@@ -1,4 +1,4 @@
-package com.example.aegis.ui.main
+package com.example.aegis.ui.commitments
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -10,6 +10,7 @@ import com.example.aegis.domain.model.ApiResult
 import com.example.aegis.domain.model.Signup
 import com.example.aegis.domain.model.SignupStatus
 import com.example.aegis.domain.repository.SignupRepository
+import com.example.aegis.ui.main.UiState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow

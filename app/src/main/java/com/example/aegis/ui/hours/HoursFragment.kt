@@ -1,4 +1,4 @@
-package com.example.aegis.ui.main
+package com.example.aegis.ui.hours
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,6 +13,7 @@ import com.example.aegis.R
 import com.example.aegis.core.AegisBaseFragment
 import com.example.aegis.databinding.FragmentHoursBinding
 import com.example.aegis.domain.model.HoursSummary
+import com.example.aegis.ui.main.UiState
 import kotlinx.coroutines.launch
 
 class HoursFragment : AegisBaseFragment() {
