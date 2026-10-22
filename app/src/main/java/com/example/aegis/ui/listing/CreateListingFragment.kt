@@ -22,6 +22,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing) {
 
@@ -32,11 +33,20 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
     private var selectedTime: LocalTime? = null
     private val uploadedImages = mutableListOf<String>()
 
+    // Must match the backend's SKILLS list exactly (same as InterestMatchingViewModel.availableSkills).
+    private val availableSkills = listOf(
+        "Tutoring", "Reading to Children", "Manual Labour", "Cooking or Food Prep",
+        "Admin & Organising", "Fundraising", "Marketing & Social Media",
+        "Translation or Multilingual", "First Aid"
+    )
+    private val selectedSkills = mutableSetOf<String>()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentCreateListingBinding.bind(view)
 
         setupSpinners()
+        setupSkillsPicker()
         setupDateTimePickers()
         setupClickListeners()
     }
@@ -76,6 +86,29 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+    }
+
+    private fun setupSkillsPicker() {
+        binding.etSkills.apply {
+            isFocusable = false              // no keyboard, no typing
+            isFocusableInTouchMode = false
+            isCursorVisible = false
+            setOnClickListener { showSkillsDialog() }
+        }
+    }
+
+    private fun showSkillsDialog() {
+        val items = availableSkills.toTypedArray()
+        val checked = BooleanArray(items.size) { items[it] in selectedSkills }
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Skills required")
+            .setMultiChoiceItems(items, checked) { _, which, isChecked ->
+                if (isChecked) selectedSkills.add(items[which]) else selectedSkills.remove(items[which])
+            }
+            .setPositiveButton("Done") { _, _ ->
+                binding.etSkills.setText(availableSkills.filter { it in selectedSkills }.joinToString(", "))
+            }
+            .show()
     }
 
     private fun setupDateTimePickers() {
@@ -127,7 +160,6 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
         val description = binding.etDescription.text.toString().trim()
         val area = binding.etArea.text.toString().trim()
         val minHoursStr = binding.etHours.text.toString().trim()
-        val skillsStr = binding.etSkills.text.toString().trim()
         val selectedCategory = binding.spinnerCategory.selectedItem.toString()
         val selectedType = ListingType.values()[binding.spinnerListingType.selectedItemPosition]
 
@@ -142,6 +174,12 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
         }
         if (area.isEmpty()) {
             binding.etArea.error = "Area is required"
+            return
+        }
+
+        val minHours = minHoursStr.toDoubleOrNull()
+        if (minHours == null || minHours < 0) {
+            binding.etHours.error = "Enter the minimum hours (e.g. 2)"
             return
         }
 
@@ -162,15 +200,13 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
                 return
             }
             spacesTotal = spacesStr.toIntOrNull()
+            if (spacesTotal == null || spacesTotal < 1) {
+                binding.etSpaces.error = "Enter a whole number of spaces (1 or more)"
+                return
+            }
         }
 
-        val skillsList = if (skillsStr.isNotEmpty()) {
-            skillsStr.split(",").map { it.trim() }.filter { it.isNotEmpty() }
-        } else {
-            emptyList()
-        }
-
-        val minHours = minHoursStr.toDoubleOrNull() ?: 0.0
+        val skillsList = availableSkills.filter { it in selectedSkills }
 
         // Construct ListingDraft domain model
         val draft = ListingDraft(
@@ -215,6 +251,7 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
         selectedDate = null
         selectedTime = null
         uploadedImages.clear()
+        selectedSkills.clear()
     }
 
     override fun onDestroyView() {
