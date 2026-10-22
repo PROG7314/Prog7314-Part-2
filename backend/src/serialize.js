@@ -84,3 +84,36 @@ export function hoursEntryResponse(id, h) {
     completedAt: iso(h.completedAt),
   };
 }
+
+// Accepts and returns the match information
+export function listingResponse(
+  id,
+  l,
+  { organizationName = null, signupCount = null, matchedCauses = null, matchedSkills = null } = {}
+) {
+  const scheduled = l.type === 'Scheduled';
+  return {
+    id,
+    organizationId: l.organizationId,
+    organizationName,
+    title: l.title,
+    description: l.description,
+    causeCategories: l.causeCategories ?? [],
+    skillsRequired: l.skillsRequired ?? [],
+    type: l.type,
+    dateTime: iso(l.dateTime),
+    spacesTotal: scheduled ? l.spacesTotal ?? null : null,
+    spacesRemaining:
+      scheduled && signupCount != null ? Math.max(0, (l.spacesTotal ?? 0) - signupCount) : null,
+    signupCount,
+    area: l.area,
+    minHours: l.minHours,
+    images: l.images ?? [],
+    // Only set on the GET /listings feed, and only when a cause/skill filter was sent - null
+    // elsewhere (a single listing fetch, create, update) because there's nothing to explain there.
+    matchedCauses,
+    matchedSkills,
+    createdAt: iso(l.createdAt),
+    updatedAt: iso(l.updatedAt),
+  };
+}
