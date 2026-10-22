@@ -76,4 +76,7 @@ dependencies {
     implementation("androidx.security:security-crypto:1.1.0")
     implementation("io.coil-kt:coil:2.7.0")
     implementation("androidx.cardview:cardview:1.0.0")
+    implementation("androidx.credentials:credentials:1.5.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
 }
