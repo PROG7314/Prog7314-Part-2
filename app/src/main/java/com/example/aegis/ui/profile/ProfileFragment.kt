@@ -22,6 +22,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
+import android.util.Log
 
 class ProfileFragment : AegisBaseFragment() {
 
@@ -115,6 +116,12 @@ class ProfileFragment : AegisBaseFragment() {
             safeApiCall("ProfileFragment") { ServiceLocator.api().logout() }
             TokenStore.clear(requireContext())
             FirebaseAuth.getInstance().signOut()
+            try {
+                androidx.credentials.CredentialManager.create(requireContext())
+                    .clearCredentialState(androidx.credentials.ClearCredentialStateRequest())
+            } catch (e: Exception) {
+                Log.w("ProfileFragment", "Could not clear credential state: ${e.message}")
+            }
             findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
         }
     }
