@@ -21,8 +21,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // Full base URL including the version prefix and trailing slash.
-        //ToDo Add in the host API URL
-        buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:3000/api/v1/\"")
+        buildConfigField("String", "API_BASE_URL", "\"https://aegis-api-phuj.onrender.com/api/v1/\"")
     }
 
     buildFeatures { buildConfig = true
