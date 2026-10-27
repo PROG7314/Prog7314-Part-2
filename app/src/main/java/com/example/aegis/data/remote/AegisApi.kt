@@ -2,6 +2,7 @@ package com.example.aegis.data.remote
 
 import com.example.aegis.data.remote.dto.CompleteSignupRequest
 import com.example.aegis.data.remote.dto.CreateListingRequest
+import com.example.aegis.data.remote.dto.FcmTokenRequest
 import com.example.aegis.data.remote.dto.HoursLogResponse
 import com.example.aegis.data.remote.dto.ListingDto
 import com.example.aegis.data.remote.dto.ListingsResponse
@@ -92,4 +93,7 @@ interface AegisApi {
 
     @GET("users/me/hours-log")
     suspend fun getHoursLog(): HoursLogResponse
+
+    @POST("users/me/fcm-token")
+    suspend fun registerFcmToken(@Body body: FcmTokenRequest)
 }

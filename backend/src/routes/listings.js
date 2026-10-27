@@ -9,7 +9,7 @@ import { listingResponse } from '../serialize.js';
 import { chunked, splitList, loadUserNames, countActiveSignups, isEnded, newestFirst } from '../lookups.js';
 
 /** Table 3 - Listings. */
-export function listingsRouter({ db, cfg }) {
+export function listingsRouter({ db, cfg, notifier }) {
   const r = Router();
   const anyRole = requireRole('volunteer', 'organization');
   const orgOnly = requireRole('organization');
@@ -135,6 +135,8 @@ export function listingsRouter({ db, cfg }) {
       };
       await ref.set(doc);
       res.status(201).json(listingResponse(ref.id, doc, { organizationName: req.user.name || null, signupCount: 0 }));
+      // Real event -> push to volunteers whose interests or skills match (runs in the background).
+      notifier.newListing({ listing: doc, organizationName: req.user.name });
     })
   );
 

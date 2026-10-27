@@ -35,8 +35,25 @@ const listingBody = (over = {}) => ({
 
 async function setup() {
   const db = new FakeFirestore();
+  // Stands in for FCM: records what would be pushed, and can be told to fail the next send.
+  const sent = [];
+  let failNext = null;
+  const messaging = {
+    async send(message) {
+      if (failNext) {
+        const code = failNext;
+        failNext = null;
+        throw Object.assign(new Error(code), { code });
+      }
+      sent.push(message);
+      return 'message-id';
+    },
+  };
+  let notifier;
   const server = await new Promise((resolve) => {
-    const s = createApp({ db, firebaseAuth, cfg }).listen(0, () => resolve(s));
+    const app = createApp({ db, firebaseAuth, cfg, messaging });
+    notifier = app.locals.notifier;
+    const s = app.listen(0, () => resolve(s));
   });
   const root = `http://127.0.0.1:${server.address().port}`;
   let n = 0;
@@ -65,7 +82,15 @@ async function setup() {
   };
   const signUp = (vol, listingId) => api('POST', `/listings/${listingId}/signups`, { token: vol.token, body: {} });
 
-  return { db, root, call, api, makeUser, createListing, signUp, close: () => server.close() };
+  const setFcmToken = (user, fcmToken) => api('POST', '/users/me/fcm-token', { token: user.token, body: { fcmToken } });
+  const failNextSend = (code) => {
+    failNext = code;
+  };
+
+  return {
+    db, root, call, api, makeUser, createListing, signUp, close: () => server.close(),
+    sent, setFcmToken, failNextSend, settled: () => notifier.settled(),
+  };
 }
 
 function scenario(name, fn) {
@@ -422,4 +447,128 @@ scenario('deleting a listing cancels confirmed sign-ups but keeps earned hours',
   assert.equal(bSignups[0].status, 'cancelled');
   assert.equal(bSignups[0].listing, null); // listing is gone; the app must cope with null
   assert.equal((await api('GET', '/users/me/hours-log', { token: a.token })).body.totalHours, 5);
+});
+
+// ------------------------------------------------------------------ push notifications (FCM)
+scenario('registering an FCM token validates it, moves it between accounts, and logout clears it', async ({ api, db, makeUser, setFcmToken }) => {
+  const a = await makeUser('volunteer');
+  const b = await makeUser('organization');
+  const tokenOf = async (u) => (await db.collection('users').doc(u.uid).get()).data().fcmToken;
+
+  errorShape(await api('POST', '/users/me/fcm-token', { token: a.token, body: {} }), 400, 'validation_error', 'fcmToken');
+  errorShape(await api('POST', '/users/me/fcm-token', { body: { fcmToken: 't' } }), 401, 'unauthorized');
+
+  assert.equal((await setFcmToken(a, 'phone-1')).status, 204);
+  assert.equal(await tokenOf(a), 'phone-1');
+
+  // The same phone is now used by a different account: the token follows the latest login.
+  assert.equal((await setFcmToken(b, 'phone-1')).status, 204);
+  assert.equal(await tokenOf(a), null);
+  assert.equal(await tokenOf(b), 'phone-1');
+
+  assert.equal((await api('POST', '/auth/logout', { token: b.token })).status, 204);
+  assert.equal(await tokenOf(b), null);
+});
+
+scenario('a new sign-up notifies the organization in its language, unless notifications are off', async ({ api, makeUser, createListing, signUp, setFcmToken, sent, settled }) => {
+  const org = await makeUser('organization', { name: 'Kids Home' });
+  const julie = await makeUser('volunteer', { name: 'Julie' });
+  const sam = await makeUser('volunteer', { name: 'Sam' });
+  const kim = await makeUser('volunteer', { name: 'Kim' });
+  const l = await createListing(org, { spacesTotal: 5 });
+  await setFcmToken(org, 'org-phone');
+
+  const first = await signUp(julie, l.id);
+  await settled();
+  assert.equal(sent.length, 1);
+  assert.equal(sent[0].token, 'org-phone');
+  assert.equal(sent[0].notification.title, 'New sign-up');
+  assert.match(sent[0].notification.body, /Julie signed up for "Read to Kids"/);
+  assert.deepEqual(sent[0].data, {
+    type: 'new_signup',
+    listingId: l.id,
+    signupId: first.body.id,
+    listingTitle: 'Read to Kids',
+    minHours: '5',
+  });
+  assert.equal(sent[0].android.notification.channelId, 'aegis_default');
+
+  // The text follows the organization's language setting.
+  await api('PUT', '/users/me/settings', { token: org.token, body: { preferredLanguage: 'af' } });
+  await signUp(sam, l.id);
+  await settled();
+  assert.equal(sent.length, 2);
+  assert.equal(sent[1].notification.title, 'Nuwe inskrywing');
+
+  // Notifications switched off in Settings: nothing is sent.
+  await api('PUT', '/users/me/settings', { token: org.token, body: { notificationsEnabled: false } });
+  await signUp(kim, l.id);
+  await settled();
+  assert.equal(sent.length, 2);
+});
+
+scenario('completing a sign-up notifies the volunteer once; editing the hours does not ping again', async ({ api, makeUser, createListing, signUp, setFcmToken, sent, settled }) => {
+  const org = await makeUser('organization');
+  const julie = await makeUser('volunteer', { name: 'Julie' });
+  const l = await createListing(org);
+  await setFcmToken(julie, 'julie-phone');
+  const s = (await signUp(julie, l.id)).body;
+  await settled();
+  assert.equal(sent.length, 0); // her own sign-up goes to the organization, which has no token
+
+  await api('PATCH', `/signups/${s.id}/complete`, { token: org.token, body: { hoursCompleted: 3 } });
+  await settled();
+  assert.equal(sent.length, 1);
+  assert.equal(sent[0].token, 'julie-phone');
+  assert.equal(sent[0].notification.title, 'Hours logged');
+  assert.match(sent[0].notification.body, /3 hours were added for "Read to Kids"/);
+  assert.deepEqual(sent[0].data, { type: 'signup_completed', listingId: l.id, signupId: s.id, hours: '3' });
+
+  await api('PATCH', `/signups/${s.id}/complete`, { token: org.token, body: { hoursCompleted: 4 } });
+  await settled();
+  assert.equal(sent.length, 1);
+});
+
+scenario('a new listing notifies only matching volunteers who have notifications on', async ({ api, makeUser, createListing, setFcmToken, sent, settled }) => {
+  const org = await makeUser('organization', { name: 'Kids Home' });
+  const byCause = await makeUser('volunteer', { interests: ['Children & Youth'] });
+  const bySkill = await makeUser('volunteer', { skills: ['Reading to Children'] });
+  const unrelated = await makeUser('volunteer', { interests: ['Soup Kitchens'], skills: ['Cooking or Food Prep'] });
+  const muted = await makeUser('volunteer', { interests: ['Children & Youth'] });
+  await makeUser('volunteer', { interests: ['Children & Youth'] }); // matches, but never registered a token
+  await setFcmToken(byCause, 'cause-phone');
+  await setFcmToken(bySkill, 'skill-phone');
+  await setFcmToken(unrelated, 'other-phone');
+  await setFcmToken(muted, 'muted-phone');
+  await api('PUT', '/users/me/settings', { token: muted.token, body: { notificationsEnabled: false } });
+
+  const l = await createListing(org); // Children & Youth + Reading to Children
+  await settled();
+
+  assert.deepEqual(sent.map((m) => m.token).sort(), ['cause-phone', 'skill-phone']);
+  assert.equal(sent[0].notification.title, 'A new opportunity matches you');
+  assert.match(sent[0].notification.body, /Read to Kids.*Kids Home/);
+  assert.deepEqual(sent[0].data, { type: 'new_listing', listingId: l.id });
+});
+
+scenario('a dead FCM token is removed, and a failed push never breaks the API call', async ({ db, makeUser, createListing, signUp, setFcmToken, failNextSend, sent, settled }) => {
+  const org = await makeUser('organization');
+  const julie = await makeUser('volunteer');
+  const sam = await makeUser('volunteer');
+  const l = await createListing(org, { spacesTotal: 5 });
+  const tokenOf = async () => (await db.collection('users').doc(org.uid).get()).data().fcmToken;
+
+  await setFcmToken(org, 'dead-phone');
+  failNextSend('messaging/registration-token-not-registered');
+  assert.equal((await signUp(julie, l.id)).status, 201);
+  await settled();
+  assert.equal(sent.length, 0);
+  assert.equal(await tokenOf(), null); // FCM said it's dead, so we stop using it
+
+  // Any other failure: the sign-up still works and the token is kept for next time.
+  await setFcmToken(org, 'good-phone');
+  failNextSend('messaging/internal-error');
+  assert.equal((await signUp(sam, l.id)).status, 201);
+  await settled();
+  assert.equal(await tokenOf(), 'good-phone');
 });

@@ -1,11 +1,14 @@
 <resources>
     <string name="app_name">Aegis</string>
+
     <string name="default_web_client_id" translatable="false">973559198654-etdnsnec60pgcaslb4s195p4np631atk.apps.googleusercontent.com</string>
+
     <string name="i_d_like_to_help">I\'d like to help</string>
     <string name="listing_image_description">Listing photo</string>
     <string name="find_a_way_to_help">Find a way to help</string>
     <string name="no_listings_right_now">No opportunities to show right now. Check back soon.</string>
     <string name="retry">Retry</string>
+
     <string name="welcome_back">Welcome back, %1$s</string>
     <string name="new_listings_count">There are %1$d listings for you</string>
     <string name="your_hours">Your Hours</string>
@@ -27,9 +30,11 @@
     <string name="settings">Settings</string>
     <string name="log_out">Log Out</string>
     <string name="dismiss">Dismiss</string>
+
     <string name="your_commitments">Your Commitments</string>
     <string name="commitments_subtitle">Manage your commitments and reminders to make sure you don\'t miss out on the chance to help</string>
     <string name="no_commitments_yet">You haven\'t signed up for anything yet.</string>
+
     <string name="signups_title">Sign-ups</string>
     <string name="signups_back">Back</string>
     <string name="signups_empty">No one has signed up for this listing yet.</string>
@@ -45,4 +50,12 @@
     <string name="signups_dialog_save">Save</string>
     <string name="signups_dialog_cancel">Cancel</string>
     <string name="signups_hours_invalid">Enter a number from 0 to 1000</string>
+
+    <string name="notification_channel_id" translatable="false">aegis_default</string>
+    <string name="notification_channel_name">Aegis updates</string>
+    <string name="notification_channel_description">Sign-ups, logged hours and new opportunities that match you</string>
+    <string name="notif_permission_title">Stay in the loop?</string>
+    <string name="notif_permission_message">Aegis can notify you when someone signs up for your listing, when your volunteer hours are logged, and when a new opportunity matches your interests.</string>
+    <string name="notif_permission_allow">Allow</string>
+    <string name="notif_permission_not_now">Not now</string>
 </resources>
