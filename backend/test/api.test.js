@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { randomUUID } from 'node:crypto';
 import jwt from 'jsonwebtoken';
 import { createApp } from '../src/app.js';
 import { FakeFirestore } from '../testutils/fakeFirestore.js';
@@ -571,4 +572,112 @@ scenario('a dead FCM token is removed, and a failed push never breaks the API ca
   assert.equal((await signUp(sam, l.id)).status, 201);
   await settled();
   assert.equal(await tokenOf(), 'good-phone');
+});
+
+// ------------------------------------------------------------------ offline sync
+const at = (offsetMs = 0) => new Date(Date.now() + offsetMs).toISOString();
+const MIN = 60_000;
+
+scenario('POST /sync/signups: volunteers only, and the body is validated field by field', async ({ api, makeUser }) => {
+  const org = await makeUser('organization');
+  const vol = await makeUser('volunteer');
+  const ok = { id: randomUUID(), action: 'signup', listingId: 'x', updatedAt: at() };
+
+  errorShape(await api('POST', '/sync/signups', { body: { changes: [ok] } }), 401, 'unauthorized');
+  errorShape(await api('POST', '/sync/signups', { token: org.token, body: { changes: [ok] } }), 403, 'forbidden');
+
+  const bad = async (body, field) => errorShape(await api('POST', '/sync/signups', { token: vol.token, body }), 400, 'validation_error', field);
+  await bad({}, 'changes');
+  await bad({ changes: [] }, 'changes');
+  await bad({ changes: Array.from({ length: 101 }, () => ({ ...ok, id: randomUUID() })) }, 'changes');
+  await bad({ changes: ['nope'] }, 'changes[0]');
+  await bad({ changes: [{ ...ok, id: 'short' }] }, 'changes[0].id');
+  await bad({ changes: [ok, { ...ok, action: 'delete' }] }, 'changes[1].action');
+  await bad({ changes: [{ ...ok, updatedAt: 'yesterday' }] }, 'changes[0].updatedAt');
+  await bad({ changes: [{ ...ok, listingId: undefined }] }, 'changes[0].listingId');
+});
+
+scenario('sync: a queued sign-up is created once, and retrying the same batch changes nothing', async ({ api, makeUser, createListing, setFcmToken, sent, settled }) => {
+  const org = await makeUser('organization');
+  const vol = await makeUser('volunteer', { name: 'Julie' });
+  const l = await createListing(org, { spacesTotal: 5 });
+  await setFcmToken(org, 'org-phone');
+  const id = randomUUID();
+  const batch = { changes: [{ id, action: 'signup', listingId: l.id, updatedAt: at(-5 * MIN) }] };
+
+  const first = await api('POST', '/sync/signups', { token: vol.token, body: batch });
+  assert.equal(first.status, 200, JSON.stringify(first.body));
+  assert.equal(first.body.results[0].status, 'applied');
+  assert.equal(first.body.results[0].signup.id, id); // stored under the app's own id
+  assert.equal(first.body.results[0].signup.status, 'confirmed');
+  assert.ok(first.body.serverTime);
+  await settled();
+  assert.equal(sent.length, 1); // the organization is told, once
+
+  // The phone never saw the reply and sends the same batch again.
+  const again = await api('POST', '/sync/signups', { token: vol.token, body: batch });
+  assert.equal(again.body.results[0].status, 'duplicate');
+  await settled();
+  assert.equal(sent.length, 1);
+
+  const mine = await api('GET', '/users/me/signups', { token: vol.token });
+  assert.equal(mine.body.length, 1);
+  assert.equal(mine.body[0].id, id);
+  assert.equal((await api('GET', `/listings/${l.id}`, { token: vol.token })).body.signupCount, 1);
+
+  // Someone else can't reuse that id for another sign-up.
+  const other = await makeUser('volunteer');
+  const clash = await api('POST', '/sync/signups', { token: other.token, body: batch });
+  assert.equal(clash.body.results[0].status, 'rejected');
+  assert.equal(clash.body.results[0].code, 'id_in_use');
+});
+
+scenario('sync: changes apply oldest-first, one rejection never fails the batch, last write wins', async ({ api, makeUser, createListing, signUp }) => {
+  const org = await makeUser('organization');
+  const vol = await makeUser('volunteer');
+  const full = await createListing(org, { spacesTotal: 1 });
+  const roomy = await createListing(org, { spacesTotal: 5 });
+  await signUp(await makeUser('volunteer'), full.id); // takes the only space
+
+  // Sent out of order on purpose: sign-up (10 min ago), cancel (5 min ago), plus two doomed changes.
+  const id = randomUUID();
+  const r = await api('POST', '/sync/signups', {
+    token: vol.token,
+    body: {
+      changes: [
+        { id, action: 'cancel', updatedAt: at(-5 * MIN) },
+        { id: randomUUID(), action: 'signup', listingId: full.id, updatedAt: at(-8 * MIN) },
+        { id: randomUUID(), action: 'signup', listingId: 'gone', updatedAt: at(-9 * MIN) },
+        { id, action: 'signup', listingId: roomy.id, updatedAt: at(-10 * MIN) },
+      ],
+    },
+  });
+  assert.equal(r.status, 200, JSON.stringify(r.body));
+  const out = r.body.results.map((x) => `${x.action}:${x.status}${x.code ? ':' + x.code : ''}`);
+  assert.deepEqual(out, ['signup:applied', 'signup:rejected:not_found', 'signup:rejected:listing_full', 'cancel:applied']);
+  const mine = await api('GET', '/users/me/signups', { token: vol.token });
+  assert.equal(mine.body.length, 1);
+  assert.equal(mine.body[0].status, 'cancelled');
+  assert.equal((await api('GET', `/listings/${roomy.id}`, { token: vol.token })).body.signupCount, 0); // space freed
+
+  // Cancelling again is a no-op, not an error.
+  const dup = await api('POST', '/sync/signups', { token: vol.token, body: { changes: [{ id, action: 'cancel', updatedAt: at() }] } });
+  assert.equal(dup.body.results[0].status, 'duplicate');
+
+  // Last write wins: the server's sign-up was touched just now, the offline cancel is from an hour ago.
+  const online = (await signUp(vol, full.id)).body; // 409 (full) - use the roomy one instead
+  assert.equal(online.error.code, 'listing_full');
+  const live = (await signUp(vol, roomy.id)).body;
+  const stale = await api('POST', '/sync/signups', { token: vol.token, body: { changes: [{ id: live.id, action: 'cancel', updatedAt: at(-60 * MIN) }] } });
+  assert.equal(stale.body.results[0].status, 'stale');
+  assert.equal(stale.body.results[0].signup.status, 'confirmed'); // server's version stands
+
+  // Completed sign-ups can't be cancelled by an old offline change; someone else's can't either.
+  const done = await api('PATCH', `/signups/${live.id}/complete`, { token: org.token, body: {} });
+  assert.equal(done.status, 200);
+  const late = await api('POST', '/sync/signups', { token: vol.token, body: { changes: [{ id: live.id, action: 'cancel', updatedAt: at() }] } });
+  assert.equal(late.body.results[0].code, 'already_completed');
+  const thief = await makeUser('volunteer');
+  const steal = await api('POST', '/sync/signups', { token: thief.token, body: { changes: [{ id: live.id, action: 'cancel', updatedAt: at() }] } });
+  assert.equal(steal.body.results[0].code, 'forbidden');
 });

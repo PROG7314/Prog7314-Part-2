@@ -14,6 +14,10 @@ export const ACTIVE_SIGNUP_STATUSES = [SIGNUP_STATUS.CONFIRMED, SIGNUP_STATUS.CO
 
 export const MAX_IMAGES = 3;
 
+// Offline sync (POST /sync/signups): what the app may queue while offline, and how much per request.
+export const SYNC_ACTIONS = ['signup', 'cancel'];
+export const MAX_SYNC_CHANGES = 100;
+
 // ---------------------------------------------------------------------------------------------
 // These lists must match, character for character, the causes and skills shown in the app's
 // chips. They're copied from InterestMatchingViewModel.availableCauses / availableSkills (the

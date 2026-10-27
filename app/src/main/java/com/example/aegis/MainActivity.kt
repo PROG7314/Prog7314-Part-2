@@ -17,6 +17,7 @@ import androidx.navigation.navOptions
 import com.example.aegis.data.local.TokenStore
 import com.example.aegis.notifications.NotificationRouter
 import com.example.aegis.notifications.NotificationTokenSync
+import com.example.aegis.ui.offline.OfflineBanner
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
@@ -106,6 +107,8 @@ class MainActivity : AppCompatActivity() {
                 bottomNav.post { onHomeReached() }
             }
         }
+
+        OfflineBanner.bind(this, findViewById(R.id.offlineBanner))
     }
 
     /** The app was already open and the user tapped a notification (launchMode="singleTop"). */

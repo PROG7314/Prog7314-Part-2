@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- Android 13+: asked at runtime, with an explanation, the first time the user reaches Home. -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 

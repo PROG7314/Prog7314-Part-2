@@ -67,6 +67,7 @@ export function signupResponse(id, s, extra = {}) {
     hoursCompleted: s.hoursCompleted ?? null,
     signedUpAt: iso(s.signedUpAt),
     completedAt: iso(s.completedAt),
+    updatedAt: iso(s.updatedAt), // null on sign-ups made before this field existed
     ...extra,
   };
 }

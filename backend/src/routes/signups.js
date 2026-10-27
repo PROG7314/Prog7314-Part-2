@@ -2,11 +2,12 @@ import { Router } from 'express';
 import { Timestamp } from 'firebase-admin/firestore';
 import { ah } from '../asyncHandler.js';
 import { requireRole } from '../middleware/auth.js';
-import { conflict, forbidden, notFound } from '../errors.js';
-import { ACTIVE_SIGNUP_STATUSES, SIGNUP_STATUS } from '../constants.js';
-import { bodyOf, parseHours } from '../validators.js';
-import { hoursEntryResponse, iso, listingResponse, signupResponse } from '../serialize.js';
-import { isEnded, loadUserNames } from '../lookups.js';
+import { AppError, conflict, forbidden, notFound } from '../errors.js';
+import { SIGNUP_STATUS } from '../constants.js';
+import { bodyOf, parseHours, parseSyncChanges } from '../validators.js';
+import { hoursEntryResponse, listingResponse, signupResponse } from '../serialize.js';
+import { loadUserNames } from '../lookups.js';
+import { cancelSignup, createSignup } from '../signupService.js';
 
 const millis = (ts) => ts?.toMillis?.() ?? 0;
 
@@ -22,40 +23,57 @@ export function signupsRouter({ db, notifier }) {
     '/listings/:id/signups',
     volunteerOnly,
     ah(async (req, res) => {
-      const listingRef = db.collection('listings').doc(req.params.id);
-      let signedUpTo; // the listing, kept for the notification below
-      const created = await db.runTransaction(async (t) => {
-        const listingSnap = await t.get(listingRef);
-        if (!listingSnap.exists) throw notFound('Listing not found.');
-        const listing = listingSnap.data();
-        signedUpTo = { ...listing, id: listingSnap.id };
-        if (isEnded(listing)) throw conflict('listing_ended', 'That event has already taken place.');
-
-        const existing = await t.get(db.collection('signups').where('listingId', '==', listingSnap.id));
-        const active = existing.docs.map((d) => d.data()).filter((s) => ACTIVE_SIGNUP_STATUSES.includes(s.status));
-        if (active.some((s) => s.volunteerId === req.user.id)) {
-          throw conflict('already_signed_up', "You're already signed up for this listing.");
-        }
-        if (listing.type === 'Scheduled' && active.length >= listing.spacesTotal) {
-          throw conflict('listing_full', 'Sorry, this listing is full.');
-        }
-
-        const ref = db.collection('signups').doc();
-        const data = {
-          id: ref.id,
-          listingId: listingSnap.id,
-          volunteerId: req.user.id,
-          status: SIGNUP_STATUS.CONFIRMED,
-          hoursCompleted: null,
-          signedUpAt: Timestamp.now(),
-          completedAt: null,
-        };
-        t.create(ref, data);
-        return data;
-      });
-      res.status(201).json(signupResponse(created.id, created));
+      const { signup, listing } = await createSignup(db, { listingId: req.params.id, volunteerId: req.user.id });
+      res.status(201).json(signupResponse(signup.id, signup));
       // Real event -> push to the organization that owns the listing (runs in the background).
-      notifier.newSignup({ listing: signedUpTo, signupId: created.id, volunteerName: req.user.name });
+      notifier.newSignup({ listing, signupId: signup.id, volunteerName: req.user.name });
+    })
+  );
+
+  // Offline sync. The app queues sign-ups and cancels made without a connection (each carries the
+  // id of its Room row and the moment the user made it) and sends them here when it is back online.
+  //  - Idempotent: a sign-up is stored under the app's own id, so retrying a batch that half-worked
+  //    never creates a second sign-up (those come back as "duplicate").
+  //  - Applied oldest-first, so sign-up -> cancel -> sign-up again ends in the right state.
+  //  - Last write wins: a change older than the server's last update of that sign-up is "stale".
+  //  - One change failing (listing full, event over...) never fails the batch: it is "rejected" with
+  //    the same code the normal route would give, and the rest still apply.
+  r.post(
+    '/sync/signups',
+    volunteerOnly,
+    ah(async (req, res) => {
+      const changes = parseSyncChanges(bodyOf(req)).sort((a, b) => a.updatedAt - b.updatedAt); // sort is stable
+      const now = Date.now();
+      const results = [];
+
+      for (const change of changes) {
+        const base = { id: change.id, action: change.action };
+        // A phone clock that runs fast can't win from the future.
+        const changedAtMs = Math.min(change.updatedAt.getTime(), now);
+        try {
+          if (change.action === 'signup') {
+            const { signup, listing, created } = await createSignup(db, {
+              listingId: change.listingId,
+              volunteerId: req.user.id,
+              id: change.id,
+              atMs: changedAtMs,
+            });
+            results.push({ ...base, status: created ? 'applied' : 'duplicate', signup: signupResponse(signup.id, signup) });
+            if (created) notifier.newSignup({ listing, signupId: signup.id, volunteerName: req.user.name });
+          } else {
+            const { signup, outcome } = await cancelSignup(db, {
+              signupId: change.id,
+              volunteerId: req.user.id,
+              changedAtMs,
+            });
+            results.push({ ...base, status: outcome, signup: signupResponse(signup.id, signup) });
+          }
+        } catch (e) {
+          if (!(e instanceof AppError)) throw e;
+          results.push({ ...base, status: 'rejected', code: e.code, message: e.message });
+        }
+      }
+      res.json({ results, serverTime: new Date().toISOString() });
     })
   );
 
@@ -115,18 +133,8 @@ export function signupsRouter({ db, notifier }) {
     '/signups/:id',
     volunteerOnly,
     ah(async (req, res) => {
-      const ref = db.collection('signups').doc(req.params.id);
-      const snap = await ref.get();
-      if (!snap.exists) throw notFound('Sign-up not found.');
-      const signup = snap.data();
-      if (signup.volunteerId !== req.user.id) throw forbidden('You can only cancel your own sign-ups.');
-      if (signup.status === SIGNUP_STATUS.COMPLETED) {
-        throw conflict('already_completed', "This one has already been completed, so it can't be cancelled.");
-      }
-      if (signup.status === SIGNUP_STATUS.CANCELLED) return res.json(signupResponse(snap.id, signup)); // idempotent
-
-      await ref.update({ status: SIGNUP_STATUS.CANCELLED });
-      res.json(signupResponse(snap.id, { ...signup, status: SIGNUP_STATUS.CANCELLED }));
+      const { signup } = await cancelSignup(db, { signupId: req.params.id, volunteerId: req.user.id });
+      res.json(signupResponse(signup.id, signup));
     })
   );
 
@@ -157,10 +165,11 @@ export function signupsRouter({ db, notifier }) {
 
         const hours = requested ?? signup.hoursCompleted ?? listing.minHours;
         const completedAt = signup.completedAt ?? Timestamp.now();
-        const updated = { ...signup, status: SIGNUP_STATUS.COMPLETED, hoursCompleted: hours, completedAt };
+        const updatedAt = Timestamp.now();
+        const updated = { ...signup, status: SIGNUP_STATUS.COMPLETED, hoursCompleted: hours, completedAt, updatedAt };
 
         const firstCompletion = signup.status !== SIGNUP_STATUS.COMPLETED; // editing hours later shouldn't ping again
-        t.update(signupRef, { status: SIGNUP_STATUS.COMPLETED, hoursCompleted: hours, completedAt });
+        t.update(signupRef, { status: SIGNUP_STATUS.COMPLETED, hoursCompleted: hours, completedAt, updatedAt });
         t.set(db.collection('hoursLog').doc(signupSnap.id), {
           id: signupSnap.id,
           volunteerId: signup.volunteerId,

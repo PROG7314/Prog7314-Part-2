@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.ksp)
     id("com.google.gms.google-services")
 }
 
@@ -52,6 +53,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.room3.runtime)
 
     implementation(libs.material)
     implementation(libs.androidx.datastore.preferences)
@@ -79,4 +81,8 @@ dependencies {
     implementation("androidx.security:security-crypto:1.1.0")
     implementation("io.coil-kt:coil:2.7.0")
     implementation("androidx.cardview:cardview:1.0.0")
+
+    implementation(libs.androidx.room3.runtime)
+    ksp(libs.androidx.room3.compiler)
+    implementation(libs.androidx.work.runtime)
 }

@@ -58,4 +58,38 @@
     <string name="notif_permission_message">Aegis can notify you when someone signs up for your listing, when your volunteer hours are logged, and when a new opportunity matches your interests.</string>
     <string name="notif_permission_allow">Allow</string>
     <string name="notif_permission_not_now">Not now</string>
+
+    <string name="offline_banner_offline">You\'re offline. Showing saved data.</string>
+    <string name="offline_banner_syncing">Back online. Syncing: %1$s…</string>
+    <plurals name="offline_pending_changes">
+        <item quantity="one">%d change waiting</item>
+        <item quantity="other">%d changes waiting</item>
+    </plurals>
+
+    <string name="offline_nothing_saved">You\'re offline and nothing is saved on this phone yet. Connect once to load it.</string>
+    <string name="offline_signed_up_queued">You\'re offline. We\'ll sign you up as soon as you reconnect.</string>
+
+    <string name="settings_last_synced">Last synced: %1$s</string>
+    <string name="settings_never_synced">Not synced yet</string>
+
+    <!-- Shown when the server refuses a change that was made offline. %1$s is the listing title in quotes. -->
+    <string name="sync_that_listing">that listing</string>
+    <string name="sync_rejected_full">Couldn\'t sign you up for %1$s: it filled up while you were offline.</string>
+    <string name="sync_rejected_ended">Couldn\'t sign you up for %1$s: the event has already taken place.</string>
+    <string name="sync_rejected_removed">Couldn\'t sign you up for %1$s: it was removed.</string>
+    <string name="sync_rejected_completed">Your sign-up for %1$s was already completed, so it can\'t be cancelled.</string>
+    <string name="sync_rejected_gone">That sign-up no longer exists.</string>
+    <string name="sync_rejected_generic">A change you made offline couldn\'t be saved.</string>
+    <string name="sync_already_signed_up">You\'re already signed up for this listing.</string>
+    <string name="sync_signup_not_on_phone">We couldn\'t find that sign-up on this phone.</string>
+
+    <!-- Logout warning when changes made offline haven't been sent yet. -->
+    <string name="logout_unsynced_title">Unsynced changes</string>
+    <plurals name="logout_unsynced_message">
+        <item quantity="one">%d change you made offline hasn\'t been sent to the server yet. If you log out now, it will be lost.</item>
+        <item quantity="other">%d changes you made offline haven\'t been sent to the server yet. If you log out now, they will be lost.</item>
+    </plurals>
+    <string name="logout_anyway">Log out anyway</string>
+    <string name="logout_stay">Stay logged in</string>
+
 </resources>

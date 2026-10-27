@@ -35,6 +35,9 @@ class CommitmentAdapter(
             timeBadge.text = formatTime(listing?.dateTime)
             timeBadge.visibility = if (listing?.dateTime != null) View.VISIBLE else View.GONE
 
+            // Made offline and not yet sent to the server.
+            pendingLabel.visibility = if (signup.pendingSync) View.VISIBLE else View.GONE
+
             dismissButton.setOnClickListener { onDismissClick(signup) }
         }
     }

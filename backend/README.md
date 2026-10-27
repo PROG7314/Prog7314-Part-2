@@ -121,6 +121,30 @@ so a failed push never fails the API call.
 - Android channel id is `aegis_default`: the app must create a channel with that id on start-up.
 - Not built: the "day before a Scheduled commitment" reminder (needs a scheduler, e.g. Render Cron Job).
 
+
+## 6c. Offline sync (`POST /sync/signups`)
+
+The app queues sign-ups and cancels made without a connection in Room, then sends them here when it is back online.
+
+Request: `{ "changes": [ { "id": "<uuid>", "action": "signup" | "cancel", "listingId": "...", "updatedAt": "<ISO time the user tapped>" } ] }`
+(max 100; `listingId` only for `signup`). `id` is the app's own UUID for that sign-up, used for both actions.
+
+Response: `{ "results": [ { "id", "action", "status", "signup"?, "code"?, "message"? } ], "serverTime" }`, one result per change.
+
+| status | meaning | what the app does |
+|---|---|---|
+| `applied` | change made | mark the Room row synced, store `signup` |
+| `duplicate` | already done (a retried batch, or already cancelled) | mark synced |
+| `stale` | server's copy was changed after the user's change; server wins | replace the Room row with `signup`, mark synced |
+| `rejected` | refused, with a `code` (`listing_full`, `listing_ended`, `not_found`, `already_signed_up`, `already_completed`, `forbidden`, `id_in_use`) | drop the row, tell the user why |
+
+Conflict rules:
+- **Idempotent.** The sign-up is stored under the app's UUID, so resending a batch never makes a second one.
+- **Oldest first.** Changes are sorted by `updatedAt`, so sign-up, cancel, sign-up again ends in the right state.
+- **Last write wins.** A cancel older than the server's last update of that sign-up is `stale`. Times are clamped to server time, so a fast phone clock can't win from the future.
+- **One bad change never fails the batch.** It comes back `rejected`; the rest still apply.
+- Sign-ups made offline are stamped with the time the user tapped, not the time of sync.
+
 ## 7. Firestore
 
 Collections: `users`, `listings`, `signups`, `hoursLog` (fields as in the Part 1 data model). No composite indexes are needed:

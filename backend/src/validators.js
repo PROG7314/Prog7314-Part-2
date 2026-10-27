@@ -1,5 +1,5 @@
 import { badRequest } from './errors.js';
-import { MAX_IMAGES, LISTING_TYPES, LANGUAGES, CAUSE_CATEGORIES, SKILLS } from './constants.js';
+import { MAX_IMAGES, LISTING_TYPES, LANGUAGES, CAUSE_CATEGORIES, SKILLS, SYNC_ACTIONS, MAX_SYNC_CHANGES } from './constants.js';
 
 const isObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 
@@ -180,6 +180,33 @@ export function parseSettings(body) {
     throw badRequest('Send preferredLanguage and/or notificationsEnabled.', 'preferredLanguage');
   }
   return patch;
+}
+
+// ---------------------------------------------------------------- offline sync
+const SYNC_ID = /^[A-Za-z0-9_-]{8,64}$/;
+
+/**
+ * Body of POST /sync/signups: { changes: [{ id, action: 'signup'|'cancel', listingId?, updatedAt }] }.
+ * `id` is the app's own UUID for the sign-up (its Room row), for both actions. Returns the changes
+ * with updatedAt as a Date. Errors name the exact field, e.g. "changes[2].listingId".
+ */
+export function parseSyncChanges(body) {
+  if (!Array.isArray(body.changes)) throw badRequest('changes must be a list.', 'changes');
+  if (body.changes.length === 0) throw badRequest('changes needs at least one change.', 'changes');
+  if (body.changes.length > MAX_SYNC_CHANGES) {
+    throw badRequest(`Send at most ${MAX_SYNC_CHANGES} changes per request.`, 'changes');
+  }
+  return body.changes.map((c, i) => {
+    const field = (name) => `changes[${i}].${name}`;
+    if (!isObject(c)) throw badRequest(`changes[${i}] must be an object.`, `changes[${i}]`);
+    if (typeof c.id !== 'string' || !SYNC_ID.test(c.id)) {
+      throw badRequest(`${field('id')} must be 8-64 letters, digits, '-' or '_' (use the sign-up's UUID).`, field('id'));
+    }
+    const action = requireEnum(c.action, field('action'), SYNC_ACTIONS);
+    const change = { id: c.id, action, updatedAt: requireIsoDate(c.updatedAt, field('updatedAt')) };
+    if (action === 'signup') change.listingId = requireString(c.listingId, field('listingId'), { max: 200 });
+    return change;
+  });
 }
 
 /** Hours are optional on "mark complete"; undefined means "use the default". */

@@ -11,6 +11,7 @@ class AegisApp : Application() {
     override fun onCreate() {
         super.onCreate()
         ServiceLocator.init(
+            context = this,
             baseUrl = BuildConfig.API_BASE_URL,
 
             tokenProvider = object : TokenProvider {
@@ -19,6 +20,8 @@ class AegisApp : Application() {
 
             debug = BuildConfig.DEBUG
         )
+        // Offline mode: watch the network and sync queued changes when it comes back.
+        ServiceLocator.startOffline()
         // Notification channels must exist before the first push arrives.
         AegisMessagingService.createChannel(this)
     }

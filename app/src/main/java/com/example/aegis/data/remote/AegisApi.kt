@@ -22,6 +22,8 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+import com.example.aegis.data.remote.dto.SyncRequest
+import com.example.aegis.data.remote.dto.SyncResponse
 
 /**
  * The Retrofit interface for the Aegis REST API.
@@ -96,4 +98,8 @@ interface AegisApi {
 
     @POST("users/me/fcm-token")
     suspend fun registerFcmToken(@Body body: FcmTokenRequest)
+
+    // ----- Offline sync -----
+    @POST("sync/signups")
+    suspend fun syncSignups(@Body body: SyncRequest): SyncResponse
 }
