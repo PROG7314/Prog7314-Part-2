@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">Aegis</string>
     <string name="default_web_client_id" translatable="false">973559198654-etdnsnec60pgcaslb4s195p4np631atk.apps.googleusercontent.com</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="i_d_like_to_help">I\'d like to help</string>
     <string name="listing_image_description">Listing photo</string>
     <string name="find_a_way_to_help">Find a way to help</string>
@@ -32,4 +30,19 @@
     <string name="your_commitments">Your Commitments</string>
     <string name="commitments_subtitle">Manage your commitments and reminders to make sure you don\'t miss out on the chance to help</string>
     <string name="no_commitments_yet">You haven\'t signed up for anything yet.</string>
+    <string name="signups_title">Sign-ups</string>
+    <string name="signups_back">Back</string>
+    <string name="signups_empty">No one has signed up for this listing yet.</string>
+    <string name="signups_retry">Try again</string>
+    <string name="signups_mark_complete">Mark complete</string>
+    <string name="signups_edit_hours">Edit hours</string>
+    <string name="signups_status_confirmed">CONFIRMED</string>
+    <string name="signups_status_completed">COMPLETED</string>
+    <string name="signups_unknown_volunteer">Volunteer</string>
+    <string name="signups_hours_format">%1$s hours</string>
+    <string name="signups_dialog_title">Hours for %1$s</string>
+    <string name="signups_dialog_hint">Hours (e.g. 2.5)</string>
+    <string name="signups_dialog_save">Save</string>
+    <string name="signups_dialog_cancel">Cancel</string>
+    <string name="signups_hours_invalid">Enter a number from 0 to 1000</string>
 </resources>

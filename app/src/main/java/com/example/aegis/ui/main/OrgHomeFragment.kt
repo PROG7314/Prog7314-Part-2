@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -17,6 +17,7 @@ import com.example.aegis.databinding.FragmentOrgHomeBinding
 import com.example.aegis.domain.model.Listing
 import com.example.aegis.ui.listing.OrgListingAdapter
 import kotlinx.coroutines.launch
+
 
 class OrgHomeFragment : AegisBaseFragment() {
 
@@ -56,7 +57,14 @@ class OrgHomeFragment : AegisBaseFragment() {
     }
 
     private fun onViewDetails(listing: Listing) {
-        Toast.makeText(requireContext(), "View details: ${listing.title}", Toast.LENGTH_SHORT).show()
+        findNavController().navigate(
+            R.id.action_orgHomeFragment_to_orgSignupsFragment,
+            bundleOf(
+                OrgSignupsFragment.ARG_LISTING_ID to listing.id,
+                OrgSignupsFragment.ARG_LISTING_TITLE to listing.title,
+                OrgSignupsFragment.ARG_MIN_HOURS to listing.minHours
+            )
+        )
     }
 
     private fun render(state: UiState<List<Listing>>) {

@@ -15,12 +15,6 @@
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
 
-        <action
-            android:id="@+id/action_splashFragment_to_roleSelectionFragment"
-            app:destination="@id/roleSelectionFragment"
-            app:popUpTo="@id/splashFragment"
-            app:popUpToInclusive="true" />
-
         <!-- RESERVED: not called from SplashFragment.kt yet — wire this to the real destination once Member 3's MainFragment exists -->
         <action
             android:id="@+id/action_splashFragment_to_mainFragment"
@@ -83,6 +77,11 @@
     </fragment>
 
     <fragment
+        android:id="@+id/orgSignupsFragment"
+        android:name="com.example.aegis.ui.main.OrgSignupsFragment"
+        android:label="Sign-ups" />
+
+    <fragment
         android:id="@+id/mainFragment"
         android:name="com.example.aegis.ui.main.VolunteerHomeFragment"
         android:label="Home" />
@@ -105,6 +104,10 @@
         <action
             android:id="@+id/action_orgHomeFragment_to_createListingFragment"
             app:destination="@id/createListingFragment" />
+
+        <action
+            android:id="@+id/action_orgHomeFragment_to_orgSignupsFragment"
+            app:destination="@id/orgSignupsFragment" />
 
     </fragment>
 
