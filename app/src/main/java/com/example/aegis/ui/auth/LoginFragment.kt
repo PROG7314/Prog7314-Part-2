@@ -50,7 +50,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         val signInButton = view.findViewById<Button>(R.id.signInButton)
 
         signInButton.setOnClickListener {
-            signInLauncher.launch(googleSignInClient.signInIntent)
+            // Forget the last-used Google account first, so the account picker always appears.
+            googleSignInClient.signOut().addOnCompleteListener {
+                if (isAdded) signInLauncher.launch(googleSignInClient.signInIntent)
+            }
         }
 
         authViewModel.authState.observe(viewLifecycleOwner) { state ->
