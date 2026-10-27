@@ -92,4 +92,6 @@
     <string name="logout_anyway">Log out anyway</string>
     <string name="logout_stay">Stay logged in</string>
 
+    <string name="commitment_waiting_sync">Waiting to sync</string>
+
 </resources>

@@ -5,9 +5,9 @@ import com.example.aegis.data.local.db.toSnapshotJson
 import com.example.aegis.data.repository.listingQueryKey
 import com.example.aegis.domain.model.Listing
 import com.example.aegis.domain.model.ListingType
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotEquals
-import org.junit.Assert.assertNull
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertNull
+import org.junit.Assert
 import org.junit.Test
 import java.time.Instant
 
@@ -61,7 +61,7 @@ class OfflineCacheTest {
         val all = listingQueryKey(emptyList(), emptyList(), null, null)
         val scheduled = listingQueryKey(emptyList(), emptyList(), ListingType.SCHEDULED, null)
         val matched = listingQueryKey(listOf("Elderly Care"), emptyList(), null, null)
-        assertNotEquals(all, scheduled)
-        assertNotEquals(all, matched)
+        Assert.assertNotEquals(all, scheduled)
+        Assert.assertNotEquals(all, matched)
     }
 }
