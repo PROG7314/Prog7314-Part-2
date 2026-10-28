@@ -150,6 +150,19 @@ Conflict rules:
 Collections: `users`, `listings`, `signups`, `hoursLog` (fields as in the Part 1 data model). No composite indexes are needed:
 queries only use equality filters, and sorting/filtering is done in code. That is fine at prototype scale.
 
+## Listing images: Cloudinary instead of Firebase Storage
+
+- Part 1 planned Firebase Storage for listing images (max 3 per listing).
+- Firebase Storage now needs the paid Blaze plan (card required). Our group has no paid plan, so we changed it.
+- We now upload to **Cloudinary** (free tier) straight from the app.
+  - Unsigned upload preset, folder `aegis_listings`.
+  - The app shrinks each photo first (max 1600 px, JPEG 85%).
+  - Cloudinary returns an https URL. We send that URL to our API in `images`.
+- Nothing else changed:
+  - API still accepts up to 3 https image URLs per listing.
+  - Firestore stores URLs only, never image data.
+- No Cloudinary API key or secret is in the app or the repo. Only the cloud name and preset name, which are public by design for unsigned uploads.
+
 ## 8. Tests
 
 `npm test` runs 17 scenarios (auth, roles, validation, filtering, sign-up race, cancel, complete, hours, delete, push notifications) against an

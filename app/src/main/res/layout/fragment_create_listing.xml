@@ -133,6 +133,21 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:tint="#6E7745" />
+
+                        <TextView
+                            android:id="@+id/tv_photo_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginBottom="12dp"
+                            android:background="@drawable/bg_circle_translucent"
+                            android:paddingHorizontal="10dp"
+                            android:paddingVertical="4dp"
+                            android:text="Add up to 3 photos"
+                            android:textColor="#6E7745"
+                            android:textSize="12sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Title -->
@@ -247,7 +262,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="6dp"
-                        android:text="Skills Required (comma separated)"
+                        android:text="Skills Required"
                         android:textColor="#212121"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -258,8 +273,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         android:background="@drawable/bg_rounded_input"
-                        android:hint="e.g. Tutoring, First Aid, Manual Labour"
-                        android:inputType="textCapWords"
+                        android:hint="Tap to choose skills"
+                        android:inputType="none"
                         android:paddingHorizontal="14dp"
                         android:paddingVertical="12dp"
                         android:textColor="#212121"
@@ -297,6 +312,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:hint="Select Date"
+                                android:minHeight="46dp"
+                                android:gravity="center_vertical"
                                 android:textColor="#212121"
                                 android:textSize="14sp" />
 
@@ -305,6 +322,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:hint="Select Time"
+                                android:minHeight="46dp"
+                                android:gravity="center_vertical"
                                 android:textColor="#212121"
                                 android:textSize="14sp" />
                         </LinearLayout>
@@ -337,7 +356,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="6dp"
-                        android:text="Minimum Hours"
+                        android:text="Minimum Hours *"
                         android:textColor="#212121"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -349,7 +368,7 @@
                         android:layout_marginBottom="24dp"
                         android:background="@drawable/bg_rounded_input"
                         android:gravity="center_vertical"
-                        android:hint="0.0"
+                        android:hint="e.g. 2"
                         android:inputType="numberDecimal"
                         android:paddingHorizontal="14dp"
                         android:textColor="#212121"

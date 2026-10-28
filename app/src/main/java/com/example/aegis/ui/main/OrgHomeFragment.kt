@@ -15,6 +15,7 @@ import com.example.aegis.R
 import com.example.aegis.core.AegisBaseFragment
 import com.example.aegis.databinding.FragmentOrgHomeBinding
 import com.example.aegis.domain.model.Listing
+import com.example.aegis.ui.listing.CreateListingFragment
 import com.example.aegis.ui.listing.OrgListingAdapter
 import kotlinx.coroutines.launch
 
@@ -48,6 +49,17 @@ class OrgHomeFragment : AegisBaseFragment() {
         binding.createListingButton.setOnClickListener {
             findNavController().navigate(R.id.action_orgHomeFragment_to_createListingFragment)
         }
+
+        // Reload when a listing was just created on the Create Listing screen
+        val savedState = findNavController().currentBackStackEntry?.savedStateHandle
+        savedState
+            ?.getLiveData<Boolean>(CreateListingFragment.LISTING_CHANGED)
+            ?.observe(viewLifecycleOwner) { changed ->
+                if (changed == true) {
+                    viewModel.loadListings()
+                    savedState.remove<Boolean>(CreateListingFragment.LISTING_CHANGED)
+                }
+            }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
