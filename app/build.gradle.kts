@@ -66,9 +66,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-database")
-    implementation("com.google.firebase:firebase-storage")
     implementation("com.google.android.gms:play-services-auth:21.2.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2")
     implementation("com.google.firebase:firebase-messaging")
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
@@ -84,7 +82,6 @@ dependencies {
     implementation("io.coil-kt:coil:2.7.0")
     implementation("androidx.cardview:cardview:1.0.0")
 
-    implementation(libs.androidx.room3.runtime)
     ksp(libs.androidx.room3.compiler)
     implementation(libs.androidx.work.runtime)
 }
