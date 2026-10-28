@@ -90,4 +90,16 @@ class ListingFormValidatorTest {
         assertEquals(FormField.HOURS, invalid(scheduled().copy(minHoursText = "1001")).field)
         assertTrue(invalid(scheduled().copy(minHoursText = "abc")).message.isNotBlank())
     }
+
+    @Test
+    fun editingKeepsAnUnchangedPastDateButStillRejectsANewPastOne() {
+        val past = LocalDate.of(2026, 10, 20)
+        val input = scheduled().copy(date = past, time = LocalTime.of(9, 0))
+        val original = Instant.parse("2026-10-20T09:00:00Z")
+        assertTrue(ListingFormValidator.validate(input, now, zone, original) is FormResult.Valid)
+
+        val moved = input.copy(date = LocalDate.of(2026, 10, 21))
+        val r = ListingFormValidator.validate(moved, now, zone, original) as FormResult.Invalid
+        assertEquals(FormField.DATE_TIME, r.field)
+    }
 }

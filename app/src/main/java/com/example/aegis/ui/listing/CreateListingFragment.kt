@@ -18,6 +18,7 @@ import coil.load
 import com.example.aegis.R
 import com.example.aegis.core.AegisBaseFragment
 import com.example.aegis.databinding.FragmentCreateListingBinding
+import com.example.aegis.domain.model.Listing
 import com.example.aegis.domain.model.ListingType
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
@@ -62,6 +63,13 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
         setupDateTimePickers()
         setupClickListeners()
         restorePickedValues()
+
+        // Opened from a listing's Edit button: load it and switch the screen to edit mode.
+        arguments?.getString(ARG_LISTING_ID)?.let { id ->
+            viewModel.startEdit(id)
+            binding.btnTabCreate.text = "Edit Listing"
+            binding.btnDiscard.text = "Cancel"
+        }
         collectViewModel()
     }
 
@@ -148,8 +156,12 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
         binding.btnSave.setOnClickListener { viewModel.save(readForm()) }
 
         binding.btnDiscard.setOnClickListener {
-            viewModel.reset()
-            clearFields()
+            if (viewModel.editingId != null) {
+                findNavController().popBackStack() // Cancel: back to the listing, nothing saved
+            } else {
+                viewModel.reset()
+                clearFields()
+            }
         }
 
         // Tapping the camera (or the photo) opens the picker; a new choice replaces the old one.
@@ -186,8 +198,12 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
     private fun collectViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.images.collect { renderImages(it) } }
-                launch { viewModel.saving.collect { renderSaving(it) } }
+                launch { viewModel.images.collect { renderImages() } }
+                launch { viewModel.existingImages.collect { renderImages() } }
+                launch { viewModel.saving.collect { renderSaving() } }
+                launch { viewModel.loading.collect { renderSaving() } }
+                launch { viewModel.prefill.collect { it?.let(::applyPrefill) } }
+                launch { viewModel.loadFailed.collect { findNavController().popBackStack() } }
                 launch { viewModel.formErrors.collect { showFormError(it) } }
                 launch { viewModel.messages.collect { toast(it, long = true) } }
                 launch { viewModel.created.collect { onCreated() } }
@@ -195,21 +211,53 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
         }
     }
 
-    private fun renderImages(uris: List<android.net.Uri>) {
-        if (uris.isEmpty()) {
-            binding.ivListingCover.setImageDrawable(null)
-            binding.tvPhotoCount.text = "Add up to ${CreateListingViewModel.MAX_IMAGES} photos"
-        } else {
-            binding.ivListingCover.load(uris.first())
-            binding.tvPhotoCount.text = if (uris.size == 1) "1 photo" else "${uris.size} photos"
+    /** New photos (if any were picked) replace the saved ones; otherwise show the saved ones. */
+    private fun renderImages() {
+        val picked = viewModel.images.value
+        val saved = viewModel.existingImages.value
+        when {
+            picked.isNotEmpty() -> {
+                binding.ivListingCover.load(picked.first())
+                binding.tvPhotoCount.text = if (picked.size == 1) "1 new photo" else "${picked.size} new photos"
+            }
+            saved.isNotEmpty() -> {
+                binding.ivListingCover.load(saved.first())
+                binding.tvPhotoCount.text = "${saved.size} saved - tap to replace"
+            }
+            else -> {
+                binding.ivListingCover.setImageDrawable(null)
+                binding.tvPhotoCount.text = "Add up to ${CreateListingViewModel.MAX_IMAGES} photos"
+            }
         }
     }
 
-    private fun renderSaving(saving: Boolean) {
-        binding.btnSave.isEnabled = !saving
-        binding.btnDiscard.isEnabled = !saving
-        binding.btnSave.text = if (saving) "Saving..." else "Save"
+    private fun renderSaving() {
+        val busy = viewModel.saving.value || viewModel.loading.value
+        binding.btnSave.isEnabled = !busy
+        binding.btnDiscard.isEnabled = !viewModel.saving.value
+        binding.btnSave.text = when {
+            viewModel.saving.value -> "Saving..."
+            viewModel.editingId != null -> "Save changes"
+            else -> "Save"
+        }
     }
+
+    /** Fills the form with the listing being edited. Runs once; after a rotation Android restores the text itself. */
+    private fun applyPrefill(listing: Listing) {
+        if (viewModel.prefillApplied) return
+        viewModel.prefillApplied = true
+        binding.etTitle.setText(listing.title)
+        binding.etDescription.setText(listing.description)
+        binding.etArea.setText(listing.area)
+        binding.etHours.setText(formatHours(listing.minHours))
+        binding.etSpaces.setText(listing.spacesTotal?.toString().orEmpty())
+        binding.spinnerCategory.setSelection(categories.indexOf(listing.causeCategories.firstOrNull()).coerceAtLeast(0))
+        binding.spinnerListingType.setSelection(ListingType.values().indexOf(listing.type).coerceAtLeast(0))
+        restorePickedValues() // date, time and skills were put in the ViewModel by startEdit
+    }
+
+    private fun formatHours(hours: Double) =
+        if (hours % 1.0 == 0.0) hours.toInt().toString() else hours.toString()
 
     private fun showFormError(error: CreateListingViewModel.FormError) {
         val box = when (error.field) {
@@ -229,13 +277,18 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
     }
 
     private fun onCreated() {
-        toast("Listing created!")
-        clearFields()
-        // Tell Org Home to reload, so the new listing is there when we land on it.
+        val editing = viewModel.editingId != null
+        toast(if (editing) "Listing updated" else "Listing created!")
+        // Tell Org Home to reload, so the change is there when we land on it.
         runCatching {
             findNavController().getBackStackEntry(R.id.orgHomeFragment).savedStateHandle[LISTING_CHANGED] = true
         }
-        goToMyListings()
+        if (editing) {
+            findNavController().popBackStack() // back to the listing's detail screen (it reloads itself)
+        } else {
+            clearFields()
+            goToMyListings()
+        }
     }
 
     /** The "My Listings" tab: the organization's home already lists its listings. */
@@ -269,6 +322,9 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
     companion object {
         /** Key OrgHomeFragment watches (see SETUP-LISTING.md). */
         const val LISTING_CHANGED = "listing_changed"
+
+        /** Pass a listing id in the arguments to open this screen in edit mode. */
+        const val ARG_LISTING_ID = "listingId"
         private val TIME_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
     }
 }

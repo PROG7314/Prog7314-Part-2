@@ -12,6 +12,7 @@ import com.example.aegis.data.ServiceLocator
 import com.example.aegis.data.storage.CloudinaryImageUploader
 import com.example.aegis.data.storage.ImageUploader
 import com.example.aegis.domain.model.ApiResult
+import com.example.aegis.domain.model.Listing
 import com.example.aegis.domain.model.ListingDraft
 import com.example.aegis.domain.repository.ListingRepository
 import kotlinx.coroutines.CancellationException
@@ -24,6 +25,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.ZoneId
 
 /**
  * The create-listing screen. Holds what must survive a screen rotation (picked date/time, skills,
@@ -57,6 +59,54 @@ class CreateListingViewModel(
     private val _created = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     val created: SharedFlow<Unit> = _created.asSharedFlow()
 
+    // ---- Edit mode (null editingId = creating a new listing) ----
+    var editingId: String? = null
+        private set
+    private var original: Listing? = null
+
+    /** The Fragment fills the form from this once, then sets this to true so a rotation doesn't redo it. */
+    var prefillApplied = false
+
+    private val _prefill = MutableStateFlow<Listing?>(null)
+    val prefill: StateFlow<Listing?> = _prefill.asStateFlow()
+
+    /** The listing's saved photos. Kept unless the user picks new ones (which replace them). */
+    private val _existingImages = MutableStateFlow<List<String>>(emptyList())
+    val existingImages: StateFlow<List<String>> = _existingImages.asStateFlow()
+
+    private val _loading = MutableStateFlow(false)
+    val loading: StateFlow<Boolean> = _loading.asStateFlow()
+
+    private val _loadFailed = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    val loadFailed: SharedFlow<Unit> = _loadFailed.asSharedFlow()
+
+    /** Loads the listing to edit. Safe to call on every onViewCreated. */
+    fun startEdit(id: String) {
+        if (editingId == id) return
+        editingId = id
+        _loading.value = true
+        viewModelScope.launch {
+            when (val result = listings.getListing(id)) {
+                is ApiResult.Success -> {
+                    val l = result.data
+                    original = l
+                    date = l.dateTime?.atZone(ZoneId.systemDefault())?.toLocalDate()
+                    time = l.dateTime?.atZone(ZoneId.systemDefault())?.toLocalTime()?.withSecond(0)?.withNano(0)
+                    skills.clear()
+                    skills.addAll(l.skillsRequired)
+                    _existingImages.value = l.images
+                    _prefill.value = l
+                }
+                is ApiResult.Failure -> {
+                    editingId = null
+                    _messages.emit(result.error.message)
+                    _loadFailed.emit(Unit)
+                }
+            }
+            _loading.value = false
+        }
+    }
+
     // Photos already uploaded. If creating the listing fails, a retry doesn't upload them again.
     private val uploaded = mutableMapOf<Uri, String>()
 
@@ -65,8 +115,8 @@ class CreateListingViewModel(
     }
 
     fun save(input: ListingFormInput) {
-        if (_saving.value) return // double tap
-        when (val result = ListingFormValidator.validate(input)) {
+        if (_saving.value || _loading.value) return // double tap, or the listing hasn't loaded yet
+        when (val result = ListingFormValidator.validate(input, originalDateTime = original?.dateTime)) {
             is FormResult.Invalid -> _formErrors.tryEmit(FormError(result.field, result.message))
             is FormResult.Valid -> submit(result.draft)
         }
@@ -76,8 +126,13 @@ class CreateListingViewModel(
         _saving.value = true
         viewModelScope.launch {
             try {
-                val urls = uploadImages() ?: return@launch // it already told the user what went wrong
-                when (val result = listings.createListing(draft.copy(images = urls))) {
+                // No new photos picked while editing: keep the saved ones. Otherwise upload the new ones.
+                val urls = if (_images.value.isEmpty()) _existingImages.value
+                else (uploadImages() ?: return@launch) // it already told the user what went wrong
+                val finished = draft.copy(images = urls)
+                val saved = editingId?.let { listings.updateListing(it, finished) }
+                    ?: listings.createListing(finished)
+                when (val result = saved) {
                     is ApiResult.Success -> {
                         reset()
                         _created.emit(Unit)

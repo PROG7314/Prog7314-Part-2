@@ -7,6 +7,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
+import java.time.temporal.ChronoUnit
 
 /*
  * The create-listing form's rules, kept out of the Fragment so they can be unit tested without a
@@ -49,7 +50,9 @@ object ListingFormValidator {
     fun validate(
         input: ListingFormInput,
         now: Instant = Instant.now(),
-        zone: ZoneId = ZoneId.systemDefault()
+        zone: ZoneId = ZoneId.systemDefault(),
+        /** Editing: the listing's saved date/time. Leaving it unchanged is allowed even if it has passed. */
+        originalDateTime: Instant? = null
     ): FormResult {
         val title = input.title.trim()
         val description = input.description.trim()
@@ -72,7 +75,10 @@ object ListingFormValidator {
             }
             dateTime = LocalDateTime.of(input.date, input.time).atZone(zone).toInstant()
             // A listing in the past counts as ended, so volunteers would never see it.
-            if (!dateTime.isAfter(now)) return invalid(FormField.DATE_TIME, "Pick a date and time in the future")
+            val unchanged = originalDateTime != null && dateTime == originalDateTime.truncatedTo(ChronoUnit.MINUTES)
+            if (!dateTime.isAfter(now) && !unchanged) {
+                return invalid(FormField.DATE_TIME, "Pick a date and time in the future")
+            }
 
             val spacesText = input.spacesText.trim()
             if (spacesText.isEmpty()) return invalid(FormField.SPACES, "Enter how many volunteers you need")

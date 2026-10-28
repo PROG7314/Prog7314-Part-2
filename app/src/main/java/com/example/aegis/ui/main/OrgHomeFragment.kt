@@ -17,6 +17,7 @@ import com.example.aegis.databinding.FragmentOrgHomeBinding
 import com.example.aegis.domain.model.Listing
 import com.example.aegis.ui.listing.CreateListingFragment
 import com.example.aegis.ui.listing.OrgListingAdapter
+import com.example.aegis.ui.listing.OrgListingDetailFragment
 import kotlinx.coroutines.launch
 
 
@@ -70,12 +71,8 @@ class OrgHomeFragment : AegisBaseFragment() {
 
     private fun onViewDetails(listing: Listing) {
         findNavController().navigate(
-            R.id.action_orgHomeFragment_to_orgSignupsFragment,
-            bundleOf(
-                OrgSignupsFragment.ARG_LISTING_ID to listing.id,
-                OrgSignupsFragment.ARG_LISTING_TITLE to listing.title,
-                OrgSignupsFragment.ARG_MIN_HOURS to listing.minHours
-            )
+            R.id.orgListingDetailFragment,
+            bundleOf(OrgListingDetailFragment.ARG_LISTING_ID to listing.id)
         )
     }
 
