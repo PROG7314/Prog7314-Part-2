@@ -2,7 +2,7 @@ name: Aegis Android CI Build & Test
 
 on:
   push:
-    branches: [ "main", "develop", "feature/**" ]
+    branches: [ "main", "develop", "feature/**", "feat/**" ]
   pull_request:
     branches: [ "main" ]
 
