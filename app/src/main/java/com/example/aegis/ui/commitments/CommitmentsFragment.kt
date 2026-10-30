@@ -10,7 +10,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.navigation.fragment.findNavController
+import com.example.aegis.R
 import com.example.aegis.core.AegisBaseFragment
+import com.example.aegis.ui.messages.ChatFragment
 import com.example.aegis.databinding.FragmentCommitmentsBinding
 import com.example.aegis.domain.model.Signup
 import com.example.aegis.ui.commitments.CommitmentAdapter
@@ -38,7 +41,10 @@ class CommitmentsFragment : AegisBaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = CommitmentAdapter(onDismissClick = { signup -> viewModel.dismiss(signup.id) })
+        adapter = CommitmentAdapter(
+            onDismissClick = { signup -> viewModel.dismiss(signup.id) },
+            onMessageClick = { signup -> viewModel.openChat(signup) }
+        )
         binding.commitmentsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.commitmentsRecyclerView.adapter = adapter
 
@@ -47,6 +53,11 @@ class CommitmentsFragment : AegisBaseFragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.commitments.collect { state -> render(state) } }
+                launch {
+                    viewModel.chatEvents.collect { conversation ->
+                        findNavController().navigate(R.id.chatFragment, ChatFragment.args(conversation))
+                    }
+                }
                 launch {
                     viewModel.messages.collect { message ->
                         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()

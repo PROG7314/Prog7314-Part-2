@@ -109,6 +109,8 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import com.example.aegis.R
+import com.example.aegis.core.Strings
 
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -164,7 +166,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun mapErrorMessage(e: Exception): String = when {
         e.message?.contains("network", ignoreCase = true) == true ->
-            "No internet connection — please check your network and try again"
-        else -> e.message ?: "Sign-in failed — please try again"
+            Strings.get(R.string.error_no_internet)
+        else -> Strings.get(R.string.sign_in_failed)
     }
 }

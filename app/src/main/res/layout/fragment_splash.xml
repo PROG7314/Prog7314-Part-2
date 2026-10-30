@@ -2,11 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#839449"
+    android:background="?attr/colorPrimary"
     android:gravity="center"
     android:orientation="vertical">
 
     <ImageView
+        android:contentDescription="@string/app_logo_description"
         android:layout_width="240dp"
         android:layout_height="136dp"
         app:srcCompat="@drawable/logo"

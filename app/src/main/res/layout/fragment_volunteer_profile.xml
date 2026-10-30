@@ -5,11 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="?android:attr/colorBackground">
 
     <!-- Header Image -->
     <ImageView
         android:id="@+id/imgHeaderBackground"
+        android:contentDescription="@null"
+        android:importantForAccessibility="no"
         android:layout_width="0dp"
         android:layout_height="280dp"
         android:scaleType="centerCrop"
@@ -28,9 +30,9 @@
         android:layout_marginEnd="16dp"
         android:background="@drawable/bg_edit_profile_btn"
         android:paddingHorizontal="16dp"
-        android:text="Edit Profile"
+        android:text="@string/edit_profile"
         android:textAllCaps="false"
-        android:textColor="#FFFFFF"
+        android:textColor="?attr/colorOnPrimary"
         android:textSize="14sp"
         app:backgroundTint="@null"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,8 +53,8 @@
             android:id="@+id/txtVolunteerName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Julie\nBeckett"
-            android:textColor="#FFFFFF"
+            tools:text="Julie\nBeckett"
+            android:textColor="@color/on_image"
             android:textSize="36sp"
             android:textStyle="bold"
             android:lineSpacingExtra="-8dp" />
@@ -62,8 +64,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="JulieBeckett2@gmail.com"
-            android:textColor="#EFEFEF"
+            tools:text="JulieBeckett2@gmail.com"
+            android:textColor="@color/on_image_variant"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -105,8 +107,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:text="My Interests"
-                    android:textColor="#1F1F1F"
+                    android:text="@string/my_interests"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="18sp"
                     android:textStyle="normal" />
 
@@ -115,6 +117,8 @@
                     android:layout_height="24dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
+                    android:contentDescription="@null"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/ic_chevron_right" />
             </RelativeLayout>
 
@@ -131,8 +135,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:text="My Skills"
-                    android:textColor="#1F1F1F"
+                    android:text="@string/my_skills"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="18sp" />
 
                 <ImageView
@@ -140,6 +144,8 @@
                     android:layout_height="24dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
+                    android:contentDescription="@null"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/ic_chevron_right" />
             </RelativeLayout>
 
@@ -156,8 +162,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:text="Language Settings"
-                    android:textColor="#1F1F1F"
+                    android:text="@string/language_settings"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="18sp" />
 
                 <ImageView
@@ -165,6 +171,8 @@
                     android:layout_height="24dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
+                    android:contentDescription="@null"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/ic_chevron_right" />
             </RelativeLayout>
 
@@ -181,8 +189,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:text="Notifications"
-                    android:textColor="#1F1F1F"
+                    android:text="@string/notifications"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="18sp" />
 
                 <ImageView
@@ -190,6 +198,8 @@
                     android:layout_height="24dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
+                    android:contentDescription="@null"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/ic_chevron_right" />
             </RelativeLayout>
 
@@ -206,8 +216,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:text="Biometric Authentication"
-                    android:textColor="#1F1F1F"
+                    android:text="@string/biometric_auth"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="18sp" />
 
                 <ImageView
@@ -215,6 +225,8 @@
                     android:layout_height="24dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
+                    android:contentDescription="@null"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/ic_chevron_right" />
             </RelativeLayout>
 
@@ -231,8 +243,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:text="Logout"
-                    android:textColor="#1F1F1F"
+                    android:text="@string/log_out"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="18sp" />
 
                 <ImageView
@@ -240,6 +252,8 @@
                     android:layout_height="24dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
+                    android:contentDescription="@null"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/ic_chevron_right" />
             </RelativeLayout>
 

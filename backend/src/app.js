@@ -5,6 +5,7 @@ import { authRouter } from './routes/auth.js';
 import { usersRouter } from './routes/users.js';
 import { listingsRouter } from './routes/listings.js';
 import { signupsRouter } from './routes/signups.js';
+import { messagesRouter } from './routes/messages.js';
 
 /**
 * db and firebaseAuth are passed in here so that the tests can swap in fake ones.
@@ -33,6 +34,7 @@ export function createApp({ db, firebaseAuth, cfg }) {
       api.use('/users', usersRouter({ db, cfg }));
       api.use('/listings', listingsRouter({ db, cfg }));
       api.use('/', signupsRouter({ db }));
+      api.use('/', messagesRouter({ db }));
 
       app.use('/api/v1', api);
       app.use(notFoundHandler);

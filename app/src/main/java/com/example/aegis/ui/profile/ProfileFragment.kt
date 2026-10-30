@@ -22,6 +22,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
+import com.example.aegis.core.Taxonomy
 
 class ProfileFragment : AegisBaseFragment() {
 
@@ -86,11 +87,19 @@ class ProfileFragment : AegisBaseFragment() {
         if (profile.profileImageUrl.isNullOrBlank()) {
             binding.avatarImage.setImageResource(R.drawable.profile)
         } else {
+            // A real photo fills the circle; the padding and tint only suit the fallback icon.
+            binding.avatarImage.setPadding(0, 0, 0, 0)
+            binding.avatarImage.imageTintList = null
+            binding.avatarImage.scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
             binding.avatarImage.load(profile.profileImageUrl) {
                 placeholder(R.drawable.profile)
                 error(R.drawable.profile)
             }
         }
+
+        val hasBanner = !profile.bannerImageUrl.isNullOrBlank()
+        binding.bannerScrim.visibility = if (hasBanner) View.VISIBLE else View.GONE
+        if (hasBanner) binding.bannerImage.load(profile.bannerImageUrl) else binding.bannerImage.setImageDrawable(null)
 
         binding.causesSection.visibility = if (isOrg) View.GONE else View.VISIBLE
         if (!isOrg) {
@@ -103,7 +112,7 @@ class ProfileFragment : AegisBaseFragment() {
         group.removeAllViews()
         values.forEach { value ->
             val chip = Chip(requireContext())
-            chip.text = value
+            chip.text = Taxonomy.label(requireContext(), value)
             chip.isClickable = false
             chip.isCheckable = false
             group.addView(chip)

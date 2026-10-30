@@ -27,6 +27,15 @@ class UserPreferencesDataStore(private val context: Context) {
     val languageFlow: Flow<String> = context.dataStore.data
         .map { prefs -> prefs[LANGUAGE] ?: "en" }
 
+    // Null until the user flips the Settings switch, so the app follows the phone's theme until then.
+    val chosenDarkModeFlow: Flow<Boolean?> = context.dataStore.data
+        .map { prefs -> prefs[DARK_MODE] }
+
+    // Null until the user has picked a language in Settings, so startup can tell "chose English"
+    // from "never chose" and leave a system-level per-app language alone.
+    val chosenLanguageFlow: Flow<String?> = context.dataStore.data
+        .map { prefs -> prefs[LANGUAGE] }
+
     val selectedCausesFlow: Flow<Set<String>> = context.dataStore.data
         .map { prefs -> prefs[SELECTED_CAUSES] ?: emptySet() }
 

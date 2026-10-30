@@ -1,15 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="brand_green">#839449</color>
-    <color name="divider">#E0E0E0</color>
-    <color name="text_secondary">#666666</color>
-    <color name="aegis_green">#6B8E4E</color>
-    <color name="aegis_green_dark">#55702E</color>
-    <color name="aegis_text_primary">#1A1A1A</color>
-    <color name="aegis_text_secondary">#6B6B6B</color>
-    <color name="aegis_card_background">#FFFFFF</color>
-    <color name="aegis_badge_background">#99000000</color>
-    <color name="aegis_badge_ended">#997A7A7A</color>
+    <!-- Brand palette. Layouts never reference these directly: they go through the theme
+         attributes wired up in themes.xml (?attr/colorPrimary, ?attr/colorOnSurface, ...)
+         so light and dark stay in step. Dark values live in values-night/colors.xml. -->
+    <color name="aegis_primary">#839449</color>
+    <color name="aegis_on_primary">#FFFFFF</color>
+    <color name="aegis_primary_container">#E3EBC9</color>
+    <color name="aegis_on_primary_container">#1F2A05</color>
+
+    <color name="aegis_background">#FFFFFF</color>
+    <color name="aegis_surface">#FFFFFF</color>
+    <color name="aegis_surface_container">#F1F3F5</color>
+    <color name="aegis_surface_container_high">#E8E8E8</color>
+    <color name="aegis_on_surface">#212121</color>
+    <color name="aegis_on_surface_variant">#666666</color>
+    <color name="aegis_outline">#BDBDBD</color>
+    <color name="aegis_outline_variant">#E0E0E0</color>
+
+    <color name="aegis_error">#B3261E</color>
+    <color name="aegis_on_error">#FFFFFF</color>
+
+    <!-- Fixed colours: these sit on top of photos or on the brand-green cards and must not
+         flip with the theme. -->
+    <color name="on_image">#FFFFFF</color>
+    <color name="on_image_variant">#EFEFEF</color>
+    <color name="image_scrim">#33000000</color>
+    <color name="image_button_background">#80FFFFFF</color>
+    <color name="badge_background">#99000000</color>
+    <color name="badge_ended_background">#997A7A7A</color>
+    <color name="on_badge">#FFFFFF</color>
+    <color name="on_primary_subtle">#33FFFFFF</color>
+    <color name="on_primary_muted">#CCFFFFFF</color>
+    <color name="scrim_gradient_start">#26000000</color>
+    <color name="scrim_gradient_center">#33000000</color>
+    <color name="scrim_gradient_end">#A6000000</color>
 </resources>

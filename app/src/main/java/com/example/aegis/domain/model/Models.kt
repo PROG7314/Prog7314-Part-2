@@ -102,10 +102,32 @@ data class UserProfile(
     val name: String,
     val email: String?,
     val profileImageUrl: String?,
+    val bannerImageUrl: String? = null,
     val bio: String?,
     val description: String?,
     val interests: List<String>,
     val skills: List<String>,
     val preferredLanguage: String?,
-    val notificationsEnabled: Boolean
+    val notificationsEnabled: Boolean,
+    val darkMode: Boolean = false
+)
+
+// ---------- Messaging ----------
+// One thread between a volunteer and the organization behind a listing.
+data class Conversation(
+    val id: String,
+    val listingId: String,
+    val listingTitle: String,
+    val otherPartyId: String,
+    val otherPartyName: String?,
+    val lastMessage: String?,
+    val lastMessageAt: Instant?,
+    val unreadCount: Int
+)
+
+data class ChatMessage(
+    val id: String,
+    val senderId: String,
+    val text: String,
+    val sentAt: Instant?
 )

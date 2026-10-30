@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="?android:attr/colorBackground">
 
     <ProgressBar
         android:id="@+id/loadingIndicator"
@@ -34,7 +34,7 @@
             android:id="@+id/errorMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/aegis_text_secondary"
+            android:textColor="?attr/colorOnSurfaceVariant"
             android:textAlignment="center"
             tools:text="Can't reach the server. Check your connection and try again." />
 
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:text="@string/retry"
-            android:textColor="@android:color/white"
+            android:textColor="?attr/colorOnPrimary"
             android:background="@drawable/bg_button_primary" />
     </LinearLayout>
 
@@ -65,13 +65,32 @@
             android:orientation="vertical"
             android:paddingBottom="24dp">
 
-            <!-- Header -->
+            <!-- Header: banner photo (falls back to the brand colour) under a scrim, then the details -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary">
+
+            <ImageView
+                android:id="@+id/bannerImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:importantForAccessibility="no"
+                android:scaleType="centerCrop" />
+
+            <View
+                android:id="@+id/bannerScrim"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/image_scrim"
+                android:visibility="gone" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center_horizontal"
-                android:background="@color/aegis_green"
                 android:paddingTop="32dp"
                 android:paddingBottom="24dp"
                 android:paddingHorizontal="24dp">
@@ -82,16 +101,17 @@
                     app:cardCornerRadius="48dp"
                     app:cardElevation="0dp"
                     app:strokeWidth="2dp"
-                    app:strokeColor="@android:color/white">
+                    app:strokeColor="?attr/colorOnPrimary">
 
                     <ImageView
                         android:id="@+id/avatarImage"
+                        android:contentDescription="@string/profile_picture_description"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@android:color/white"
+                        android:background="?attr/colorOnPrimary"
                         android:padding="18dp"
                         android:scaleType="centerInside"
-                        app:tint="@color/aegis_green"
+                        app:tint="?attr/colorPrimary"
                         tools:src="@drawable/profile" />
 
                 </com.google.android.material.card.MaterialCardView>
@@ -101,7 +121,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:textColor="@android:color/white"
+                    android:textColor="?attr/colorOnPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     tools:text="Julie Beckett" />
@@ -114,7 +134,7 @@
                     android:paddingHorizontal="12dp"
                     android:paddingVertical="4dp"
                     android:background="@drawable/bg_badge_pill"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/on_badge"
                     android:textSize="11sp"
                     android:textStyle="bold"
                     tools:text="VOLUNTEER" />
@@ -124,11 +144,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:textColor="#CCFFFFFF"
+                    android:textColor="@color/on_primary_muted"
                     android:textSize="13sp"
                     tools:text="julie@example.com" />
 
             </LinearLayout>
+            </FrameLayout>
 
             <!-- About + actions -->
             <LinearLayout
@@ -141,7 +162,7 @@
                     android:id="@+id/aboutLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/aegis_text_primary"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     tools:text="About Me" />
@@ -151,7 +172,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:textColor="@color/aegis_text_secondary"
+                    android:textColor="?attr/colorOnSurfaceVariant"
                     android:textSize="14sp"
                     tools:text="Nothing here yet." />
 
@@ -166,7 +187,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/your_causes"
-                        android:textColor="@color/aegis_text_primary"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -181,7 +202,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="@string/your_skills"
-                        android:textColor="@color/aegis_text_primary"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -200,8 +221,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="28dp"
                     android:text="@string/settings"
-                    android:textColor="@color/aegis_green"
-                    app:strokeColor="@color/aegis_green" />
+                    android:textColor="?attr/colorPrimary"
+                    app:strokeColor="?attr/colorPrimary" />
 
                 <Button
                     android:id="@+id/logoutButton"
@@ -209,7 +230,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:text="@string/log_out"
-                    android:textColor="@android:color/white"
+                    android:textColor="?attr/colorOnPrimary"
                     android:background="@drawable/bg_button_primary" />
 
             </LinearLayout>

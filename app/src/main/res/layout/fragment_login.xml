@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#839449"
+    android:background="?attr/colorPrimary"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="24dp">
@@ -15,6 +15,7 @@
 
     <ImageView
         android:id="@+id/imageView"
+        android:contentDescription="@string/app_logo_description"
         android:layout_width="472dp"
         android:layout_height="268dp"
         app:srcCompat="@drawable/logo" />
@@ -29,12 +30,12 @@
         android:layout_width="227dp"
         android:layout_height="60dp"
         android:layout_marginBottom="48dp"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="?attr/colorSurface"
         android:drawableStart="@drawable/ic_google"
         android:drawablePadding="12dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:text="Sign in with Google"
-        android:textColor="@color/black" />
+        android:text="@string/sign_in_google"
+        android:textColor="?attr/colorOnSurface" />
 
 </LinearLayout>
