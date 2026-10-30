@@ -90,4 +90,5 @@ dependencies {
     ksp(libs.androidx.room3.compiler)
     implementation(libs.androidx.work.runtime)
 
+    implementation("androidx.biometric:biometric:1.1.0")
 }
