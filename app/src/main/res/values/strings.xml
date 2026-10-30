@@ -94,4 +94,15 @@
 
     <string name="commitment_waiting_sync">Waiting to sync</string>
 
+
+    <string name="biometric_title">Unlock Aegis</string>
+    <string name="biometric_subtitle">Confirm it\'s you to continue</string>
+    <string name="biometric_use_password">Sign in again</string>
+    <string name="biometric_setting_label">Fingerprint / face unlock</string>
+    <string name="biometric_unavailable">No fingerprint or face unlock is set up on this device</string>
+    <string name="biometric_enable_title">Turn on fingerprint unlock?</string>
+    <string name="biometric_enable_message">Use your fingerprint or face to open Aegis next time.</string>
+    <string name="biometric_yes">Turn on</string>
+    <string name="biometric_not_now">Not now</string>
+
 </resources>
