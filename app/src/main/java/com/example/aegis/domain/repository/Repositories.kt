@@ -7,6 +7,9 @@ import com.example.aegis.domain.model.ListingDraft
 import com.example.aegis.domain.model.ListingType
 import com.example.aegis.domain.model.Signup
 import com.example.aegis.domain.model.UserProfile
+import com.example.aegis.domain.model.ChatMessage
+import com.example.aegis.domain.model.Conversation
+import java.time.Instant
 
 /*
  * Repository contracts. ViewModels depend on these interfaces, never on Retrofit.
@@ -52,5 +55,24 @@ interface UserRepository {
     // Sends the volunteer's selected causes and skills to the API (Custom Feature #1).
     suspend fun updateInterests(interests: List<String>, skills: List<String>): ApiResult<UserProfile>
 
-    suspend fun updateSettings(preferredLanguage: String, notificationsEnabled: Boolean): ApiResult<Unit>
+    suspend fun updateSettings(
+        preferredLanguage: String? = null,
+        notificationsEnabled: Boolean? = null,
+        darkMode: Boolean? = null
+    ): ApiResult<Unit>
+}
+
+interface MessageRepository {
+    // Opens (or returns) the conversation about a listing. Volunteers pass no volunteerId;
+    // an organization passes the volunteer it wants to message.
+    suspend fun openConversation(listingId: String, volunteerId: String? = null): ApiResult<Conversation>
+
+    suspend fun getConversations(): ApiResult<List<Conversation>>
+
+    // since = only messages newer than this (the chat screen's refresh).
+    suspend fun getMessages(conversationId: String, since: Instant? = null): ApiResult<List<ChatMessage>>
+
+    suspend fun sendMessage(conversationId: String, text: String): ApiResult<ChatMessage>
+
+    suspend fun markRead(conversationId: String): ApiResult<Unit>
 }

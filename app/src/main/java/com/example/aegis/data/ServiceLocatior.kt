@@ -9,6 +9,8 @@ import com.example.aegis.data.repository.ApiUserRepository
 import com.example.aegis.domain.repository.ListingRepository
 import com.example.aegis.domain.repository.SignupRepository
 import com.example.aegis.domain.repository.UserRepository
+import com.example.aegis.data.repository.ApiMessageRepository
+import com.example.aegis.domain.repository.MessageRepository
 
 /**
  * The place that builds the API client and repositories.
@@ -28,4 +30,5 @@ object ServiceLocator {
     val listingRepository: ListingRepository by lazy { ApiListingRepository(api()) }
     val signupRepository: SignupRepository by lazy { ApiSignupRepository(api()) }
     val userRepository: UserRepository by lazy { ApiUserRepository(api()) }
+    val messageRepository: MessageRepository by lazy { ApiMessageRepository(api()) }
 }

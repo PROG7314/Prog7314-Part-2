@@ -15,6 +15,12 @@ import com.example.aegis.domain.model.UserProfile
 import com.example.aegis.domain.repository.ListingRepository
 import com.example.aegis.domain.repository.SignupRepository
 import com.example.aegis.domain.repository.UserRepository
+import com.example.aegis.data.remote.dto.OpenConversationRequest
+import com.example.aegis.data.remote.dto.SendMessageRequest
+import com.example.aegis.domain.model.ChatMessage
+import com.example.aegis.domain.model.Conversation
+import com.example.aegis.domain.repository.MessageRepository
+import java.time.Instant
 
 /*
  * Retrofit-backed repositories. Every call goes through safeApiCall, so failures come back as
@@ -90,10 +96,36 @@ class ApiUserRepository(private val api: AegisApi) : UserRepository {
             api.updateMe(UpdateProfileRequest(interests = interests, skills = skills)).toDomain()
         }
 
-    override suspend fun updateSettings(preferredLanguage: String, notificationsEnabled: Boolean): ApiResult<Unit> =
-        safeApiCall(TAG) { api.updateSettings(SettingsRequest(preferredLanguage, notificationsEnabled)) }
+    override suspend fun updateSettings(
+        preferredLanguage: String?,
+        notificationsEnabled: Boolean?,
+        darkMode: Boolean?
+    ): ApiResult<Unit> =
+        safeApiCall(TAG) { api.updateSettings(SettingsRequest(preferredLanguage, notificationsEnabled, darkMode)) }
 
     private companion object {
         const val TAG = "UserRepository"
+    }
+}
+
+class ApiMessageRepository(private val api: AegisApi) : MessageRepository {
+
+    override suspend fun openConversation(listingId: String, volunteerId: String?): ApiResult<Conversation> =
+        safeApiCall(TAG) { api.openConversation(listingId, OpenConversationRequest(volunteerId)).toDomain() }
+
+    override suspend fun getConversations(): ApiResult<List<Conversation>> =
+        safeApiCall(TAG) { api.getConversations().map { it.toDomain() } }
+
+    override suspend fun getMessages(conversationId: String, since: Instant?): ApiResult<List<ChatMessage>> =
+        safeApiCall(TAG) { api.getMessages(conversationId, since?.toString()).map { it.toDomain() } }
+
+    override suspend fun sendMessage(conversationId: String, text: String): ApiResult<ChatMessage> =
+        safeApiCall(TAG) { api.sendMessage(conversationId, SendMessageRequest(text)).toDomain() }
+
+    override suspend fun markRead(conversationId: String): ApiResult<Unit> =
+        safeApiCall(TAG) { api.markConversationRead(conversationId) }
+
+    private companion object {
+        const val TAG = "MessageRepository"
     }
 }

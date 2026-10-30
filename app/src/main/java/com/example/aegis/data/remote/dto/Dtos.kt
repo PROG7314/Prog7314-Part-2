@@ -20,18 +20,21 @@ data class ProfileDto(
     val role: String? = null,
     val name: String? = null,
     val profileImageUrl: String? = null,
+    val bannerImageUrl: String? = null,
     val bio: String? = null,              // volunteer only
     val description: String? = null,      // organization only
     val interests: List<String>? = null,  // volunteer only
     val skills: List<String>? = null,     // volunteer only
     val preferredLanguage: String? = null,
-    val notificationsEnabled: Boolean? = null
+    val notificationsEnabled: Boolean? = null,
+    val darkMode: Boolean? = null
 )
 
 // Send only the fields you are changing - nulls are omitted from the JSON.
 data class UpdateProfileRequest(
     val name: String? = null,
     val profileImageUrl: String? = null,
+    val bannerImageUrl: String? = null,
     val bio: String? = null,
     val description: String? = null,
     val interests: List<String>? = null,
@@ -39,7 +42,12 @@ data class UpdateProfileRequest(
 )
 
 // preferredLanguage: "en" | "af" | "zu" | "xh"
-data class SettingsRequest(val preferredLanguage: String, val notificationsEnabled: Boolean)
+// Nulls are omitted from the JSON, so each call sends only the settings it names.
+data class SettingsRequest(
+    val preferredLanguage: String? = null,
+    val notificationsEnabled: Boolean? = null,
+    val darkMode: Boolean? = null
+)
 
 // ---------- Listings ----------
 data class ListingsResponse(val items: List<ListingDto>)
@@ -123,3 +131,28 @@ data class HoursLogResponse(val entries: List<HoursLogEntryDto> = emptyList(), v
 data class ErrorEnvelopeDto(val error: ErrorBodyDto? = null)
 
 data class ErrorBodyDto(val code: String? = null, val message: String? = null, val field: String? = null)
+
+// ---------- Messaging ----------
+data class PartyDto(val id: String, val name: String? = null)
+
+data class ConversationDto(
+    val id: String,
+    val listingId: String,
+    val listingTitle: String? = null,
+    val otherParty: PartyDto,
+    val lastMessage: String? = null,
+    val lastMessageAt: String? = null,
+    val unreadCount: Int? = null
+)
+
+data class MessageDto(
+    val id: String,
+    val senderId: String,
+    val text: String,
+    val sentAt: String? = null
+)
+
+data class SendMessageRequest(val text: String)
+
+// A volunteer sends {} (the API uses the caller); an organization names the volunteer to message.
+data class OpenConversationRequest(val volunteerId: String? = null)

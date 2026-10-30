@@ -17,6 +17,10 @@ import com.example.aegis.domain.model.SignupStatus
 import com.example.aegis.domain.model.UserProfile
 import java.time.Instant
 import java.time.OffsetDateTime
+import com.example.aegis.data.remote.dto.ConversationDto
+import com.example.aegis.data.remote.dto.MessageDto
+import com.example.aegis.domain.model.ChatMessage
+import com.example.aegis.domain.model.Conversation
 
 // DTO and domain mapping. Keeps JSON quirks (nullable lists, ISO strings) out of the UI layer.
 
@@ -68,12 +72,14 @@ internal fun ProfileDto.toDomain() = UserProfile(
     name = name.orEmpty(),
     email = email,
     profileImageUrl = profileImageUrl,
+    bannerImageUrl = bannerImageUrl,
     bio = bio,
     description = description,
     interests = interests.orEmpty(),
     skills = skills.orEmpty(),
     preferredLanguage = preferredLanguage,
-    notificationsEnabled = notificationsEnabled ?: true
+    notificationsEnabled = notificationsEnabled ?: true,
+    darkMode = darkMode ?: false
 )
 
 internal fun ListingDraft.toCreateRequest() = CreateListingRequest(
@@ -100,4 +106,21 @@ internal fun ListingDraft.toUpdateRequest() = UpdateListingRequest(
     area = area,
     minHours = minHours,
     images = images
+)
+internal fun ConversationDto.toDomain() = Conversation(
+    id = id,
+    listingId = listingId,
+    listingTitle = listingTitle.orEmpty(),
+    otherPartyId = otherParty.id,
+    otherPartyName = otherParty.name,
+    lastMessage = lastMessage,
+    lastMessageAt = lastMessageAt.toInstantOrNull(),
+    unreadCount = unreadCount ?: 0
+)
+
+internal fun MessageDto.toDomain() = ChatMessage(
+    id = id,
+    senderId = senderId,
+    text = text,
+    sentAt = sentAt.toInstantOrNull()
 )

@@ -21,6 +21,10 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+import com.example.aegis.data.remote.dto.ConversationDto
+import com.example.aegis.data.remote.dto.MessageDto
+import com.example.aegis.data.remote.dto.OpenConversationRequest
+import com.example.aegis.data.remote.dto.SendMessageRequest
 
 /**
  * The Retrofit interface for the Aegis REST API.
@@ -92,4 +96,26 @@ interface AegisApi {
 
     @GET("users/me/hours-log")
     suspend fun getHoursLog(): HoursLogResponse
+
+    // ----- Messaging -----
+    // Opens (or returns) the thread about a listing. Volunteers need a sign-up; an organization
+    // passes the volunteer it wants to message.
+    @POST("listings/{id}/conversations")
+    suspend fun openConversation(
+        @Path("id") listingId: String,
+        @Body body: OpenConversationRequest
+    ): ConversationDto
+
+    @GET("conversations")
+    suspend fun getConversations(): List<ConversationDto>
+
+    // `since` (ISO date) returns only newer messages.
+    @GET("conversations/{id}/messages")
+    suspend fun getMessages(@Path("id") conversationId: String, @Query("since") since: String?): List<MessageDto>
+
+    @POST("conversations/{id}/messages")
+    suspend fun sendMessage(@Path("id") conversationId: String, @Body body: SendMessageRequest): MessageDto
+
+    @PATCH("conversations/{id}/read")
+    suspend fun markConversationRead(@Path("id") conversationId: String)
 }
