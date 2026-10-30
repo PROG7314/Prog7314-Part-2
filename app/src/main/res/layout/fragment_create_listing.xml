@@ -5,14 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F9FA">
+    android:background="?android:attr/colorBackground">
 
     <!-- Top App Bar / Brand Header -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="#838E50"
+        android:background="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -22,8 +22,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="serif"
-            android:text="Aegis"
-            android:textColor="#F9F6EB"
+            android:text="@string/app_name"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="32sp"
             android:textStyle="bold|italic"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -61,33 +61,33 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_tab_create"
                     android:layout_width="wrap_content"
-                    android:layout_height="38dp"
+                    android:layout_height="48dp"
                     android:elevation="0dp"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
                     android:paddingHorizontal="16dp"
-                    android:text="+ Create Listing"
+                    android:text="@string/tab_create_listing"
                     android:textAllCaps="false"
-                    android:textColor="@android:color/white"
+                    android:textColor="?attr/colorOnPrimary"
                     android:textSize="13sp"
-                    app:backgroundTint="#838E50"
-                    app:cornerRadius="19dp" />
+                    app:backgroundTint="?attr/colorPrimary"
+                    app:cornerRadius="24dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_tab_my_listings"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="38dp"
+                    android:layout_height="48dp"
                     android:layout_marginStart="10dp"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
                     android:paddingHorizontal="16dp"
-                    android:text="My Listings"
+                    android:text="@string/tab_my_listings"
                     android:textAllCaps="false"
-                    android:textColor="#838E50"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="13sp"
-                    app:cornerRadius="19dp"
-                    app:strokeColor="#838E50"
+                    app:cornerRadius="24dp"
+                    app:strokeColor="?attr/colorPrimary"
                     app:strokeWidth="1.2dp" />
             </LinearLayout>
 
@@ -96,7 +96,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                app:cardBackgroundColor="@android:color/white"
+                app:cardBackgroundColor="?attr/colorSurface"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="5dp"
                 app:strokeWidth="0dp">
@@ -115,24 +115,26 @@
 
                         <ImageView
                             android:id="@+id/iv_listing_cover"
+                            android:contentDescription="@string/listing_cover_description"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="#E8E8E8"
+                            android:background="?attr/colorSurfaceContainerHigh"
                             android:scaleType="centerCrop"
                             tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
                         <ImageView
                             android:id="@+id/iv_camera_badge"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
+                            android:contentDescription="@string/add_photo"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
                             android:layout_marginEnd="12dp"
                             android:layout_marginBottom="12dp"
                             android:background="@drawable/bg_circle_translucent"
-                            android:padding="6dp"
+                            android:padding="12dp"
                             android:src="@drawable/camera"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:tint="#6E7745" />
+                            app:tint="?attr/colorPrimary" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Title -->
@@ -140,8 +142,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="6dp"
-                        android:text="Title *"
-                        android:textColor="#212121"
+                        android:text="@string/label_title"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -151,11 +153,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         android:background="@drawable/bg_rounded_input"
-                        android:hint="Enter listing title"
+                        android:hint="@string/hint_title"
                         android:inputType="textCapSentences"
                         android:paddingHorizontal="14dp"
                         android:paddingVertical="12dp"
-                        android:textColor="#212121"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="14sp" />
 
                     <!-- Description -->
@@ -163,8 +165,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="6dp"
-                        android:text="Description *"
-                        android:textColor="#212121"
+                        android:text="@string/label_description"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -175,12 +177,12 @@
                         android:layout_marginBottom="16dp"
                         android:background="@drawable/bg_rounded_input"
                         android:gravity="top|start"
-                        android:hint="Describe the activity..."
+                        android:hint="@string/hint_description"
                         android:inputType="textCapSentences|textMultiLine"
                         android:minLines="3"
                         android:paddingHorizontal="14dp"
                         android:paddingVertical="12dp"
-                        android:textColor="#212121"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="14sp" />
 
                     <!-- Listing Type (Scheduled / Ongoing) -->
@@ -188,15 +190,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="6dp"
-                        android:text="Listing Type *"
-                        android:textColor="#212121"
+                        android:text="@string/label_listing_type"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
                     <androidx.appcompat.widget.AppCompatSpinner
                         android:id="@+id/spinner_listing_type"
                         android:layout_width="match_parent"
-                        android:layout_height="46dp"
+                        android:layout_height="48dp"
                         android:layout_marginBottom="16dp"
                         android:background="@drawable/bg_spinner_rounded"
                         android:paddingHorizontal="14dp" />
@@ -206,15 +208,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="6dp"
-                        android:text="Cause Category *"
-                        android:textColor="#212121"
+                        android:text="@string/label_cause_category"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
                     <androidx.appcompat.widget.AppCompatSpinner
                         android:id="@+id/spinner_category"
                         android:layout_width="match_parent"
-                        android:layout_height="46dp"
+                        android:layout_height="48dp"
                         android:layout_marginBottom="16dp"
                         android:background="@drawable/bg_spinner_rounded"
                         android:paddingHorizontal="14dp" />
@@ -224,8 +226,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="6dp"
-                        android:text="Area / Suburb *"
-                        android:textColor="#212121"
+                        android:text="@string/label_area"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -235,11 +237,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         android:background="@drawable/bg_rounded_input"
-                        android:hint="e.g. Wynberg, Cape Town"
+                        android:hint="@string/hint_area"
                         android:inputType="textCapWords"
                         android:paddingHorizontal="14dp"
                         android:paddingVertical="12dp"
-                        android:textColor="#212121"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="14sp" />
 
                     <!-- Skills Required -->
@@ -247,8 +249,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="6dp"
-                        android:text="Skills Required (comma separated)"
-                        android:textColor="#212121"
+                        android:text="@string/label_skills_required"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -258,11 +260,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         android:background="@drawable/bg_rounded_input"
-                        android:hint="e.g. Tutoring, First Aid, Manual Labour"
+                        android:hint="@string/hint_skills"
                         android:inputType="textCapWords"
                         android:paddingHorizontal="14dp"
                         android:paddingVertical="12dp"
-                        android:textColor="#212121"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="14sp" />
 
                     <!-- Conditional Scheduled Container (Date/Time & Spaces) -->
@@ -277,14 +279,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="6dp"
-                            android:text="Date &amp; Time *"
-                            android:textColor="#212121"
+                            android:text="@string/label_date_time"
+                            android:textColor="?attr/colorOnSurface"
                             android:textSize="15sp"
                             android:textStyle="bold" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="46dp"
+                            android:layout_height="48dp"
                             android:layout_marginBottom="16dp"
                             android:background="@drawable/bg_rounded_input"
                             android:gravity="center_vertical"
@@ -296,16 +298,16 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:hint="Select Date"
-                                android:textColor="#212121"
+                                android:hint="@string/hint_select_date"
+                                android:textColor="?attr/colorOnSurface"
                                 android:textSize="14sp" />
 
                             <TextView
                                 android:id="@+id/tv_time"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:hint="Select Time"
-                                android:textColor="#212121"
+                                android:hint="@string/hint_select_time"
+                                android:textColor="?attr/colorOnSurface"
                                 android:textSize="14sp" />
                         </LinearLayout>
 
@@ -313,22 +315,22 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="6dp"
-                            android:text="Spaces Available *"
-                            android:textColor="#212121"
+                            android:text="@string/label_spaces"
+                            android:textColor="?attr/colorOnSurface"
                             android:textSize="15sp"
                             android:textStyle="bold" />
 
                         <EditText
                             android:id="@+id/et_spaces"
                             android:layout_width="120dp"
-                            android:layout_height="44dp"
+                            android:layout_height="48dp"
                             android:layout_marginBottom="16dp"
                             android:background="@drawable/bg_rounded_input"
                             android:gravity="center_vertical"
-                            android:hint="e.g. 10"
+                            android:hint="@string/hint_spaces"
                             android:inputType="number"
                             android:paddingHorizontal="14dp"
-                            android:textColor="#212121"
+                            android:textColor="?attr/colorOnSurface"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -337,22 +339,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="6dp"
-                        android:text="Minimum Hours"
-                        android:textColor="#212121"
+                        android:text="@string/label_min_hours"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
                     <EditText
                         android:id="@+id/et_hours"
                         android:layout_width="120dp"
-                        android:layout_height="44dp"
+                        android:layout_height="48dp"
                         android:layout_marginBottom="24dp"
                         android:background="@drawable/bg_rounded_input"
                         android:gravity="center_vertical"
-                        android:hint="0.0"
+                        android:hint="@string/hint_hours_example"
                         android:inputType="numberDecimal"
                         android:paddingHorizontal="14dp"
-                        android:textColor="#212121"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="14sp" />
 
                     <!-- Action Buttons -->
@@ -366,30 +368,30 @@
                             android:id="@+id/btn_discard"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="110dp"
-                            android:layout_height="44dp"
+                            android:layout_height="48dp"
                             android:layout_marginEnd="16dp"
                             android:insetTop="0dp"
                             android:insetBottom="0dp"
-                            android:text="Discard"
+                            android:text="@string/discard"
                             android:textAllCaps="false"
-                            android:textColor="#838E50"
+                            android:textColor="?attr/colorPrimary"
                             android:textSize="14sp"
                             app:cornerRadius="12dp"
-                            app:strokeColor="#838E50"
+                            app:strokeColor="?attr/colorPrimary"
                             app:strokeWidth="1.2dp" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btn_save"
                             android:layout_width="110dp"
-                            android:layout_height="44dp"
+                            android:layout_height="48dp"
                             android:elevation="0dp"
                             android:insetTop="0dp"
                             android:insetBottom="0dp"
-                            android:text="Save"
+                            android:text="@string/save"
                             android:textAllCaps="false"
-                            android:textColor="@android:color/white"
+                            android:textColor="?attr/colorOnPrimary"
                             android:textSize="14sp"
-                            app:backgroundTint="#838E50"
+                            app:backgroundTint="?attr/colorPrimary"
                             app:cornerRadius="12dp" />
                     </LinearLayout>
                 </LinearLayout>
