@@ -52,8 +52,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 authViewModel.signUpWithEmail(email, password)
             } else {
                 authViewModel.signInWithEmail(email, password)
-
-
+            }
+        }
 
         toggleModeText.setOnClickListener {
             isSignUpMode = !isSignUpMode
