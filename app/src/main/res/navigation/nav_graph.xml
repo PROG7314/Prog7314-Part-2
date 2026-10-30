@@ -34,12 +34,6 @@
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
 
-        <action
-            android:id="@+id/action_splashFragment_to_roleSelectionFragment"
-            app:destination="@id/roleSelectionFragment"
-            app:popUpTo="@id/splashFragment"
-            app:popUpToInclusive="true" />
-
     </fragment>
 
     <fragment
@@ -112,6 +106,16 @@
         android:id="@+id/createListingFragment"
         android:name="com.example.aegis.ui.listing.CreateListingFragment"
         android:label="Create Listing" />
+
+    <fragment
+        android:id="@+id/messagesFragment"
+        android:name="com.example.aegis.ui.messages.MessagesFragment"
+        android:label="Messages" />
+
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.aegis.ui.messages.ChatFragment"
+        android:label="Chat" />
 
     <fragment
         android:id="@+id/settingsFragment"

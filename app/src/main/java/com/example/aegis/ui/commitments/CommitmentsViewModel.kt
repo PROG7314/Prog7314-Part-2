@@ -7,6 +7,8 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.aegis.data.ServiceLocator
 import com.example.aegis.domain.model.ApiResult
+import com.example.aegis.domain.model.Conversation
+import com.example.aegis.domain.repository.MessageRepository
 import com.example.aegis.domain.model.Signup
 import com.example.aegis.domain.model.SignupStatus
 import com.example.aegis.domain.repository.SignupRepository
@@ -24,7 +26,8 @@ import kotlinx.coroutines.launch
  * ones are shown here (a completed one no longer needs "Dismiss", a cancelled one is already gone).
  */
 class CommitmentsViewModel(
-    private val signups: SignupRepository
+    private val signups: SignupRepository,
+    private val messageRepository: MessageRepository
 ) : ViewModel() {
 
     private val _commitments = MutableStateFlow<UiState<List<Signup>>>(UiState.Loading)
@@ -33,8 +36,22 @@ class CommitmentsViewModel(
     private val _messages = MutableSharedFlow<String>(extraBufferCapacity = 1)
     val messages: SharedFlow<String> = _messages.asSharedFlow()
 
+    // Fired when "Message" has opened (or found) the thread with the organization.
+    private val _chatEvents = MutableSharedFlow<Conversation>(extraBufferCapacity = 1)
+    val chatEvents: SharedFlow<Conversation> = _chatEvents.asSharedFlow()
+
     init {
         loadCommitments()
+    }
+
+    /** "Message" button: open the conversation about this commitment's listing. */
+    fun openChat(signup: Signup) {
+        viewModelScope.launch {
+            when (val result = messageRepository.openConversation(signup.listingId)) {
+                is ApiResult.Success -> _chatEvents.emit(result.data)
+                is ApiResult.Failure -> _messages.emit(result.error.message)
+            }
+        }
     }
 
     fun loadCommitments() {
@@ -67,7 +84,7 @@ class CommitmentsViewModel(
 
         val Factory = viewModelFactory {
             initializer {
-                CommitmentsViewModel(ServiceLocator.signupRepository)
+                CommitmentsViewModel(ServiceLocator.signupRepository, ServiceLocator.messageRepository)
             }
         }
     }
