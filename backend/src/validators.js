@@ -180,8 +180,8 @@ export function parseListingUpdate(body, existing, cfg) {
 // ---------------------------------------------------------------- profile & settings
 // Which profile fields each role may change. Volunteers have interests/skills/bio; organizations have a description.
 const PROFILE_FIELDS = {
-  volunteer: ['name', 'profileImageUrl', 'bio', 'interests', 'skills'],
-  organization: ['name', 'description', 'profileImageUrl'],
+  volunteer: ['name', 'profileImageUrl', 'bannerImageUrl', 'bio', 'interests', 'skills'],
+  organization: ['name', 'description', 'profileImageUrl', 'bannerImageUrl'],
 };
 
 // PUT /users/me. Anything not on the role's list is rejected (not silently ignored),
@@ -199,6 +199,9 @@ export function parseProfileUpdate(body, role, cfg) {
     // null is allowed and means "remove my profile picture".
     patch.profileImageUrl = body.profileImageUrl === null ? null : requireImageList([body.profileImageUrl], 'profileImageUrl')[0];
   }
+  if ('bannerImageUrl' in body) {
+    patch.bannerImageUrl = body.bannerImageUrl === null ? null : requireImageList([body.bannerImageUrl], 'bannerImageUrl')[0];
+  }
   if ('bio' in body) patch.bio = optionalString(body.bio, 'bio', { max: 500 });
   if ('description' in body) patch.description = optionalString(body.description, 'description', { max: 1000 });
   // A volunteer's interests are causes, so they are checked against the same list as a listing's causeCategories.
@@ -212,8 +215,9 @@ export function parseSettings(body) {
   const patch = {};
   if ('preferredLanguage' in body) patch.preferredLanguage = requireEnum(body.preferredLanguage, 'preferredLanguage', LANGUAGES);
   if ('notificationsEnabled' in body) patch.notificationsEnabled = requireBoolean(body.notificationsEnabled, 'notificationsEnabled');
+  if ('darkMode' in body) patch.darkMode = requireBoolean(body.darkMode, 'darkMode');
   if (Object.keys(patch).length === 0) {
-    throw badRequest('Send preferredLanguage and/or notificationsEnabled.', 'preferredLanguage');
+    throw badRequest('Send preferredLanguage, notificationsEnabled and/or darkMode.', 'preferredLanguage');
   }
   return patch;
 }
@@ -223,4 +227,14 @@ export function parseSettings(body) {
 export function parseHours(body) {
   if (!('hoursCompleted' in body) || body.hoursCompleted === null) return undefined;
   return requireNumber(body.hoursCompleted, 'hoursCompleted', { min: 0, max: 1000 });
+}
+// A chat message: plain text, trimmed, 1-1000 characters.
+export function parseMessage(body) {
+  return { text: requireString(body.text, 'text', { max: 1000 }) };
+}
+
+// Optional ?since=<ISO date> on the message list, so the app can ask only for what's new.
+export function parseSince(v) {
+  if (v === undefined) return null;
+  return requireIsoDate(v, 'since');
 }
