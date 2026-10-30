@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import com.example.aegis.notifications.NotificationTokenSync
 
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -105,6 +106,8 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         }) {
             is ApiResult.Success -> {
                 TokenStore.save(getApplication(), result.data.token)
+                // JWT is saved first because the FCM call needs it. Separate launch: best effort, never blocks login.
+                viewModelScope.launch { NotificationTokenSync.sync() }
                 _authState.value = AuthState.Success(result.data.user.role, result.data.user.isNewUser)
             }
             is ApiResult.Failure -> _authState.value = AuthState.Error(result.error.message)
