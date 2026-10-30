@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.aegis.R
 import com.google.firebase.auth.FirebaseAuth
+import androidx.navigation.fragment.findNavController
 
 class OrgProfileFragment : Fragment() {
 
@@ -29,7 +30,7 @@ class OrgProfileFragment : Fragment() {
         val currentUser = auth.currentUser
         if (currentUser != null) {
             val txtOrgEmail = view.findViewById<TextView>(R.id.txtOrgEmail)
-            txtOrgEmail?.text = currentUser.email ?: "ChristineRevell@gmail.com"
+            txtOrgEmail?.text = currentUser.email ?: ""
         }
 
         setupClickListeners(view)
@@ -37,24 +38,24 @@ class OrgProfileFragment : Fragment() {
 
     private fun setupClickListeners(view: View) {
         view.findViewById<View>(R.id.btnEditProfile)?.setOnClickListener {
-            Toast.makeText(requireContext(), "Edit Profile clicked", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.coming_soon, getString(R.string.edit_profile)), Toast.LENGTH_SHORT).show()
         }
 
         view.findViewById<View>(R.id.rowLanguageSettings)?.setOnClickListener {
-            Toast.makeText(requireContext(), "Language Settings clicked", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.settingsFragment)
         }
 
         view.findViewById<View>(R.id.rowBiometricAuth)?.setOnClickListener {
-            Toast.makeText(requireContext(), "Biometric Settings clicked", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.coming_soon, getString(R.string.biometric_auth)), Toast.LENGTH_SHORT).show()
         }
 
         view.findViewById<View>(R.id.rowNotifications)?.setOnClickListener {
-            Toast.makeText(requireContext(), "Notifications clicked", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.settingsFragment)
         }
 
         view.findViewById<View>(R.id.rowLogout)?.setOnClickListener {
             auth.signOut()
-            Toast.makeText(requireContext(), "Logged out successfully", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.logged_out), Toast.LENGTH_SHORT).show()
         }
     }
 }

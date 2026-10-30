@@ -10,6 +10,8 @@ import com.example.aegis.domain.model.HoursEntry
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import com.example.aegis.R
+import com.example.aegis.core.Strings
 
 class HoursAdapter : ListAdapter<HoursEntry, HoursAdapter.ViewHolder>(DIFF) {
 
@@ -34,7 +36,7 @@ class HoursAdapter : ListAdapter<HoursEntry, HoursAdapter.ViewHolder>(DIFF) {
 
     private fun formatHoursBadge(hours: Double): String {
         val value = if (hours == hours.toInt().toDouble()) hours.toInt().toString() else hours.toString()
-        return "$value HRS"
+        return Strings.get(R.string.badge_hours, value)
     }
 
     companion object {

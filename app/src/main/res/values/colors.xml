@@ -34,18 +34,4 @@
     <color name="scrim_gradient_start">#26000000</color>
     <color name="scrim_gradient_center">#33000000</color>
     <color name="scrim_gradient_end">#A6000000</color>
-
-    <!-- Legacy colours still used by layouts that have not been restyled yet; removed in the layout restyle commit. -->
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="brand_green">#839449</color>
-    <color name="divider">#E0E0E0</color>
-    <color name="text_secondary">#666666</color>
-    <color name="aegis_green">#6B8E4E</color>
-    <color name="aegis_green_dark">#55702E</color>
-    <color name="aegis_text_primary">#1A1A1A</color>
-    <color name="aegis_text_secondary">#6B6B6B</color>
-    <color name="aegis_card_background">#FFFFFF</color>
-    <color name="aegis_badge_background">#99000000</color>
-    <color name="aegis_badge_ended">#997A7A7A</color>
 </resources>

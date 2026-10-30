@@ -29,11 +29,9 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             authViewModel.firebaseAuthWithGoogle(account.idToken!!)
         } catch (e: ApiException) {
             Log.e("AegisAuth", "Sign-in failed, status code: ${e.statusCode}")
-            val message = if (e.statusCode == 12501) {
-                "Sign-in was cancelled"
-            } else {
-                "Sign-in failed — please try again"
-            }
+            val message = getString(
+                if (e.statusCode == 12501) R.string.sign_in_cancelled else R.string.sign_in_failed
+            )
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         }
     }

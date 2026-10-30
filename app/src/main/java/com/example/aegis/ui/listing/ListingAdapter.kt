@@ -9,6 +9,7 @@ import coil.load
 import com.example.aegis.R
 import com.example.aegis.databinding.ItemListingCardBinding
 import com.example.aegis.domain.model.Listing
+import com.example.aegis.core.Strings
 
 class ListingAdapter(
     private val onSignUpClick: (Listing) -> Unit
@@ -31,8 +32,8 @@ class ListingAdapter(
 
             if (listing.images.isNotEmpty()) {
                 listingImage.load(listing.images.first()) {
-                    placeholder(R.color.aegis_green)
-                    error(R.color.aegis_green)
+                    placeholder(R.drawable.bg_image_placeholder)
+                    error(R.drawable.bg_image_placeholder)
                 }
             } else {
                 listingImage.setImageDrawable(null)
@@ -44,7 +45,7 @@ class ListingAdapter(
 
     private fun formatHoursBadge(minHours: Double): String {
         val value = if (minHours == minHours.toInt().toDouble()) minHours.toInt().toString() else minHours.toString()
-        return "$value hrs commitment"
+        return Strings.get(R.string.badge_hours_commitment, value)
     }
 
     companion object {
