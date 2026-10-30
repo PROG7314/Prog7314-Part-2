@@ -2,6 +2,7 @@ package com.example.aegis.data.remote
 
 import com.example.aegis.data.remote.dto.CompleteSignupRequest
 import com.example.aegis.data.remote.dto.CreateListingRequest
+import com.example.aegis.data.remote.dto.FcmTokenRequest
 import com.example.aegis.data.remote.dto.HoursLogResponse
 import com.example.aegis.data.remote.dto.ListingDto
 import com.example.aegis.data.remote.dto.ListingsResponse
@@ -21,6 +22,8 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+import com.example.aegis.data.remote.dto.SyncRequest
+import com.example.aegis.data.remote.dto.SyncResponse
 
 /**
  * The Retrofit interface for the Aegis REST API.
@@ -92,4 +95,11 @@ interface AegisApi {
 
     @GET("users/me/hours-log")
     suspend fun getHoursLog(): HoursLogResponse
+
+    @POST("users/me/fcm-token")
+    suspend fun registerFcmToken(@Body body: FcmTokenRequest)
+
+    // ----- Offline sync -----
+    @POST("sync/signups")
+    suspend fun syncSignups(@Body body: SyncRequest): SyncResponse
 }

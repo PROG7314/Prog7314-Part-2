@@ -35,6 +35,8 @@ class CommitmentsViewModel(
 
     init {
         loadCommitments()
+        viewModelScope.launch { ServiceLocator.syncState.syncFinished.collect { loadCommitments() } }
+        viewModelScope.launch { ServiceLocator.syncState.events.collect { _messages.emit(it) } }
     }
 
     fun loadCommitments() {

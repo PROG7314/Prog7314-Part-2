@@ -40,6 +40,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
         googleSignInButton.setOnClickListener { launchGoogleSignIn() }
 
+
         emailSignInButton.setOnClickListener {
             val email = emailInput.text.toString().trim()
             val password = passwordInput.text.toString()
@@ -51,8 +52,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 authViewModel.signUpWithEmail(email, password)
             } else {
                 authViewModel.signInWithEmail(email, password)
-            }
-        }
+
+
 
         toggleModeText.setOnClickListener {
             isSignUpMode = !isSignUpMode

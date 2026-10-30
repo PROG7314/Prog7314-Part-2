@@ -7,11 +7,13 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import android.widget.TextView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.aegis.R
 import com.example.aegis.core.AegisBaseFragment
+import com.example.aegis.data.ServiceLocator
 import com.example.aegis.data.local.UserPreferencesDataStore
 import com.google.android.material.materialswitch.MaterialSwitch
 import kotlinx.coroutines.launch
@@ -39,6 +41,7 @@ class SettingsFragment : AegisBaseFragment() {
         val darkModeSwitch = view.findViewById<MaterialSwitch>(R.id.darkModeSwitch)
         val notificationsSwitch = view.findViewById<MaterialSwitch>(R.id.notificationsSwitch)
         val languageSpinner = view.findViewById<Spinner>(R.id.languageSpinner)
+        val lastSyncText = view.findViewById<TextView>(R.id.lastSyncText)
 
         languageSpinner.adapter = ArrayAdapter(
             requireContext(),
@@ -81,6 +84,12 @@ class SettingsFragment : AegisBaseFragment() {
                         if (languageSpinner.selectedItemPosition != index) {
                             languageSpinner.setSelection(index)
                         }
+                    }
+                }
+                launch {
+                    // "Last synced: 27 Oct 2026, 15:20" or "Not synced yet"; updates itself when a sync finishes.
+                    ServiceLocator.syncState.lastSyncAt.collect {
+                        lastSyncText.text = ServiceLocator.syncState.lastSyncLabel(requireContext())
                     }
                 }
             }

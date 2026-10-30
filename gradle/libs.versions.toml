@@ -17,6 +17,10 @@ coroutines = "1.8.1"
 lifecycle = "2.8.7"
 desugarJdkLibs = "2.1.4"
 coil = "2.7.0"
+room3 = "3.0.3"
+work = "2.12.0"
+ksp = "2.3.4"
+coroutinesPlayServices = "1.10.2"
 
 
 [libraries]
@@ -38,9 +42,14 @@ kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutine
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugarJdkLibs" }
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
+androidx-room3-runtime = { module = "androidx.room3:room3-runtime", version.ref = "room3" }
+androidx-room3-compiler = { module = "androidx.room3:room3-compiler", version.ref = "room3" }
+androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "work" }
+kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutinesPlayServices" }
 
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 

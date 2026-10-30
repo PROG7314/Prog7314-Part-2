@@ -1,10 +1,7 @@
-// serialize.js - turns database documents into the JSON the Android app expects.
+/** Turns Firestore documents into the JSON shapes in the Part 1 spec (Timestamps -> ISO strings). */
 
-// Firestore Timestamp -> "2026-10-17T14:00:00.000Z". Returns null if there is no date.
-// (`typeof ts.toDate === 'function'` checks it really is a Timestamp.)
 export const iso = (ts) => (ts && typeof ts.toDate === 'function' ? ts.toDate().toISOString() : null);
 
-// The user's profile. Private fields such as fcmToken and firebaseUid are deliberately left out.
 export function profileResponse(u) {
   const base = {
     id: u.id,
@@ -15,26 +12,29 @@ export function profileResponse(u) {
     preferredLanguage: u.preferredLanguage ?? 'en',
     notificationsEnabled: u.notificationsEnabled ?? true,
   };
-  // "Full profile (fields vary by role)": each role only sees its own extra fields.
+  // "Full profile (fields vary by role)"
   if (u.role === 'volunteer') {
     return { ...base, bio: u.bio ?? '', interests: u.interests ?? [], skills: u.skills ?? [] };
   }
   if (u.role === 'organization') {
     return { ...base, description: u.description ?? '' };
   }
-  return base; // no role chosen yet
+  return base;
 }
 
 /**
  * signupCount / spacesRemaining are computed at query time from active sign-ups (there is no
  * stored counter), so callers pass signupCount in. null = "not calculated for this response".
  */
-export function listingResponse(id, l, { organizationName = null, signupCount = null } = {}) {
+export function listingResponse(
+  id,
+  l,
+  { organizationName = null, signupCount = null, matchedCauses = null, matchedSkills = null } = {}
+) {
   const scheduled = l.type === 'Scheduled';
   return {
     id,
     organizationId: l.organizationId,
-    // Looked up from the organization's profile by the caller; not stored on the listing itself.
     organizationName,
     title: l.title,
     description: l.description,
@@ -42,23 +42,22 @@ export function listingResponse(id, l, { organizationName = null, signupCount = 
     skillsRequired: l.skillsRequired ?? [],
     type: l.type,
     dateTime: iso(l.dateTime),
-    // Only Scheduled listings have a space limit.
     spacesTotal: scheduled ? l.spacesTotal ?? null : null,
-    // Spaces left = total minus people signed up, never below zero. null for Ongoing listings,
-    // or when the caller didn't work out the count.
     spacesRemaining:
       scheduled && signupCount != null ? Math.max(0, (l.spacesTotal ?? 0) - signupCount) : null,
     signupCount,
     area: l.area,
     minHours: l.minHours,
     images: l.images ?? [],
+    // Only set on the GET /listings feed, and only when a cause/skill filter was sent - null
+    // elsewhere (a single listing fetch, create, update) because there's nothing to explain there.
+    matchedCauses,
+    matchedSkills,
     createdAt: iso(l.createdAt),
     updatedAt: iso(l.updatedAt),
   };
 }
 
-// One sign-up. `extra` lets a route attach more fields, e.g. the volunteer's name (organization view)
-// or the listing summary (volunteer's commitments view).
 export function signupResponse(id, s, extra = {}) {
   return {
     id,
@@ -68,11 +67,11 @@ export function signupResponse(id, s, extra = {}) {
     hoursCompleted: s.hoursCompleted ?? null,
     signedUpAt: iso(s.signedUpAt),
     completedAt: iso(s.completedAt),
+    updatedAt: iso(s.updatedAt), // null on sign-ups made before this field existed
     ...extra,
   };
 }
 
-// One row of the volunteer's hours history.
 export function hoursEntryResponse(id, h) {
   return {
     id,
