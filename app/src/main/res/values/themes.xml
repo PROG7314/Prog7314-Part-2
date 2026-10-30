@@ -1,8 +1,35 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- DayNight parent: values-night/colors.xml swaps the palette, this file maps it onto
+         the Material 3 colour roles once for both modes. -->
     <style name="Base.Theme.Aegis" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/aegis_primary</item>
+        <item name="colorOnPrimary">@color/aegis_on_primary</item>
+        <item name="colorPrimaryContainer">@color/aegis_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/aegis_on_primary_container</item>
+        <item name="colorSecondary">@color/aegis_primary</item>
+        <item name="colorOnSecondary">@color/aegis_on_primary</item>
+        <item name="colorSecondaryContainer">@color/aegis_primary_container</item>
+        <item name="colorOnSecondaryContainer">@color/aegis_on_primary_container</item>
+        <item name="colorTertiary">@color/aegis_primary</item>
+        <item name="colorOnTertiary">@color/aegis_on_primary</item>
+
+        <item name="android:colorBackground">@color/aegis_background</item>
+        <item name="colorOnBackground">@color/aegis_on_surface</item>
+        <item name="colorSurface">@color/aegis_surface</item>
+        <item name="colorOnSurface">@color/aegis_on_surface</item>
+        <item name="colorSurfaceVariant">@color/aegis_surface_container</item>
+        <item name="colorOnSurfaceVariant">@color/aegis_on_surface_variant</item>
+        <item name="colorSurfaceContainer">@color/aegis_surface_container</item>
+        <item name="colorSurfaceContainerHigh">@color/aegis_surface_container_high</item>
+        <item name="colorSurfaceContainerHighest">@color/aegis_surface_container_high</item>
+        <item name="colorOutline">@color/aegis_outline</item>
+        <item name="colorOutlineVariant">@color/aegis_outline_variant</item>
+
+        <item name="colorError">@color/aegis_error</item>
+        <item name="colorOnError">@color/aegis_on_error</item>
+
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">@bool/aegis_light_system_bars</item>
     </style>
 
     <style name="Theme.Aegis" parent="Base.Theme.Aegis" />
