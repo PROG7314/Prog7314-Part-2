@@ -6,7 +6,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.net.Uri
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import com.example.aegis.data.ImageUploader
 import androidx.lifecycle.lifecycleScope
 import com.example.aegis.R
 import com.example.aegis.core.AegisBaseFragment
@@ -22,6 +25,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import com.example.aegis.core.Taxonomy
 
 class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing) {
 
@@ -32,6 +36,10 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
     private var selectedTime: LocalTime? = null
     private val uploadedImages = mutableListOf<String>()
 
+    private val pickPhoto = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        if (uri != null) uploadCover(uri)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentCreateListingBinding.bind(view)
@@ -41,22 +49,29 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
         setupClickListeners()
     }
 
+    // API values behind the category spinner, in the same order as its (translated) rows.
+    private lateinit var categoryValues: Array<String>
+
     private fun setupSpinners() {
         // Cause Category Spinner - must match the backend's fixed CAUSE_CATEGORIES list exactly.
+        // The English text is what the API stores; the spinner only shows its translation.
         val categories = arrayOf(
             "Children & Youth", "Elderly Care", "Soup Kitchens", "Animal Welfare", "Homeless Shelters",
             "Tutoring & Reading", "Environment & Conservation", "Health & Wellbeing", "Disaster Relief",
             "Community Development", "Disability Support"
         )
+        categoryValues = categories
         val categoryAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
-            categories
+            categories.map { Taxonomy.label(requireContext(), it) }
         )
         binding.spinnerCategory.adapter = categoryAdapter
 
         // Listing Type Spinner (SCHEDULED vs ONGOING)
-        val listingTypes = ListingType.values().map { it.apiValue }
+        val listingTypes = ListingType.values().map {
+            getString(if (it == ListingType.SCHEDULED) R.string.listing_type_scheduled else R.string.listing_type_ongoing)
+        }
         val typeAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
@@ -116,10 +131,34 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
             clearFields()
         }
 
-        binding.ivCameraBadge.setOnClickListener {
-            // Launch photo picker / camera intent logic
-            Toast.makeText(requireContext(), "Image selection triggered", Toast.LENGTH_SHORT).show()
+        binding.ivCameraBadge.setOnClickListener { pickPhoto.launch("image/*") }
+        binding.ivListingCover.setOnClickListener { pickPhoto.launch("image/*") }
+    }
+
+    // Shows the photo straight away, uploads it, and keeps the saved URL for the listing.
+    private fun uploadCover(uri: Uri) {
+        binding.ivListingCover.setImageURI(uri)
+        setUploading(true)
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val url = ImageUploader.upload(requireContext(), uri, "listing_images")
+                uploadedImages.clear()
+                uploadedImages.add(url)
+            } catch (e: Exception) {
+                uploadedImages.clear()
+                binding.ivListingCover.setImageDrawable(null)
+                Toast.makeText(requireContext(), getString(R.string.photo_upload_failed), Toast.LENGTH_LONG).show()
+            } finally {
+                _binding?.let { setUploading(false) }
+            }
         }
+    }
+
+    private fun setUploading(uploading: Boolean) {
+        binding.btnSave.isEnabled = !uploading
+        binding.ivCameraBadge.isEnabled = !uploading
+        binding.ivCameraBadge.alpha = if (uploading) 0.5f else 1f
+        if (uploading) Toast.makeText(requireContext(), getString(R.string.photo_uploading), Toast.LENGTH_SHORT).show()
     }
 
     private fun submitListing() {
@@ -128,20 +167,20 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
         val area = binding.etArea.text.toString().trim()
         val minHoursStr = binding.etHours.text.toString().trim()
         val skillsStr = binding.etSkills.text.toString().trim()
-        val selectedCategory = binding.spinnerCategory.selectedItem.toString()
+        val selectedCategory = categoryValues[binding.spinnerCategory.selectedItemPosition]
         val selectedType = ListingType.values()[binding.spinnerListingType.selectedItemPosition]
 
         // Core Validations
         if (title.isEmpty()) {
-            binding.etTitle.error = "Title is required"
+            binding.etTitle.error = getString(R.string.error_title_required)
             return
         }
         if (description.isEmpty()) {
-            binding.etDescription.error = "Description is required"
+            binding.etDescription.error = getString(R.string.error_description_required)
             return
         }
         if (area.isEmpty()) {
-            binding.etArea.error = "Area is required"
+            binding.etArea.error = getString(R.string.error_area_required)
             return
         }
 
@@ -150,7 +189,7 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
 
         if (selectedType == ListingType.SCHEDULED) {
             if (selectedDate == null || selectedTime == null) {
-                Toast.makeText(requireContext(), "Please select both date and time for scheduled listings", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.error_date_time_required), Toast.LENGTH_SHORT).show()
                 return
             }
             val localDateTime = LocalDateTime.of(selectedDate, selectedTime)
@@ -158,7 +197,7 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
 
             val spacesStr = binding.etSpaces.text.toString().trim()
             if (spacesStr.isEmpty()) {
-                binding.etSpaces.error = "Spaces total is required for scheduled listings"
+                binding.etSpaces.error = getString(R.string.error_spaces_required)
                 return
             }
             spacesTotal = spacesStr.toIntOrNull()
@@ -191,11 +230,11 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
             val result = ServiceLocator.listingRepository.createListing(draft)
             when (result) {
                 is ApiResult.Success -> {
-                    Toast.makeText(requireContext(), "Listing created successfully!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.listing_created), Toast.LENGTH_SHORT).show()
                     clearFields()
                 }
                 is ApiResult.Failure -> {
-                    Toast.makeText(requireContext(), "Error: ${result.error.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), getString(R.string.listing_create_failed, result.error.message), Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -210,11 +249,12 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
         binding.etHours.text?.clear()
         binding.spinnerCategory.setSelection(0)
         binding.spinnerListingType.setSelection(0)
-        binding.tvDate.text = "Select Date"
-        binding.tvTime.text = "Select Time"
+        binding.tvDate.text = getString(R.string.hint_select_date)
+        binding.tvTime.text = getString(R.string.hint_select_time)
         selectedDate = null
         selectedTime = null
         uploadedImages.clear()
+        binding.ivListingCover.setImageDrawable(null)
     }
 
     override fun onDestroyView() {
