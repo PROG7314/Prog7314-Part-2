@@ -28,6 +28,9 @@
         <item name="colorError">@color/aegis_error</item>
         <item name="colorOnError">@color/aegis_on_error</item>
 
+        <item name="android:fontFamily">@font/plus_jakarta_sans</item>
+        <item name="fontFamily">@font/plus_jakarta_sans</item>
+
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">@bool/aegis_light_system_bars</item>
     </style>
