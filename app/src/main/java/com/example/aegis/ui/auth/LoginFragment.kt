@@ -22,6 +22,8 @@ import com.example.aegis.R
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import kotlinx.coroutines.launch
+import com.example.aegis.data.local.UserPreferencesDataStore
+import kotlinx.coroutines.flow.first
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
@@ -77,11 +79,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 is AuthState.Success -> {
                     emailSignInButton.isEnabled = true
                     googleSignInButton.isEnabled = true
-                    when (state.role) {
-                        null -> findNavController().navigate(R.id.action_loginFragment_to_roleSelectionFragment)
-                        "volunteer" -> findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
-                        "organization" -> findNavController().navigate(R.id.action_loginFragment_to_orgHomeFragment)
-                    }
+                    offerBiometricThenNavigate(state.role)
                 }
                 is AuthState.Error -> {
                     emailSignInButton.isEnabled = true
@@ -92,7 +90,47 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             }
         }
     }
+    private fun navigateByRole(role: String?) {
+        when (role) {
+            null -> findNavController().navigate(R.id.action_loginFragment_to_roleSelectionFragment)
+            "volunteer" -> findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
+            "organization" -> findNavController().navigate(R.id.action_loginFragment_to_orgHomeFragment)
+        }
+    }
 
+    /** Asks once, after the first sign-in, whether to turn on fingerprint unlock, then continues. */
+    private fun offerBiometricThenNavigate(role: String?) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val prefs = UserPreferencesDataStore(requireContext())
+            val alreadyHandled = prefs.biometricEnabledFlow.first() || prefs.biometricAskedFlow.first()
+            if (alreadyHandled || !BiometricHelper.isAvailable(requireContext())) {
+                navigateByRole(role)
+                return@launch
+            }
+            prefs.setBiometricAsked(true)
+            AlertDialog.Builder(requireContext())
+                .setTitle(R.string.biometric_enable_title)
+                .setMessage(R.string.biometric_enable_message)
+                .setCancelable(false)
+                .setPositiveButton(R.string.biometric_yes) { _, _ ->
+                    BiometricHelper.prompt(
+                        requireActivity(),
+                        getString(R.string.biometric_title),
+                        getString(R.string.biometric_subtitle),
+                        getString(android.R.string.cancel),
+                        onSuccess = {
+                            viewLifecycleOwner.lifecycleScope.launch {
+                                prefs.setBiometricEnabled(true)
+                                navigateByRole(role)
+                            }
+                        },
+                        onFailure = { navigateByRole(role) }
+                    )
+                }
+                .setNegativeButton(R.string.biometric_not_now) { _, _ -> navigateByRole(role) }
+                .show()
+        }
+    }
     private fun launchGoogleSignIn() {
         val credentialManager = CredentialManager.create(requireContext())
 
