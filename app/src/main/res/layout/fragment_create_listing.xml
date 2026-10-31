@@ -135,6 +135,21 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:tint="?attr/colorPrimary" />
+
+                        <TextView
+                            android:id="@+id/tv_photo_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginBottom="12dp"
+                            android:background="@drawable/bg_circle_translucent"
+                            android:paddingHorizontal="10dp"
+                            android:paddingVertical="4dp"
+                            android:text="@string/photo_count_add"
+                            android:textColor="?attr/colorPrimary"
+                            android:textSize="12sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Title -->
@@ -260,8 +275,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         android:background="@drawable/bg_rounded_input"
-                        android:hint="@string/hint_skills"
-                        android:inputType="textCapWords"
+                        android:hint="@string/hint_skills_pick"
+                        android:inputType="none"
                         android:paddingHorizontal="14dp"
                         android:paddingVertical="12dp"
                         android:textColor="?attr/colorOnSurface"
@@ -300,6 +315,8 @@
                                 android:layout_weight="1"
                                 android:hint="@string/hint_select_date"
                                 android:textColor="?attr/colorOnSurface"
+                                android:minHeight="46dp"
+                                android:gravity="center_vertical"
                                 android:textSize="14sp" />
 
                             <TextView
@@ -308,6 +325,8 @@
                                 android:layout_height="wrap_content"
                                 android:hint="@string/hint_select_time"
                                 android:textColor="?attr/colorOnSurface"
+                                android:minHeight="46dp"
+                                android:gravity="center_vertical"
                                 android:textSize="14sp" />
                         </LinearLayout>
 

@@ -134,6 +134,56 @@
     <string name="skill_marketing">Ukumaketha Nezokuxhumana</string>
     <string name="skill_translation">Ukuhumusha Noma Izilimi Eziningi</string>
     <string name="skill_first_aid">Usizo Lokuqala</string>
-    <string name="photo_upload_failed">Ayikwazanga ukulayisha isithombe. Sicela uzame futhi.</string>
-    <string name="photo_uploading">Isithombe siyalayishwa…</string>
+
+    <!-- Strings for the sign-up management, notifications and offline screens (draft translations - need a native-speaker review) -->
+    <string name="signups_title">Okubhalisile</string>
+    <string name="signups_back">Emuva</string>
+    <string name="signups_empty">Akekho okhulumile okubhalisa kuloluhlu okwamanje.</string>
+    <string name="signups_retry">Zama futhi</string>
+    <string name="signups_mark_complete">Phawula njengokuqediwe</string>
+    <string name="signups_edit_hours">Hlela amahora</string>
+    <string name="signups_status_confirmed">KUQINISEKISIWE</string>
+    <string name="signups_status_completed">KUQEDIWE</string>
+    <string name="signups_unknown_volunteer">Isikhonzi</string>
+    <string name="signups_hours_format">amahora angu-%1$s</string>
+    <string name="signups_dialog_title">Amahora e-%1$s</string>
+    <string name="signups_dialog_hint">Amahora (isb. 2.5)</string>
+    <string name="signups_dialog_save">Londoloza</string>
+    <string name="signups_dialog_cancel">Khansela</string>
+    <string name="signups_hours_invalid">Faka inombolo kusuka ku-0 kuya ku-1000</string>
+    <string name="notification_channel_name">Izibuyekezo ze-Aegis</string>
+    <string name="notification_channel_description">Ukubhalisa, amahora arekhodiwe namathuba amasha ahambisana nawe</string>
+    <string name="notif_permission_title">Uthanda ukwazi okwenzekayo?</string>
+    <string name="notif_permission_message">I-Aegis ingakwazisa uma othile ebhalisaohlwini lwakho, uma amahora akho okuzithoba arekhodiwe, nalapho kuvela ithuba elisha elihambisana nezintshisekelo zakho.</string>
+    <string name="notif_permission_allow">Vumela</string>
+    <string name="notif_permission_not_now">Hhayi manje</string>
+    <string name="offline_banner_offline">Awuxhumekile ku-inthanethi. Kuboniswa idatha elondoloziwe.</string>
+    <string name="offline_banner_syncing">Usubuye waxhumeka. Iyavumelanisa: %1$s…</string>
+    <string name="offline_nothing_saved">Awuxhumekile futhi akukho okulondolozwe kule foni okwamanje. Xhuma kanye ukuze ulayishe.</string>
+    <string name="offline_signed_up_queued">Awuxhumekile. Sizokubhalisa uma usuxhumeke futhi.</string>
+    <string name="settings_last_synced">Okokugcina kuvumelanisiwe: %1$s</string>
+    <string name="settings_never_synced">Akukavumelaniswa</string>
+    <string name="sync_that_listing">lolo hlu</string>
+    <string name="sync_rejected_full">Asikwazanga ukukubhalisela i-%1$s: igcwele ngenkathi ungaxhumekile.</string>
+    <string name="sync_rejected_ended">Asikwazanga ukukubhalisela i-%1$s: umcimbi usuvele wenzeka.</string>
+    <string name="sync_rejected_removed">Asikwazanga ukukubhalisela i-%1$s: isisusiwe.</string>
+    <string name="sync_rejected_completed">Ukubhalisa kwakho kwe-%1$s sekuvele kuqediwe, ngakho akukwazi ukukhanselwa.</string>
+    <string name="sync_rejected_gone">Loko kubhalisa akusekho.</string>
+    <string name="sync_rejected_generic">Ushintsho owasenza ungaxhumekile alukwazanga ukulondolozwa.</string>
+    <string name="sync_already_signed_up">Usevele ubhalisele lolu hlu.</string>
+    <string name="sync_signup_not_on_phone">Asikwazanga ukuthola loko kubhalisa kule foni.</string>
+    <string name="logout_unsynced_title">Izinguquko ezingavumelanisiwe</string>
+    <string name="logout_anyway">Phuma noma kunjalo</string>
+    <string name="logout_stay">Hlala ungene</string>
+    <string name="commitment_waiting_sync">Kulindele ukuvumelanisa</string>
+    <string name="photo_count_add">Engeza izithombe ezifika kwezi-3</string>
+    <string name="hint_skills_pick">Thinta ukuze ukhethe amakhono</string>
+    <plurals name="offline_pending_changes">
+        <item quantity="one">Ushintsho olu-%d lulindile</item>
+        <item quantity="other">Izinguquko ezingu-%d zilindile</item>
+    </plurals>
+    <plurals name="logout_unsynced_message">
+        <item quantity="one">Ushintsho olu-%d owalwenza ungaxhumekile alukathunyelwa kuseva. Uma uphuma manje, luzolahleka.</item>
+        <item quantity="other">Izinguquko ezingu-%d owazenza ungaxhumekile azikathunyelwa kuseva. Uma uphuma manje, zizolahleka.</item>
+    </plurals>
 </resources>

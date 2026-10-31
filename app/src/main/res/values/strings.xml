@@ -12,6 +12,7 @@
     <string name="find_a_way_to_help">Find a way to help</string>
     <string name="no_listings_right_now">No opportunities to show right now. Check back soon.</string>
     <string name="retry">Retry</string>
+
     <string name="welcome_back">Welcome back, %1$s</string>
     <string name="new_listings_count">There are %1$d listings for you</string>
     <string name="your_hours">Your Hours</string>
@@ -33,6 +34,7 @@
     <string name="settings">Settings</string>
     <string name="log_out">Log Out</string>
     <string name="dismiss">Dismiss</string>
+
     <string name="your_commitments">Your Commitments</string>
     <string name="commitments_subtitle">Manage your commitments and reminders to make sure you don\'t miss out on the chance to help</string>
     <string name="no_commitments_yet">You haven\'t signed up for anything yet.</string>
@@ -137,6 +139,67 @@
     <string name="skill_marketing">Marketing &amp; Social Media</string>
     <string name="skill_translation">Translation or Multilingual</string>
     <string name="skill_first_aid">First Aid</string>
-    <string name="photo_upload_failed">Could not upload the photo. Please try again.</string>
-    <string name="photo_uploading">Uploading photo…</string>
+
+    <string name="signups_title">Sign-ups</string>
+    <string name="signups_back">Back</string>
+    <string name="signups_empty">No one has signed up for this listing yet.</string>
+    <string name="signups_retry">Try again</string>
+    <string name="signups_mark_complete">Mark complete</string>
+    <string name="signups_edit_hours">Edit hours</string>
+    <string name="signups_status_confirmed">CONFIRMED</string>
+    <string name="signups_status_completed">COMPLETED</string>
+    <string name="signups_unknown_volunteer">Volunteer</string>
+    <string name="signups_hours_format">%1$s hours</string>
+    <string name="signups_dialog_title">Hours for %1$s</string>
+    <string name="signups_dialog_hint">Hours (e.g. 2.5)</string>
+    <string name="signups_dialog_save">Save</string>
+    <string name="signups_dialog_cancel">Cancel</string>
+    <string name="signups_hours_invalid">Enter a number from 0 to 1000</string>
+
+    <string name="notification_channel_id" translatable="false">aegis_default</string>
+    <string name="notification_channel_name">Aegis updates</string>
+    <string name="notification_channel_description">Sign-ups, logged hours and new opportunities that match you</string>
+    <string name="notif_permission_title">Stay in the loop?</string>
+    <string name="notif_permission_message">Aegis can notify you when someone signs up for your listing, when your volunteer hours are logged, and when a new opportunity matches your interests.</string>
+    <string name="notif_permission_allow">Allow</string>
+    <string name="notif_permission_not_now">Not now</string>
+
+    <string name="offline_banner_offline">You\'re offline. Showing saved data.</string>
+    <string name="offline_banner_syncing">Back online. Syncing: %1$s…</string>
+    <plurals name="offline_pending_changes">
+        <item quantity="one">%d change waiting</item>
+        <item quantity="other">%d changes waiting</item>
+    </plurals>
+
+    <string name="offline_nothing_saved">You\'re offline and nothing is saved on this phone yet. Connect once to load it.</string>
+    <string name="offline_signed_up_queued">You\'re offline. We\'ll sign you up as soon as you reconnect.</string>
+
+    <string name="settings_last_synced">Last synced: %1$s</string>
+    <string name="settings_never_synced">Not synced yet</string>
+
+    <!-- Shown when the server refuses a change that was made offline. %1$s is the listing title in quotes. -->
+    <string name="sync_that_listing">that listing</string>
+    <string name="sync_rejected_full">Couldn\'t sign you up for %1$s: it filled up while you were offline.</string>
+    <string name="sync_rejected_ended">Couldn\'t sign you up for %1$s: the event has already taken place.</string>
+    <string name="sync_rejected_removed">Couldn\'t sign you up for %1$s: it was removed.</string>
+    <string name="sync_rejected_completed">Your sign-up for %1$s was already completed, so it can\'t be cancelled.</string>
+    <string name="sync_rejected_gone">That sign-up no longer exists.</string>
+    <string name="sync_rejected_generic">A change you made offline couldn\'t be saved.</string>
+    <string name="sync_already_signed_up">You\'re already signed up for this listing.</string>
+    <string name="sync_signup_not_on_phone">We couldn\'t find that sign-up on this phone.</string>
+
+    <!-- Logout warning when changes made offline haven't been sent yet. -->
+    <string name="logout_unsynced_title">Unsynced changes</string>
+    <plurals name="logout_unsynced_message">
+        <item quantity="one">%d change you made offline hasn\'t been sent to the server yet. If you log out now, it will be lost.</item>
+        <item quantity="other">%d changes you made offline haven\'t been sent to the server yet. If you log out now, they will be lost.</item>
+    </plurals>
+    <string name="logout_anyway">Log out anyway</string>
+    <string name="logout_stay">Stay logged in</string>
+
+    <string name="commitment_waiting_sync">Waiting to sync</string>
+
+
+    <string name="photo_count_add">Add up to 3 photos</string>
+    <string name="hint_skills_pick">Tap to choose skills</string>
 </resources>
