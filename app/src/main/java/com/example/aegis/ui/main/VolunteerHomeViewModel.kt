@@ -18,6 +18,8 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
 // What every screen in ui/main/ exposes: exactly one of these at a time.
@@ -54,6 +56,9 @@ class VolunteerHomeViewModel(
 
     init {
         loadFeed()
+        viewModelScope.launch {
+            ServiceLocator.connectivity.online.drop(1).filter { it }.collect { loadFeed() }
+        }
     }
 
     fun loadFeed() {
@@ -83,8 +88,11 @@ class VolunteerHomeViewModel(
         viewModelScope.launch {
             when (val result = signups.signUp(listingId)) {
                 is ApiResult.Success -> {
-                    _messages.emit("You're signed up!")
-                    loadFeed() // refresh so spaces / counts update
+                    _messages.emit(
+                        if (result.data.pendingSync) "You're offline. We'll sign you up as soon as you reconnect."
+                        else "You're signed up!"
+                    )
+                    loadFeed()
                 }
                 // A full Scheduled listing arrives as conflict; its message is already user-safe.
                 is ApiResult.Failure -> _messages.emit(result.error.message)

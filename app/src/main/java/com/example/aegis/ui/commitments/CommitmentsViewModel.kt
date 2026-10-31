@@ -42,6 +42,8 @@ class CommitmentsViewModel(
 
     init {
         loadCommitments()
+        viewModelScope.launch { ServiceLocator.syncState.syncFinished.collect { loadCommitments() } }
+        viewModelScope.launch { ServiceLocator.syncState.events.collect { _messages.emit(it) } }
     }
 
     /** "Message" button: open the conversation about this commitment's listing. */

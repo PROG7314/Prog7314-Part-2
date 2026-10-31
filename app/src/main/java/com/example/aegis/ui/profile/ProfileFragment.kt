@@ -20,6 +20,7 @@ import com.example.aegis.domain.model.UserProfile
 import com.example.aegis.ui.main.UiState
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import com.example.aegis.core.Taxonomy
@@ -119,13 +120,46 @@ class ProfileFragment : AegisBaseFragment() {
         }
     }
 
+    /**
+     * Logout button. First try to send anything made offline (the token is still valid). If changes
+     * are still unsent - no connection, or the server refused - ask before throwing them away.
+     */
     private fun logout() {
+        binding.logoutButton.isEnabled = false
         viewLifecycleOwner.lifecycleScope.launch {
-            safeApiCall("ProfileFragment") { ServiceLocator.api().logout() }
-            TokenStore.clear(requireContext())
-            FirebaseAuth.getInstance().signOut()
-            findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
+            if (ServiceLocator.connectivity.isOnline) ServiceLocator.syncEngine.syncPending()
+
+            val unsynced = ServiceLocator.database.pendingDao().allUnsynced().size
+            if (unsynced == 0) {
+                finishLogout()
+            } else {
+                showUnsyncedWarning(unsynced)
+            }
         }
+    }
+
+    private fun showUnsyncedWarning(count: Int) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.logout_unsynced_title)
+            .setMessage(resources.getQuantityString(R.plurals.logout_unsynced_message, count, count))
+            .setNegativeButton(R.string.logout_stay) { _, _ -> _binding?.logoutButton?.isEnabled = true }
+            .setPositiveButton(R.string.logout_anyway) { _, _ ->
+                viewLifecycleOwner.lifecycleScope.launch { finishLogout() }
+            }
+            .setOnCancelListener { _binding?.logoutButton?.isEnabled = true } // tapped outside / back
+            .show()
+    }
+
+    /** The actual logout, in order, with no nested launch (leaving the screen would cancel it). */
+    private suspend fun finishLogout() {
+        // Tells the server, and clears this phone's push token there.
+        safeApiCall("ProfileFragment") { ServiceLocator.api().logout() }
+
+        TokenStore.clear(requireContext())
+        ServiceLocator.clearUserData() // cached listings/commitments + the offline queue
+        FirebaseAuth.getInstance().signOut()
+
+        findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
     }
 
     override fun onDestroyView() {

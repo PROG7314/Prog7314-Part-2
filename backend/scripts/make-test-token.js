@@ -7,8 +7,6 @@ import { initFirebase } from '../src/firebase.js';
 import { ensureTestUser } from '../src/devTools.js';
 import { signSessionToken } from '../src/tokens.js';
 
-// Reads the value after a command-line flag: arg('--role', 'volunteer') looks for "--role x" in the
-// command and returns x, or the fallback if the flag wasn't given.
 const arg = (flag, fallback) => {
   const i = process.argv.indexOf(flag);
   return i > -1 && process.argv[i + 1] ? process.argv[i + 1] : fallback;
@@ -19,24 +17,17 @@ if (!['volunteer', 'organization'].includes(role)) {
   console.error('--role must be "volunteer" or "organization"');
   process.exit(1);
 }
-// Sensible defaults taken from the mockups (Julie Beckett, and the children's home organization).
 const defaults =
-   role === 'volunteer'
-      ? {
-          name: 'Julie Beckett',
-          interests: ['Children & Youth', 'Environment & Conservation', 'Soup Kitchens'],
-          skills: ['Reading to Children', 'Manual Labour', 'Cooking or Food Prep'],
-        }
-      : { name: "Christine Revell Children's Home", interests: [], skills: [] };
+  role === 'volunteer'
+    ? { name: 'Julie Beckett', interests: ['Children & Youth', 'Animal Welfare'], skills: ['Reading to Children'] }
+    : { name: "Christine Revell Children's Home", interests: [], skills: [] };
 
 const cfg = loadConfig();
 const { db } = initFirebase();
-// A fixed id per role ("test-volunteer" / "test-organization"), so the same test account is reused every time.
 const uid = `test-${role}`;
 await ensureTestUser(db, { uid, role, name: arg('--name', defaults.name), interests: defaults.interests, skills: defaults.skills });
 
 console.log(`Test ${role} account: ${uid}`);
 console.log('Token (valid for JWT_EXPIRES_IN). Do NOT commit it to GitHub:\n');
 console.log(signSessionToken(uid, cfg));
-// Exit explicitly: the Firebase connection would otherwise keep the script running.
 process.exit(0);

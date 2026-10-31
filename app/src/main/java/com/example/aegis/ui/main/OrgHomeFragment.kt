@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -15,8 +15,11 @@ import com.example.aegis.R
 import com.example.aegis.core.AegisBaseFragment
 import com.example.aegis.databinding.FragmentOrgHomeBinding
 import com.example.aegis.domain.model.Listing
+import com.example.aegis.ui.listing.CreateListingFragment
 import com.example.aegis.ui.listing.OrgListingAdapter
+import com.example.aegis.ui.listing.OrgListingDetailFragment
 import kotlinx.coroutines.launch
+
 
 class OrgHomeFragment : AegisBaseFragment() {
 
@@ -48,6 +51,17 @@ class OrgHomeFragment : AegisBaseFragment() {
             findNavController().navigate(R.id.action_orgHomeFragment_to_createListingFragment)
         }
 
+        // Reload when a listing was just created on the Create Listing screen
+        val savedState = findNavController().currentBackStackEntry?.savedStateHandle
+        savedState
+            ?.getLiveData<Boolean>(CreateListingFragment.LISTING_CHANGED)
+            ?.observe(viewLifecycleOwner) { changed ->
+                if (changed == true) {
+                    viewModel.loadListings()
+                    savedState.remove<Boolean>(CreateListingFragment.LISTING_CHANGED)
+                }
+            }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.listings.collect { state -> render(state) }
@@ -56,7 +70,10 @@ class OrgHomeFragment : AegisBaseFragment() {
     }
 
     private fun onViewDetails(listing: Listing) {
-        Toast.makeText(requireContext(), "View details: ${listing.title}", Toast.LENGTH_SHORT).show()
+        findNavController().navigate(
+            R.id.orgListingDetailFragment,
+            bundleOf(OrgListingDetailFragment.ARG_LISTING_ID to listing.id)
+        )
     }
 
     private fun render(state: UiState<List<Listing>>) {
