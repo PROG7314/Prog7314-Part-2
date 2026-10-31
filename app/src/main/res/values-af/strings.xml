@@ -134,6 +134,56 @@
     <string name="skill_marketing">Bemarking &amp; Sosiale Media</string>
     <string name="skill_translation">Vertaling of Veeltalig</string>
     <string name="skill_first_aid">Noodhulp</string>
-    <string name="photo_upload_failed">Kon nie die foto oplaai nie. Probeer asseblief weer.</string>
-    <string name="photo_uploading">Foto word opgelaai…</string>
+
+    <!-- Strings for the sign-up management, notifications and offline screens (draft translations - need a native-speaker review) -->
+    <string name="signups_title">Inskrywings</string>
+    <string name="signups_back">Terug</string>
+    <string name="signups_empty">Niemand het nog vir hierdie lys ingeskryf nie.</string>
+    <string name="signups_retry">Probeer weer</string>
+    <string name="signups_mark_complete">Merk as voltooi</string>
+    <string name="signups_edit_hours">Wysig ure</string>
+    <string name="signups_status_confirmed">BEVESTIG</string>
+    <string name="signups_status_completed">VOLTOOI</string>
+    <string name="signups_unknown_volunteer">Vrywilliger</string>
+    <string name="signups_hours_format">%1$s ure</string>
+    <string name="signups_dialog_title">Ure vir %1$s</string>
+    <string name="signups_dialog_hint">Ure (bv. 2.5)</string>
+    <string name="signups_dialog_save">Stoor</string>
+    <string name="signups_dialog_cancel">Kanselleer</string>
+    <string name="signups_hours_invalid">Voer \'n getal van 0 tot 1000 in</string>
+    <string name="notification_channel_name">Aegis-opdaterings</string>
+    <string name="notification_channel_description">Inskrywings, aangetekende ure en nuwe geleenthede wat by jou pas</string>
+    <string name="notif_permission_title">Bly op hoogte?</string>
+    <string name="notif_permission_message">Aegis kan jou in kennis stel wanneer iemand vir jou lys inskryf, wanneer jou vrywilligersure aangeteken word, en wanneer \'n nuwe geleentheid by jou belangstellings pas.</string>
+    <string name="notif_permission_allow">Laat toe</string>
+    <string name="notif_permission_not_now">Nie nou nie</string>
+    <string name="offline_banner_offline">Jy is vanlyn. Gestoorde data word gewys.</string>
+    <string name="offline_banner_syncing">Weer aanlyn. Sinkroniseer: %1$s…</string>
+    <string name="offline_nothing_saved">Jy is vanlyn en niks is nog op hierdie foon gestoor nie. Koppel een keer om dit te laai.</string>
+    <string name="offline_signed_up_queued">Jy is vanlyn. Ons skryf jou in sodra jy weer koppel.</string>
+    <string name="settings_last_synced">Laas gesinkroniseer: %1$s</string>
+    <string name="settings_never_synced">Nog nie gesinkroniseer nie</string>
+    <string name="sync_that_listing">daardie lys</string>
+    <string name="sync_rejected_full">Kon jou nie vir %1$s inskryf nie: dit het volgeboek terwyl jy vanlyn was.</string>
+    <string name="sync_rejected_ended">Kon jou nie vir %1$s inskryf nie: die geleentheid het reeds plaasgevind.</string>
+    <string name="sync_rejected_removed">Kon jou nie vir %1$s inskryf nie: dit is verwyder.</string>
+    <string name="sync_rejected_completed">Jou inskrywing vir %1$s is reeds voltooi en kan nie gekanselleer word nie.</string>
+    <string name="sync_rejected_gone">Daardie inskrywing bestaan nie meer nie.</string>
+    <string name="sync_rejected_generic">\'n Verandering wat jy vanlyn gemaak het, kon nie gestoor word nie.</string>
+    <string name="sync_already_signed_up">Jy is reeds vir hierdie lys ingeskryf.</string>
+    <string name="sync_signup_not_on_phone">Ons kon nie daardie inskrywing op hierdie foon vind nie.</string>
+    <string name="logout_unsynced_title">Ongesinkroniseerde veranderinge</string>
+    <string name="logout_anyway">Teken tog uit</string>
+    <string name="logout_stay">Bly ingeteken</string>
+    <string name="commitment_waiting_sync">Wag om te sinkroniseer</string>
+    <string name="photo_count_add">Voeg tot 3 foto\'s by</string>
+    <string name="hint_skills_pick">Tik om vaardighede te kies</string>
+    <plurals name="offline_pending_changes">
+        <item quantity="one">%d verandering wag</item>
+        <item quantity="other">%d veranderinge wag</item>
+    </plurals>
+    <plurals name="logout_unsynced_message">
+        <item quantity="one">%d verandering wat jy vanlyn gemaak het, is nog nie na die bediener gestuur nie. As jy nou uitteken, sal dit verlore gaan.</item>
+        <item quantity="other">%d veranderinge wat jy vanlyn gemaak het, is nog nie na die bediener gestuur nie. As jy nou uitteken, sal dit verlore gaan.</item>
+    </plurals>
 </resources>

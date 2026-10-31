@@ -41,6 +41,8 @@ class CommitmentAdapter(
 
             val photo = listing?.images?.firstOrNull()
             if (photo != null) commitmentImage.load(photo) else commitmentImage.setImageDrawable(null)
+            // Made offline and not yet sent to the server.
+            pendingLabel.visibility = if (signup.pendingSync) View.VISIBLE else View.GONE
 
             dismissButton.setOnClickListener { onDismissClick(signup) }
             // Nobody to message if the organization deleted the listing.

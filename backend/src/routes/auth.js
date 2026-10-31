@@ -1,10 +1,3 @@
-// routes/auth.js - login and account setup.
-
-// Login flow:
-//   1. The app signs in with Google via Firebase and gets a Firebase ID token.
-//   2. The app sends that token to POST /auth/login.
-//   3. We ask Firebase to verify it, find (or create) the user's record, and reply with OUR OWN JWT.
-//   4. From then on the app sends our JWT instead of the Firebase token.
 import { Router } from 'express';
 import { Timestamp } from 'firebase-admin/firestore';
 import { ah } from '../asyncHandler.js';
@@ -14,11 +7,10 @@ import { ROLES } from '../constants.js';
 import { signSessionToken } from '../tokens.js';
 import { profileResponse } from '../serialize.js';
 
-/** Auth & session. `auth` is the JWT middleware; only POST /login is unauthenticated. */
+/** Table 1 - Auth & session. `auth` is the JWT middleware; only POST /login is unauthenticated. */
 export function authRouter({ db, firebaseAuth, cfg, auth }) {
   const r = Router();
 
-  // POST /auth/login - body: { firebaseIdToken }  ->  { token, user: { id, role, isNewUser } }
   r.post(
     '/login',
     ah(async (req, res) => {
@@ -27,7 +19,6 @@ export function authRouter({ db, firebaseAuth, cfg, auth }) {
         throw badRequest('firebaseIdToken is required.', 'firebaseIdToken');
       }
 
-      // `decoded` then holds the verified details: uid, email, name and picture.
       let decoded;
       try {
         decoded = await firebaseAuth.verifyIdToken(firebaseIdToken);
@@ -41,13 +32,10 @@ export function authRouter({ db, firebaseAuth, cfg, auth }) {
       }
 
       // Get-or-create the users document. Its id is the Firebase uid, so a double login can't create two accounts.
-      // It runs as a transaction so "look it up, and create it if missing" happens as one step;
-      // two logins at the same moment can't both create the account.
       const ref = db.collection('users').doc(decoded.uid);
       const { user, isNewUser } = await db.runTransaction(async (t) => {
         const snap = await t.get(ref);
-        if (snap.exists) return { user: snap.data(), isNewUser: false }; // returning user
-        // First ever login: build the new user record, pre-filled from their Google account.
+        if (snap.exists) return { user: snap.data(), isNewUser: false };
         const now = Timestamp.now();
         const data = {
           id: decoded.uid,
@@ -66,11 +54,10 @@ export function authRouter({ db, firebaseAuth, cfg, auth }) {
           createdAt: now,
           updatedAt: now,
         };
-        t.create(ref, data); // create() fails if the document already exists, as a safety net
+        t.create(ref, data);
         return { user: data, isNewUser: true };
       });
 
-      // isNewUser lets the app decide whether to show the "choose your role" screen.
       res.json({
         token: signSessionToken(decoded.uid, cfg),
         user: { id: decoded.uid, role: user.role ?? null, isNewUser },
@@ -78,14 +65,12 @@ export function authRouter({ db, firebaseAuth, cfg, auth }) {
     })
   );
 
-  // POST /auth/role - body: { role: "volunteer" | "organization" }. Allowed once per account.
   r.post(
     '/role',
     auth,
     ah(async (req, res) => {
       const role = requireEnum(bodyOf(req).role, 'role', ROLES);
       const ref = db.collection('users').doc(req.user.id);
-      // A transaction again, so two requests can't both pass the "role not set yet" check.
       const updated = await db.runTransaction(async (t) => {
         const snap = await t.get(ref);
         if (snap.data().role) {
@@ -93,15 +78,22 @@ export function authRouter({ db, firebaseAuth, cfg, auth }) {
         }
         const patch = { role, updatedAt: Timestamp.now() };
         t.update(ref, patch);
-        return { ...snap.data(), ...patch, id: snap.id }; // the record as it will look after the update
+        return { ...snap.data(), ...patch, id: snap.id };
       });
       res.json(profileResponse(updated));
     })
   );
 
-  // JWTs are stateless, so there is nothing to revoke server-side; the app clears its stored token.
-  // 204 = success with no response body.
-  r.post('/logout', auth, (req, res) => res.status(204).end());
+  // JWTs are stateless, so the app just discards its token. The one thing logout does server-side is
+  // forget the device's FCM token, so this account stops getting pushes on this phone.
+  r.post(
+    '/logout',
+    auth,
+    ah(async (req, res) => {
+      await db.collection('users').doc(req.user.id).update({ fcmToken: null, updatedAt: Timestamp.now() });
+      res.status(204).end();
+    })
+  );
 
   return r;
 }

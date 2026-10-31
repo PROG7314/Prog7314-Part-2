@@ -6,238 +6,295 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.net.Uri
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import com.example.aegis.data.ImageUploader
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import coil.load
 import com.example.aegis.R
 import com.example.aegis.core.AegisBaseFragment
-import com.example.aegis.data.ServiceLocator
 import com.example.aegis.databinding.FragmentCreateListingBinding
-import com.example.aegis.domain.model.ApiResult
-import com.example.aegis.domain.model.ListingDraft
+import com.example.aegis.domain.model.Listing
 import com.example.aegis.domain.model.ListingType
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
-import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import com.example.aegis.core.Taxonomy
 
 class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing) {
 
     private var _binding: FragmentCreateListingBinding? = null
     private val binding get() = _binding!!
 
-    private var selectedDate: LocalDate? = null
-    private var selectedTime: LocalTime? = null
-    private val uploadedImages = mutableListOf<String>()
+    private val viewModel: CreateListingViewModel by viewModels { CreateListingViewModel.Factory }
 
-    private val pickPhoto = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        if (uri != null) uploadCover(uri)
+    // Up to 3 photos from the system photo picker (falls back to the gallery on older phones).
+    private val pickPhotos = registerForActivityResult(
+        ActivityResultContracts.PickMultipleVisualMedia(CreateListingViewModel.MAX_IMAGES)
+    ) { uris ->
+        if (uris.isNotEmpty()) viewModel.setImages(uris)
     }
+
+    // Must match the backend's SKILLS list exactly (same as InterestMatchingViewModel.availableSkills).
+    private val availableSkills = listOf(
+        "Tutoring", "Reading to Children", "Manual Labour", "Cooking or Food Prep",
+        "Admin & Organising", "Fundraising", "Marketing & Social Media",
+        "Translation or Multilingual", "First Aid"
+    )
+
+    // Must match the backend's fixed CAUSE_CATEGORIES list exactly.
+    private val categories = arrayOf(
+        "Children & Youth", "Elderly Care", "Soup Kitchens", "Animal Welfare", "Homeless Shelters",
+        "Tutoring & Reading", "Environment & Conservation", "Health & Wellbeing", "Disaster Relief",
+        "Community Development", "Disability Support"
+    )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentCreateListingBinding.bind(view)
 
         setupSpinners()
+        setupSkillsPicker()
         setupDateTimePickers()
         setupClickListeners()
+        restorePickedValues()
+
+        // Opened from a listing's Edit button: load it and switch the screen to edit mode.
+        arguments?.getString(ARG_LISTING_ID)?.let { id ->
+            viewModel.startEdit(id)
+            binding.btnTabCreate.text = "Edit Listing"
+            binding.btnDiscard.text = "Cancel"
+        }
+        collectViewModel()
     }
 
-    // API values behind the category spinner, in the same order as its (translated) rows.
-    private lateinit var categoryValues: Array<String>
-
+    // ------------------------------------------------------------------ setup
     private fun setupSpinners() {
-        // Cause Category Spinner - must match the backend's fixed CAUSE_CATEGORIES list exactly.
-        // The English text is what the API stores; the spinner only shows its translation.
-        val categories = arrayOf(
-            "Children & Youth", "Elderly Care", "Soup Kitchens", "Animal Welfare", "Homeless Shelters",
-            "Tutoring & Reading", "Environment & Conservation", "Health & Wellbeing", "Disaster Relief",
-            "Community Development", "Disability Support"
+        binding.spinnerCategory.adapter = ArrayAdapter(
+            requireContext(), android.R.layout.simple_spinner_dropdown_item, categories
         )
-        categoryValues = categories
-        val categoryAdapter = ArrayAdapter(
+
+        binding.spinnerListingType.adapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
-            categories.map { Taxonomy.label(requireContext(), it) }
+            ListingType.values().map { it.apiValue }
         )
-        binding.spinnerCategory.adapter = categoryAdapter
-
-        // Listing Type Spinner (SCHEDULED vs ONGOING)
-        val listingTypes = ListingType.values().map {
-            getString(if (it == ListingType.SCHEDULED) R.string.listing_type_scheduled else R.string.listing_type_ongoing)
-        }
-        val typeAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
-            listingTypes
-        )
-        binding.spinnerListingType.adapter = typeAdapter
-
         binding.spinnerListingType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val selectedType = ListingType.values()[position]
-                binding.layoutScheduledFields.visibility = if (selectedType == ListingType.SCHEDULED) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
+                // Ongoing listings have no date and no cap.
+                binding.layoutScheduledFields.visibility =
+                    if (ListingType.values()[position] == ListingType.SCHEDULED) View.VISIBLE else View.GONE
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
 
+    private fun setupSkillsPicker() {
+        binding.etSkills.apply {
+            isFocusable = false // a tap opens the list; there is nothing to type
+            isFocusableInTouchMode = false
+            isCursorVisible = false
+            setOnClickListener { showSkillsDialog() }
+        }
+    }
+
+    private fun showSkillsDialog() {
+        val items = availableSkills.toTypedArray()
+        val checked = BooleanArray(items.size) { items[it] in viewModel.skills }
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Skills required")
+            .setMultiChoiceItems(items, checked) { _, which, isChecked ->
+                if (isChecked) viewModel.skills.add(items[which]) else viewModel.skills.remove(items[which])
+            }
+            .setPositiveButton("Done") { _, _ -> binding.etSkills.setText(skillsText()) }
+            .show()
+    }
+
+    private fun skillsText() = availableSkills.filter { it in viewModel.skills }.joinToString(", ")
+
     private fun setupDateTimePickers() {
         binding.tvDate.setOnClickListener {
-            val now = LocalDate.now()
-            DatePickerDialog(
+            val start = viewModel.date ?: LocalDate.now()
+            val dialog = DatePickerDialog(
                 requireContext(),
                 { _, year, month, dayOfMonth ->
-                    selectedDate = LocalDate.of(year, month + 1, dayOfMonth)
-                    binding.tvDate.text = selectedDate?.format(DateTimeFormatter.ISO_LOCAL_DATE)
+                    val picked = LocalDate.of(year, month + 1, dayOfMonth)
+                    viewModel.date = picked
+                    binding.tvDate.text = picked.format(DateTimeFormatter.ISO_LOCAL_DATE)
                 },
-                now.year,
-                now.monthValue - 1,
-                now.dayOfMonth
-            ).show()
+                start.year,
+                start.monthValue - 1,
+                start.dayOfMonth
+            )
+            dialog.datePicker.minDate = System.currentTimeMillis() - 1000 // no past dates
+            dialog.show()
         }
 
         binding.tvTime.setOnClickListener {
-            val now = LocalTime.now()
+            val start = viewModel.time ?: LocalTime.now()
             TimePickerDialog(
                 requireContext(),
                 { _, hourOfDay, minute ->
-                    selectedTime = LocalTime.of(hourOfDay, minute)
-                    binding.tvTime.text = selectedTime?.format(DateTimeFormatter.ofPattern("HH:mm"))
+                    val picked = LocalTime.of(hourOfDay, minute)
+                    viewModel.time = picked
+                    binding.tvTime.text = picked.format(TIME_FORMAT)
                 },
-                now.hour,
-                now.minute,
+                start.hour,
+                start.minute,
                 true
             ).show()
         }
     }
+
     private fun setupClickListeners() {
-        binding.btnSave.setOnClickListener {
-            submitListing()
-        }
+        binding.btnSave.setOnClickListener { viewModel.save(readForm()) }
 
         binding.btnDiscard.setOnClickListener {
-            clearFields()
+            if (viewModel.editingId != null) {
+                findNavController().popBackStack() // Cancel: back to the listing, nothing saved
+            } else {
+                viewModel.reset()
+                clearFields()
+            }
         }
 
-        binding.ivCameraBadge.setOnClickListener { pickPhoto.launch("image/*") }
-        binding.ivListingCover.setOnClickListener { pickPhoto.launch("image/*") }
+        // Tapping the camera (or the photo) opens the picker; a new choice replaces the old one.
+        val openPicker = View.OnClickListener {
+            pickPhotos.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+        binding.ivCameraBadge.setOnClickListener(openPicker)
+        binding.ivListingCover.setOnClickListener(openPicker)
+
+        binding.btnTabMyListings.setOnClickListener { goToMyListings() }
     }
 
-    // Shows the photo straight away, uploads it, and keeps the saved URL for the listing.
-    private fun uploadCover(uri: Uri) {
-        binding.ivListingCover.setImageURI(uri)
-        setUploading(true)
+    /** After a rotation the ViewModel still has the picked date/time/skills; show them again. */
+    private fun restorePickedValues() {
+        viewModel.date?.let { binding.tvDate.text = it.format(DateTimeFormatter.ISO_LOCAL_DATE) }
+        viewModel.time?.let { binding.tvTime.text = it.format(TIME_FORMAT) }
+        if (viewModel.skills.isNotEmpty()) binding.etSkills.setText(skillsText())
+    }
+
+    private fun readForm() = ListingFormInput(
+        title = binding.etTitle.text.toString(),
+        description = binding.etDescription.text.toString(),
+        area = binding.etArea.text.toString(),
+        minHoursText = binding.etHours.text.toString(),
+        type = ListingType.values()[binding.spinnerListingType.selectedItemPosition],
+        category = binding.spinnerCategory.selectedItem.toString(),
+        skills = availableSkills.filter { it in viewModel.skills },
+        date = viewModel.date,
+        time = viewModel.time,
+        spacesText = binding.etSpaces.text.toString()
+    )
+
+    // ------------------------------------------------------------------ ViewModel -> screen
+    private fun collectViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
-            try {
-                val url = ImageUploader.upload(requireContext(), uri, "listing_images")
-                uploadedImages.clear()
-                uploadedImages.add(url)
-            } catch (e: Exception) {
-                uploadedImages.clear()
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.images.collect { renderImages() } }
+                launch { viewModel.existingImages.collect { renderImages() } }
+                launch { viewModel.saving.collect { renderSaving() } }
+                launch { viewModel.loading.collect { renderSaving() } }
+                launch { viewModel.prefill.collect { it?.let(::applyPrefill) } }
+                launch { viewModel.loadFailed.collect { findNavController().popBackStack() } }
+                launch { viewModel.formErrors.collect { showFormError(it) } }
+                launch { viewModel.messages.collect { toast(it, long = true) } }
+                launch { viewModel.created.collect { onCreated() } }
+            }
+        }
+    }
+
+    /** New photos (if any were picked) replace the saved ones; otherwise show the saved ones. */
+    private fun renderImages() {
+        val picked = viewModel.images.value
+        val saved = viewModel.existingImages.value
+        when {
+            picked.isNotEmpty() -> {
+                binding.ivListingCover.load(picked.first())
+                binding.tvPhotoCount.text = if (picked.size == 1) "1 new photo" else "${picked.size} new photos"
+            }
+            saved.isNotEmpty() -> {
+                binding.ivListingCover.load(saved.first())
+                binding.tvPhotoCount.text = "${saved.size} saved - tap to replace"
+            }
+            else -> {
                 binding.ivListingCover.setImageDrawable(null)
-                Toast.makeText(requireContext(), getString(R.string.photo_upload_failed), Toast.LENGTH_LONG).show()
-            } finally {
-                _binding?.let { setUploading(false) }
+                binding.tvPhotoCount.text = "Add up to ${CreateListingViewModel.MAX_IMAGES} photos"
             }
         }
     }
 
-    private fun setUploading(uploading: Boolean) {
-        binding.btnSave.isEnabled = !uploading
-        binding.ivCameraBadge.isEnabled = !uploading
-        binding.ivCameraBadge.alpha = if (uploading) 0.5f else 1f
-        if (uploading) Toast.makeText(requireContext(), getString(R.string.photo_uploading), Toast.LENGTH_SHORT).show()
+    private fun renderSaving() {
+        val busy = viewModel.saving.value || viewModel.loading.value
+        binding.btnSave.isEnabled = !busy
+        binding.btnDiscard.isEnabled = !viewModel.saving.value
+        binding.btnSave.text = when {
+            viewModel.saving.value -> "Saving..."
+            viewModel.editingId != null -> "Save changes"
+            else -> "Save"
+        }
     }
 
-    private fun submitListing() {
-        val title = binding.etTitle.text.toString().trim()
-        val description = binding.etDescription.text.toString().trim()
-        val area = binding.etArea.text.toString().trim()
-        val minHoursStr = binding.etHours.text.toString().trim()
-        val skillsStr = binding.etSkills.text.toString().trim()
-        val selectedCategory = categoryValues[binding.spinnerCategory.selectedItemPosition]
-        val selectedType = ListingType.values()[binding.spinnerListingType.selectedItemPosition]
+    /** Fills the form with the listing being edited. Runs once; after a rotation Android restores the text itself. */
+    private fun applyPrefill(listing: Listing) {
+        if (viewModel.prefillApplied) return
+        viewModel.prefillApplied = true
+        binding.etTitle.setText(listing.title)
+        binding.etDescription.setText(listing.description)
+        binding.etArea.setText(listing.area)
+        binding.etHours.setText(formatHours(listing.minHours))
+        binding.etSpaces.setText(listing.spacesTotal?.toString().orEmpty())
+        binding.spinnerCategory.setSelection(categories.indexOf(listing.causeCategories.firstOrNull()).coerceAtLeast(0))
+        binding.spinnerListingType.setSelection(ListingType.values().indexOf(listing.type).coerceAtLeast(0))
+        restorePickedValues() // date, time and skills were put in the ViewModel by startEdit
+    }
 
-        // Core Validations
-        if (title.isEmpty()) {
-            binding.etTitle.error = getString(R.string.error_title_required)
-            return
+    private fun formatHours(hours: Double) =
+        if (hours % 1.0 == 0.0) hours.toInt().toString() else hours.toString()
+
+    private fun showFormError(error: CreateListingViewModel.FormError) {
+        val box = when (error.field) {
+            FormField.TITLE -> binding.etTitle
+            FormField.DESCRIPTION -> binding.etDescription
+            FormField.AREA -> binding.etArea
+            FormField.SPACES -> binding.etSpaces
+            FormField.HOURS -> binding.etHours
+            FormField.DATE_TIME -> null // plain text rows, not boxes: a Toast says it best
         }
-        if (description.isEmpty()) {
-            binding.etDescription.error = getString(R.string.error_description_required)
-            return
-        }
-        if (area.isEmpty()) {
-            binding.etArea.error = getString(R.string.error_area_required)
-            return
-        }
-
-        var scheduledInstant: Instant? = null
-        var spacesTotal: Int? = null
-
-        if (selectedType == ListingType.SCHEDULED) {
-            if (selectedDate == null || selectedTime == null) {
-                Toast.makeText(requireContext(), getString(R.string.error_date_time_required), Toast.LENGTH_SHORT).show()
-                return
-            }
-            val localDateTime = LocalDateTime.of(selectedDate, selectedTime)
-            scheduledInstant = localDateTime.atZone(ZoneId.systemDefault()).toInstant()
-
-            val spacesStr = binding.etSpaces.text.toString().trim()
-            if (spacesStr.isEmpty()) {
-                binding.etSpaces.error = getString(R.string.error_spaces_required)
-                return
-            }
-            spacesTotal = spacesStr.toIntOrNull()
-        }
-
-        val skillsList = if (skillsStr.isNotEmpty()) {
-            skillsStr.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+        if (box == null) {
+            toast(error.message)
         } else {
-            emptyList()
+            box.error = error.message
+            box.requestFocus() // also scrolls it into view
         }
+    }
 
-        val minHours = minHoursStr.toDoubleOrNull() ?: 0.0
-
-        // Construct ListingDraft domain model
-        val draft = ListingDraft(
-            title = title,
-            description = description,
-            causeCategories = listOf(selectedCategory),
-            skillsRequired = skillsList,
-            type = selectedType,
-            dateTime = scheduledInstant,
-            spacesTotal = spacesTotal,
-            area = area,
-            minHours = minHours,
-            images = uploadedImages
-        )
-
-        // Call repository through ServiceLocator
-        lifecycleScope.launch {
-            val result = ServiceLocator.listingRepository.createListing(draft)
-            when (result) {
-                is ApiResult.Success -> {
-                    Toast.makeText(requireContext(), getString(R.string.listing_created), Toast.LENGTH_SHORT).show()
-                    clearFields()
-                }
-                is ApiResult.Failure -> {
-                    Toast.makeText(requireContext(), getString(R.string.listing_create_failed, result.error.message), Toast.LENGTH_LONG).show()
-                }
-            }
+    private fun onCreated() {
+        val editing = viewModel.editingId != null
+        toast(if (editing) "Listing updated" else "Listing created!")
+        // Tell Org Home to reload, so the change is there when we land on it.
+        runCatching {
+            findNavController().getBackStackEntry(R.id.orgHomeFragment).savedStateHandle[LISTING_CHANGED] = true
         }
+        if (editing) {
+            findNavController().popBackStack() // back to the listing's detail screen (it reloads itself)
+        } else {
+            clearFields()
+            goToMyListings()
+        }
+    }
+
+    /** The "My Listings" tab: the organization's home already lists its listings. */
+    private fun goToMyListings() {
+        val nav = findNavController()
+        if (!nav.popBackStack(R.id.orgHomeFragment, false)) nav.navigate(R.id.orgHomeFragment)
     }
 
     private fun clearFields() {
@@ -249,16 +306,25 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
         binding.etHours.text?.clear()
         binding.spinnerCategory.setSelection(0)
         binding.spinnerListingType.setSelection(0)
-        binding.tvDate.text = getString(R.string.hint_select_date)
-        binding.tvTime.text = getString(R.string.hint_select_time)
-        selectedDate = null
-        selectedTime = null
-        uploadedImages.clear()
-        binding.ivListingCover.setImageDrawable(null)
+        binding.tvDate.text = "" // empty shows the "Select Date" hint again
+        binding.tvTime.text = ""
+    }
+
+    private fun toast(message: String, long: Boolean = false) {
+        Toast.makeText(requireContext(), message, if (long) Toast.LENGTH_LONG else Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        /** Key OrgHomeFragment watches (see SETUP-LISTING.md). */
+        const val LISTING_CHANGED = "listing_changed"
+
+        /** Pass a listing id in the arguments to open this screen in edit mode. */
+        const val ARG_LISTING_ID = "listingId"
+        private val TIME_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
     }
 }

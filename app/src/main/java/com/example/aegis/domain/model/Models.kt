@@ -88,7 +88,8 @@ data class Signup(
     val volunteerName: String?,   // filled on the organisation's view
     val status: SignupStatus,
     val hoursCompleted: Double?,
-    val listing: Listing?         // filled on the volunteer's Commitments view
+    val listing: Listing?,         // filled on the volunteer's Commitments view
+    val pendingSync: Boolean = false   // true while an offline change hasn't reached the server yet
 )
 
 data class HoursEntry(val listingTitle: String, val hours: Double, val completedAt: Instant?)
