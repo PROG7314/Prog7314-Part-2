@@ -1,13 +1,13 @@
+STATUS BADGE
+[![Aegis Android CI Build & Test](https://github.com/PROG7314/Prog7314-Part-2/actions/workflows/android.yml/badge.svg?branch=main)](https://github.com/PROG7314/Prog7314-Part-2/actions/workflows/android.yml)
+
 ```text
 **Aegis — Volunteer & Opportunity Matching Platform**
 **Final POE**
 
 
 GitHub Link:
-Demonstration video link: 
-
-STATUS BADGE
-[![Aegis Android CI Build & Test](https://github.com/PROG7314/Prog7314-Part-2/actions/workflows/android.yml/badge.svg?branch=main)](https://github.com/PROG7314/Prog7314-Part-2/actions/workflows/android.yml)
+Demonstration video link:
 
 ===============================================================================
 **Project Overview & Target Audience**
