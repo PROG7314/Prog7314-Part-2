@@ -1,5 +1,7 @@
-Aegis — Volunteer & Opportunity Matching Platform
-Final POE
+```text
+**Aegis — Volunteer & Opportunity Matching Platform**
+**Final POE**
+
 
 GitHub Link:
 Demonstration video link: 
@@ -8,14 +10,14 @@ STATUS BADGE
 [![Aegis Android CI Build & Test](https://github.com/PROG7314/Prog7314-Part-2/actions/workflows/android.yml/badge.svg?branch=main)](https://github.com/PROG7314/Prog7314-Part-2/actions/workflows/android.yml)
 
 ===============================================================================
-- Project Overview & Target Audience
+**Project Overview & Target Audience**
 Aegis is a native Android application designed to empower communities by seamlessly connecting volunteers with meaningful social initiatives, non-profit organizations, and community service opportunities. Built with modern Android architecture, offline-first synchronization, and real-time Firebase Cloud Messaging (FCM) notifications, Aegis provides robust opportunity matching, multi-language localization, and secure volunteer hour tracking.
 
 Target Audience: 
 Community volunteers seeking verified social impact opportunities, non-profit organizations managing local initiatives, and operational managers coordinating community engagement.
 
 ===============================================================================
-Tech Stack & Prerequisites
+**Tech Stack & Prerequisites**
 
 Language: Kotlin
 
@@ -34,12 +36,14 @@ Backend & Services: Node.js Express REST API, Firebase Authentication & Firestor
 DevOps: GitHub Actions CI/CD Pipeline
 
 Prerequisites: Android Studio Ladybug (or newer), JDK 17 (Temurin recommended)
+
 ===============================================================================
-Package Architecture
+**Package Architecture**
 
 The codebase follows a modular clean architecture layer structure under com.example.aegis
 app/
 
+app/
 ├── manifests/
 │   └── AndroidManifest.xml
 ├── kotlin+java/
@@ -60,8 +64,9 @@ app/
     │   └── OfflineCacheTest.kt      # Offline sync & caching unit tests
     └── ui.listing/
         └── ...                      # Feature-specific listing unit tests
+        
 ===============================================================================
-System Architecture Diagram
+**System Architecture Diagram**
 
 The system integrates client mobile architecture with a secure backend and cloud infrastructure:
 
@@ -75,7 +80,7 @@ The system integrates client mobile architecture with a secure backend and cloud
          └──► [ Firestore / RoomDB (Offline Sync) ]
 
 ===============================================================================
-Getting Started & Fresh Clone Setup
+**Getting Started & Fresh Clone Setup**
 
 To set up and run the application locally on a fresh clone:
 
@@ -100,7 +105,7 @@ Connect a physical Android device (min SDK 25) or start an Android Emulator
 Execute via terminal:./gradlew installDebug
 
 ===============================================================================
-Automated Testing & CI Pipeline
+**Automated Testing & CI Pipeline**
 
 Continuous Integration is managed via GitHub Actions (.github/workflows/android.yml), automatically ensuring build integrity and code quality on every push and pull request
 
@@ -117,7 +122,7 @@ Android Unit Tests: ./gradlew testDebugUnitTest (Reports generated at app/build/
 Backend Unit Tests: cd backend && npm test
 
 ===============================================================================
-Core Features Breakdown
+**Core Features Breakdown**
 
 Secure Authentication & Biometrics: Supports Firebase SSO, email/password sign-in with recovery options, and device biometric authentication integration (androidx.biometric)
 
@@ -130,7 +135,7 @@ Real-Time Notifications: Push notifications triggered by real backend events usi
 Multi-Language Localization: Full UI localization supporting English and official South African languages with dynamic locale switching
 
 ===============================================================================
-Team Responsibilities (PROG7314 PoE Final)
+**Team Responsibilities (PROG7314 PoE Final)**
 
 Member 1: Melo (30 Marks)   
 
@@ -156,7 +161,7 @@ Core Files & Scope: DevOps, GitHub workflow management, CI/CD pipeline configura
 
 Primary Rubric & Bug Fixes: GitHub repository management (enforcing 75+ meaningful commits and PR workflows), maintaining a green automated CI/CD pipeline (android.yml running both backend and Android test suites), creating the 6+ required Android unit test suite (AegisValidationTest), Play Store packaging and signed AAB/APK release generation, store-listing/ asset preparation, drafting the AI-use write-up, and coordinating the final demonstration video.
 ===============================================================================
-Release Notes & Play Store Readiness
+**Release Notes & Play Store Readiness**
 
 Version Tag: v1.0.0-final-poe
 
