@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="?android:attr/colorBackground">
 
     <!-- Header Banner Image Area -->
     <RelativeLayout
@@ -17,17 +17,18 @@
 
         <ImageView
             android:id="@+id/imgHeaderBanner"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            tools:src="@android:drawable/ic_menu_gallery"
-            tools:ignore="ContentDescription" />
+            tools:src="@android:drawable/ic_menu_gallery" />
 
         <!-- Overlay to ensure white text is readable -->
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#33000000" />
+            android:background="@color/image_scrim" />
 
         <!-- Edit Profile Button -->
         <com.google.android.material.button.MaterialButton
@@ -37,11 +38,11 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="16dp"
-            android:backgroundTint="#7A8B42"
+            android:backgroundTint="?attr/colorPrimary"
             android:paddingHorizontal="16dp"
-            android:text="Edit Profile"
+            android:text="@string/edit_profile"
             android:textAllCaps="false"
-            android:textColor="#FFFFFF"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="14sp"
             app:cornerRadius="20dp" />
 
@@ -58,8 +59,8 @@
                 android:id="@+id/txtOrgName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Christine Revell\nChildren's Home"
-                android:textColor="#FFFFFF"
+                tools:text="Christine Revell\nChildren's Home"
+                android:textColor="@color/on_image"
                 android:textSize="26sp"
                 android:textStyle="bold" />
 
@@ -68,8 +69,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="ChristineRevell@gmail.com"
-                android:textColor="#FFFFFF"
+                tools:text="ChristineRevell@gmail.com"
+                android:textColor="@color/on_image"
                 android:textSize="14sp" />
         </LinearLayout>
     </RelativeLayout>
@@ -111,16 +112,17 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Language Settings"
-                    android:textColor="#000000"
+                    android:text="@string/language_settings"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="16sp" />
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
+                    android:contentDescription="@null"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/ic_chevron_right"
-                    app:tint="#333333"
-                    tools:ignore="ContentDescription" />
+                    app:tint="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
 
             <!-- Biometric Authentication -->
@@ -140,16 +142,17 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Biometric Authentication"
-                    android:textColor="#000000"
+                    android:text="@string/biometric_auth"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="16sp" />
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
+                    android:contentDescription="@null"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/ic_chevron_right"
-                    app:tint="#333333"
-                    tools:ignore="ContentDescription" />
+                    app:tint="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
 
             <!-- Notifications -->
@@ -169,16 +172,17 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Notifications"
-                    android:textColor="#000000"
+                    android:text="@string/notifications"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="16sp" />
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
+                    android:contentDescription="@null"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/ic_chevron_right"
-                    app:tint="#333333"
-                    tools:ignore="ContentDescription" />
+                    app:tint="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
 
             <!-- Logout -->
@@ -198,16 +202,17 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Logout"
-                    android:textColor="#000000"
+                    android:text="@string/log_out"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="16sp" />
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
+                    android:contentDescription="@null"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/ic_chevron_right"
-                    app:tint="#333333"
-                    tools:ignore="ContentDescription" />
+                    app:tint="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
 
         </LinearLayout>

@@ -1,6 +1,8 @@
 package com.example.aegis.data.remote
 
 import android.util.Log
+import com.example.aegis.R
+import com.example.aegis.core.Strings
 import com.example.aegis.data.remote.dto.ErrorEnvelopeDto
 import com.example.aegis.domain.model.ApiError
 import com.example.aegis.domain.model.ApiResult
@@ -30,7 +32,7 @@ suspend fun <T> safeApiCall(tag: String, call: suspend () -> T): ApiResult<T> =
         ApiResult.Failure(ApiError(ApiError.Kind.NETWORK, defaultMessage(ApiError.Kind.NETWORK)))
     } catch (e: JsonParseException) {
         Log.e(tag, "Unexpected response shape: ${e.message}")
-        ApiResult.Failure(ApiError(ApiError.Kind.UNKNOWN, "The server sent a response we couldn't read."))
+        ApiResult.Failure(ApiError(ApiError.Kind.UNKNOWN, Strings.get(R.string.error_unreadable_response)))
     }
 
 private fun HttpException.toApiError(): ApiError {
@@ -59,20 +61,22 @@ private fun HttpException.toApiError(): ApiError {
 
     return ApiError(
         kind = kind,
-        message = parsed?.message?.takeIf { it.isNotBlank() } ?: defaultMessage(kind),
+        message = defaultMessage(kind), // the server's own text is English, so only log it (above)
         httpCode = httpCode,
         code = parsed?.code,
         field = parsed?.field
     )
 }
 
-private fun defaultMessage(kind: ApiError.Kind): String = when (kind) {
-    ApiError.Kind.NETWORK -> "Can't reach the server. Check your connection and try again."
-    ApiError.Kind.UNAUTHORIZED -> "Your session has expired. Please log in again."
-    ApiError.Kind.FORBIDDEN -> "You don't have permission to do that."
-    ApiError.Kind.NOT_FOUND -> "We couldn't find that."
-    ApiError.Kind.CONFLICT -> "That listing is full, or you're already signed up."
-    ApiError.Kind.VALIDATION -> "Some of the details aren't valid. Please check and try again."
-    ApiError.Kind.SERVER -> "The server had a problem. Please try again shortly."
-    ApiError.Kind.UNKNOWN -> "Something went wrong. Please try again."
-}
+private fun defaultMessage(kind: ApiError.Kind): String = Strings.get(
+    when (kind) {
+        ApiError.Kind.NETWORK -> R.string.error_network
+        ApiError.Kind.UNAUTHORIZED -> R.string.error_session_expired
+        ApiError.Kind.FORBIDDEN -> R.string.error_forbidden
+        ApiError.Kind.NOT_FOUND -> R.string.error_not_found
+        ApiError.Kind.CONFLICT -> R.string.error_conflict
+        ApiError.Kind.VALIDATION -> R.string.error_validation
+        ApiError.Kind.SERVER -> R.string.error_server
+        ApiError.Kind.UNKNOWN -> R.string.error_unknown
+    }
+)

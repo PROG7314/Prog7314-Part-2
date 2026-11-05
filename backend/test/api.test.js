@@ -193,8 +193,8 @@ scenario('profile and settings updates', async ({ api, makeUser }) => {
   assert.equal(orgUp.body.description, 'We help kids');
   errorShape(await api('PUT', '/users/me', { token: org.token, body: { interests: ['Children & Youth'] } }), 400, 'validation_error', 'interests');
 
-  const s = await api('PUT', '/users/me/settings', { token: vol.token, body: { preferredLanguage: 'zu', notificationsEnabled: false } });
-  assert.deepEqual(s.body, { preferredLanguage: 'zu', notificationsEnabled: false });
+  const s = await api('PUT', '/users/me/settings', { token: vol.token, body: { preferredLanguage: 'zu', notificationsEnabled: false, darkMode: true } });
+  assert.deepEqual(s.body, { preferredLanguage: 'zu', notificationsEnabled: false, darkMode: true });
   errorShape(await api('PUT', '/users/me/settings', { token: vol.token, body: { preferredLanguage: 'fr' } }), 400, 'validation_error', 'preferredLanguage');
   errorShape(await api('PUT', '/users/me/settings', { token: vol.token, body: {} }), 400, 'validation_error');
 });

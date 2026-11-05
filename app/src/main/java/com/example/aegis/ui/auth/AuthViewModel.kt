@@ -20,6 +20,9 @@ import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import com.example.aegis.notifications.NotificationTokenSync
+import com.example.aegis.R
+import com.example.aegis.core.Strings
+
 
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -115,12 +118,12 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun mapErrorMessage(e: Exception): String = when (e) {
-        is FirebaseAuthInvalidCredentialsException -> "Incorrect email or password. Please try again."
-        is FirebaseAuthInvalidUserException -> "We couldn't find an account with that email."
-        is FirebaseAuthUserCollisionException -> "An account already exists with that email."
-        is FirebaseAuthWeakPasswordException -> "Please choose a stronger password (at least 6 characters)."
+        is FirebaseAuthInvalidCredentialsException -> Strings.get(R.string.error_wrong_credentials)
+        is FirebaseAuthInvalidUserException -> Strings.get(R.string.error_user_not_found)
+        is FirebaseAuthUserCollisionException -> Strings.get(R.string.error_email_in_use)
+        is FirebaseAuthWeakPasswordException -> Strings.get(R.string.error_weak_password)
         else -> if (e.message?.contains("network", ignoreCase = true) == true)
-            "No internet connection — please check your network and try again"
-        else "Sign-in failed — please try again"
+            Strings.get(R.string.error_no_internet)
+        else Strings.get(R.string.sign_in_failed)
     }
 }

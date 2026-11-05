@@ -5,6 +5,7 @@ import { authRouter } from './routes/auth.js';
 import { usersRouter } from './routes/users.js';
 import { listingsRouter } from './routes/listings.js';
 import { signupsRouter } from './routes/signups.js';
+import { messagesRouter } from './routes/messages.js';
 import { createNotifier } from './notifications.js';
 
 /**
@@ -38,6 +39,7 @@ export function createApp({ db, firebaseAuth, cfg, messaging }) {
   api.use('/users', usersRouter({ db, cfg }));
   api.use('/listings', listingsRouter({ db, cfg, notifier }));
   api.use('/', signupsRouter({ db, notifier }));
+  api.use('/', messagesRouter({ db }));
 
   app.use('/api/v1', api);
   app.use(notFoundHandler);

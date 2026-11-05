@@ -122,6 +122,16 @@
         android:label="Create Listing" />
 
     <fragment
+        android:id="@+id/messagesFragment"
+        android:name="com.example.aegis.ui.messages.MessagesFragment"
+        android:label="Messages" />
+
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.aegis.ui.messages.ChatFragment"
+        android:label="Chat" />
+
+    <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.aegis.ui.settings.SettingsFragment"
         android:label="Settings" />

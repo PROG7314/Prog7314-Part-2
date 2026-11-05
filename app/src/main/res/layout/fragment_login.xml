@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#839449"
+    android:background="?attr/colorPrimary"
     android:fillViewport="true">
 
     <LinearLayout
@@ -22,6 +22,7 @@
             android:id="@+id/imageView"
             android:layout_width="240dp"
             android:layout_height="136dp"
+            android:contentDescription="@string/app_logo_description"
             app:srcCompat="@drawable/logo" />
 
         <EditText
@@ -30,10 +31,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:autofillHints="emailAddress"
-            android:background="@android:color/white"
-            android:hint="Email"
+            android:background="?attr/colorSurface"
+            android:hint="@string/email_hint"
             android:inputType="textEmailAddress"
-            android:padding="12dp" />
+            android:minHeight="48dp"
+            android:padding="12dp"
+            android:textColor="?attr/colorOnSurface" />
 
         <EditText
             android:id="@+id/passwordInput"
@@ -41,10 +44,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:autofillHints="password"
-            android:background="@android:color/white"
-            android:hint="Password"
+            android:background="?attr/colorSurface"
+            android:hint="@string/password_hint"
             android:inputType="textPassword"
-            android:padding="12dp" />
+            android:minHeight="48dp"
+            android:padding="12dp"
+            android:textColor="?attr/colorOnSurface" />
 
         <TextView
             android:id="@+id/forgotPasswordText"
@@ -52,32 +57,36 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginTop="8dp"
-            android:text="Forgot password?"
-            android:textColor="@android:color/white" />
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:text="@string/forgot_password"
+            android:textColor="?attr/colorOnPrimary" />
 
         <Button
             android:id="@+id/emailSignInButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="@color/white"
-            android:text="Log in"
-            android:textColor="@color/black" />
+            android:layout_marginTop="8dp"
+            android:backgroundTint="?attr/colorSurface"
+            android:text="@string/log_in"
+            android:textColor="?attr/colorOnSurface" />
 
         <TextView
             android:id="@+id/toggleModeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="New here? Create an account"
-            android:textColor="@android:color/white" />
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:text="@string/new_here_create_account"
+            android:textColor="?attr/colorOnPrimary" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="— or —"
-            android:textColor="@android:color/white" />
+            android:layout_marginTop="16dp"
+            android:text="@string/or_divider"
+            android:textColor="?attr/colorOnPrimary" />
 
         <Button
             android:id="@+id/signInButton"
@@ -85,13 +94,13 @@
             android:layout_height="60dp"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="48dp"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="?attr/colorSurface"
             android:drawableStart="@drawable/ic_google"
             android:drawablePadding="12dp"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:text="Sign in with Google"
-            android:textColor="@color/black" />
+            android:text="@string/sign_in_google"
+            android:textColor="?attr/colorOnSurface" />
 
     </LinearLayout>
 </ScrollView>

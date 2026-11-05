@@ -13,7 +13,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginBottom="32dp"
         android:gravity="center"
-        android:text="Interests"
+        android:text="@string/interests_title"
         android:textSize="28sp" />
 
     <ScrollView
@@ -37,10 +37,10 @@
                 tools:visibility="visible"
                 tools:text="Children &amp; Youth"
                 app:chipBackgroundColor="@android:color/transparent"
-                app:chipStrokeColor="@color/brand_green"
+                app:chipStrokeColor="?attr/colorPrimary"
                 app:chipStrokeWidth="1.5dp"
                 app:chipCornerRadius="20dp"
-                android:textColor="@color/brand_green" />
+                android:textColor="?attr/colorPrimary" />
 
             <com.google.android.material.chip.Chip
                 android:layout_width="wrap_content"
@@ -48,11 +48,11 @@
                 android:visibility="gone"
                 tools:visibility="visible"
                 tools:text="Elderly Care"
-                app:chipBackgroundColor="@color/brand_green"
-                app:chipStrokeColor="@color/brand_green"
+                app:chipBackgroundColor="?attr/colorPrimary"
+                app:chipStrokeColor="?attr/colorPrimary"
                 app:chipStrokeWidth="1.5dp"
                 app:chipCornerRadius="20dp"
-                android:textColor="@color/white" />
+                android:textColor="?attr/colorOnPrimary" />
 
             <com.google.android.material.chip.Chip
                 android:layout_width="wrap_content"
@@ -61,10 +61,10 @@
                 tools:visibility="visible"
                 tools:text="Soup Kitchens"
                 app:chipBackgroundColor="@android:color/transparent"
-                app:chipStrokeColor="@color/brand_green"
+                app:chipStrokeColor="?attr/colorPrimary"
                 app:chipStrokeWidth="1.5dp"
                 app:chipCornerRadius="20dp"
-                android:textColor="@color/brand_green" />
+                android:textColor="?attr/colorPrimary" />
 
             <com.google.android.material.chip.Chip
                 android:layout_width="wrap_content"
@@ -73,10 +73,10 @@
                 tools:visibility="visible"
                 tools:text="Animal Welfare"
                 app:chipBackgroundColor="@android:color/transparent"
-                app:chipStrokeColor="@color/brand_green"
+                app:chipStrokeColor="?attr/colorPrimary"
                 app:chipStrokeWidth="1.5dp"
                 app:chipCornerRadius="20dp"
-                android:textColor="@color/brand_green" />
+                android:textColor="?attr/colorPrimary" />
 
             <com.google.android.material.chip.Chip
                 android:layout_width="wrap_content"
@@ -85,10 +85,10 @@
                 tools:visibility="visible"
                 tools:text="Homeless Shelters"
                 app:chipBackgroundColor="@android:color/transparent"
-                app:chipStrokeColor="@color/brand_green"
+                app:chipStrokeColor="?attr/colorPrimary"
                 app:chipStrokeWidth="1.5dp"
                 app:chipCornerRadius="20dp"
-                android:textColor="@color/brand_green" />
+                android:textColor="?attr/colorPrimary" />
 
         </com.google.android.material.chip.ChipGroup>
 
@@ -99,9 +99,9 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_marginTop="16dp"
-        android:backgroundTint="@color/brand_green"
-        android:text="Next"
-        android:textColor="@color/black"
+        android:backgroundTint="?attr/colorPrimary"
+        android:text="@string/next"
+        android:textColor="?attr/colorOnPrimary"
         app:cornerRadius="28dp" />
 
     <com.google.android.material.button.MaterialButton
@@ -110,9 +110,9 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_marginTop="12dp"
-        android:text="Skip for now"
-        android:textColor="@color/black"
+        android:text="@string/skip_for_now"
+        android:textColor="?attr/colorOnSurface"
         app:cornerRadius="28dp"
-        app:strokeColor="@color/black" />
+        app:strokeColor="?attr/colorOutline" />
 
 </LinearLayout>

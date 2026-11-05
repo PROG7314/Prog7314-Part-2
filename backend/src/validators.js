@@ -149,8 +149,8 @@ export function parseListingUpdate(body, existing, cfg) {
 
 // ---------------------------------------------------------------- profile & settings
 const PROFILE_FIELDS = {
-  volunteer: ['name', 'profileImageUrl', 'bio', 'interests', 'skills'],
-  organization: ['name', 'description', 'profileImageUrl'],
+  volunteer: ['name', 'profileImageUrl', 'bannerImageUrl', 'bio', 'interests', 'skills'],
+  organization: ['name', 'description', 'profileImageUrl', 'bannerImageUrl'],
 };
 
 export function parseProfileUpdate(body, role, cfg) {
@@ -165,6 +165,9 @@ export function parseProfileUpdate(body, role, cfg) {
   if ('profileImageUrl' in body) {
     patch.profileImageUrl = body.profileImageUrl === null ? null : requireImageList([body.profileImageUrl], 'profileImageUrl')[0];
   }
+  if ('bannerImageUrl' in body) {
+    patch.bannerImageUrl = body.bannerImageUrl === null ? null : requireImageList([body.bannerImageUrl], 'bannerImageUrl')[0];
+  }
   if ('bio' in body) patch.bio = optionalString(body.bio, 'bio', { max: 500 });
   if ('description' in body) patch.description = optionalString(body.description, 'description', { max: 1000 });
   if ('interests' in body) patch.interests = requireStringList(body.interests, 'interests', { allowed: causeList(cfg) });
@@ -176,8 +179,9 @@ export function parseSettings(body) {
   const patch = {};
   if ('preferredLanguage' in body) patch.preferredLanguage = requireEnum(body.preferredLanguage, 'preferredLanguage', LANGUAGES);
   if ('notificationsEnabled' in body) patch.notificationsEnabled = requireBoolean(body.notificationsEnabled, 'notificationsEnabled');
+  if ('darkMode' in body) patch.darkMode = requireBoolean(body.darkMode, 'darkMode');
   if (Object.keys(patch).length === 0) {
-    throw badRequest('Send preferredLanguage and/or notificationsEnabled.', 'preferredLanguage');
+    throw badRequest('Send preferredLanguage, notificationsEnabled and/or darkMode.', 'preferredLanguage');
   }
   return patch;
 }
@@ -213,4 +217,14 @@ export function parseSyncChanges(body) {
 export function parseHours(body) {
   if (!('hoursCompleted' in body) || body.hoursCompleted === null) return undefined;
   return requireNumber(body.hoursCompleted, 'hoursCompleted', { min: 0, max: 1000 });
+}
+// A chat message: plain text, trimmed, 1-1000 characters.
+export function parseMessage(body) {
+  return { text: requireString(body.text, 'text', { max: 1000 }) };
+}
+
+// Optional ?since=<ISO date> on the message list, so the app can ask only for what's new.
+export function parseSince(v) {
+  if (v === undefined) return null;
+  return requireIsoDate(v, 'since');
 }

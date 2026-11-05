@@ -5,14 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F9FA">
+    android:background="?android:attr/colorBackground">
 
     <!-- Brand header with a back arrow -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="#838E50"
+        android:background="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -25,7 +25,7 @@
             android:contentDescription="Back"
             android:gravity="center"
             android:text="&#8249;"
-            android:textColor="#F9F6EB"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="34sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="serif"
             android:text="Aegis"
-            android:textColor="#F9F6EB"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="32sp"
             android:textStyle="bold|italic"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:gravity="center"
-            android:textColor="#212121"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="15sp"
             tools:text="Couldn't load this listing" />
 
@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:text="Retry"
             android:textAllCaps="false"
-            app:backgroundTint="#838E50" />
+            app:backgroundTint="?attr/colorPrimary" />
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -130,7 +130,7 @@
                             android:id="@+id/iv_cover"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="#E8E8E8"
+                            android:background="?attr/colorSurfaceContainerHigh"
                             android:contentDescription="Listing photo"
                             android:scaleType="centerCrop" />
 
@@ -143,7 +143,7 @@
                             android:background="@drawable/bg_circle_translucent"
                             android:paddingHorizontal="10dp"
                             android:paddingVertical="4dp"
-                            android:textColor="#6E7745"
+                            android:textColor="?attr/colorPrimary"
                             android:textSize="12sp"
                             android:visibility="gone"
                             tools:text="1 / 3" />
@@ -154,7 +154,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="6dp"
-                        android:textColor="#838E50"
+                        android:textColor="?attr/colorPrimary"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         tools:text="UPCOMING" />
@@ -164,7 +164,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="14dp"
-                        android:textColor="#212121"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="22sp"
                         android:textStyle="bold"
                         tools:text="Soup kitchen shift" />
@@ -206,7 +206,7 @@
                 android:text="View sign-ups"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
-                app:backgroundTint="#838E50"
+                app:backgroundTint="?attr/colorPrimary"
                 app:cornerRadius="12dp" />
 
             <LinearLayout
@@ -225,9 +225,9 @@
                     android:insetBottom="0dp"
                     android:text="Edit"
                     android:textAllCaps="false"
-                    android:textColor="#838E50"
+                    android:textColor="?attr/colorPrimary"
                     app:cornerRadius="12dp"
-                    app:strokeColor="#838E50"
+                    app:strokeColor="?attr/colorPrimary"
                     app:strokeWidth="1.2dp" />
 
                 <com.google.android.material.button.MaterialButton
@@ -241,9 +241,9 @@
                     android:insetBottom="0dp"
                     android:text="Delete"
                     android:textAllCaps="false"
-                    android:textColor="#B3261E"
+                    android:textColor="?attr/colorError"
                     app:cornerRadius="12dp"
-                    app:strokeColor="#B3261E"
+                    app:strokeColor="?attr/colorError"
                     app:strokeWidth="1.2dp" />
             </LinearLayout>
         </LinearLayout>

@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:text="Settings"
+            android:text="@string/settings"
             android:textSize="22sp"
             android:textStyle="bold" />
 
@@ -31,7 +31,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Dark Mode"
+                android:text="@string/dark_mode"
                 android:textSize="16sp" />
 
             <com.google.android.material.materialswitch.MaterialSwitch
@@ -44,7 +44,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/divider" />
+            android:background="?attr/colorOutlineVariant" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -57,7 +57,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Notifications"
+                android:text="@string/notifications"
                 android:textSize="16sp" />
 
             <com.google.android.material.materialswitch.MaterialSwitch
@@ -70,7 +70,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/divider" />
+            android:background="?attr/colorOutlineVariant" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -96,7 +96,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/divider" />
+            android:background="?attr/colorOutlineVariant" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -108,7 +109,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Language"
+                android:text="@string/language_label"
                 android:textSize="16sp" />
 
             <Spinner
@@ -121,7 +122,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/divider" />
+            android:background="?attr/colorOutlineVariant" />
 
         <!-- Offline mode: when the phone last agreed with the server. Text is filled in by SettingsFragment. -->
         <TextView

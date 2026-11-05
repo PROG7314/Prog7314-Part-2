@@ -9,8 +9,10 @@ export function profileResponse(u) {
     role: u.role ?? null,
     name: u.name ?? '',
     profileImageUrl: u.profileImageUrl ?? null,
+    bannerImageUrl: u.bannerImageUrl ?? null,
     preferredLanguage: u.preferredLanguage ?? 'en',
     notificationsEnabled: u.notificationsEnabled ?? true,
+    darkMode: u.darkMode ?? false,
   };
   // "Full profile (fields vary by role)"
   if (u.role === 'volunteer') {
@@ -81,5 +83,33 @@ export function hoursEntryResponse(id, h) {
     listingTitle: h.listingTitle,
     hoursCompleted: h.hoursCompleted,
     completedAt: iso(h.completedAt),
+  };
+}
+// One conversation as the caller sees it: `me` is the caller's id, so unreadCount is theirs and
+// otherParty is whoever they are talking to.
+export function conversationResponse(id, c, me, names = new Map()) {
+  const otherId = c.organizationId === me ? c.volunteerId : c.organizationId;
+  return {
+    id,
+    listingId: c.listingId,
+    listingTitle: c.listingTitle,
+    organizationId: c.organizationId,
+    volunteerId: c.volunteerId,
+    otherParty: { id: otherId, name: names.get(otherId) ?? null },
+    lastMessage: c.lastMessage ?? null,
+    lastMessageAt: iso(c.lastMessageAt),
+    lastSenderId: c.lastSenderId ?? null,
+    unreadCount: c.unread?.[me] ?? 0,
+    createdAt: iso(c.createdAt),
+  };
+}
+
+export function messageResponse(id, m) {
+  return {
+    id,
+    conversationId: m.conversationId,
+    senderId: m.senderId,
+    text: m.text,
+    sentAt: iso(m.sentAt),
   };
 }

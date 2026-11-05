@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Are you signing up as a Volunteer or an Organisation?"
+        android:text="@string/role_prompt"
         android:textSize="22sp"
         android:textStyle="bold"
         android:gravity="center"
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="24dp"
         app:cardElevation="4dp"
-        app:cardBackgroundColor="#839449"
+        app:cardBackgroundColor="?attr/colorPrimary"
         android:layout_marginBottom="20dp"
         android:clickable="true"
         android:focusable="true"
@@ -42,6 +42,8 @@
                 app:cardElevation="0dp">
 
                 <ImageView
+                    android:contentDescription="@null"
+                    android:importantForAccessibility="no"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
@@ -52,10 +54,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Volunteer"
+                android:text="@string/volunteer"
                 android:textSize="26sp"
                 android:textStyle="italic"
-                android:textColor="@color/white"
+                android:textColor="?attr/colorOnPrimary"
                 android:fontFamily="serif"
                 android:layout_marginTop="10dp" />
 
@@ -69,7 +71,7 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="24dp"
         app:cardElevation="4dp"
-        app:cardBackgroundColor="#839449"
+        app:cardBackgroundColor="?attr/colorPrimary"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground">
@@ -88,6 +90,8 @@
                 app:cardElevation="0dp">
 
                 <ImageView
+                    android:contentDescription="@null"
+                    android:importantForAccessibility="no"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
@@ -98,10 +102,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Organisation"
+                android:text="@string/organisation"
                 android:textSize="26sp"
                 android:textStyle="italic"
-                android:textColor="@color/white"
+                android:textColor="?attr/colorOnPrimary"
                 android:fontFamily="serif"
                 android:layout_marginTop="10dp" />
 

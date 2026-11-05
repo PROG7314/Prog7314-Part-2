@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark counterparts of the brand palette in values/colors.xml. Same names, so the
+         theme and every layout pick them up automatically. -->
+    <color name="aegis_primary">#A9BC6C</color>
+    <color name="aegis_on_primary">#1F2A05</color>
+    <color name="aegis_primary_container">#3A4519</color>
+    <color name="aegis_on_primary_container">#E3EBC9</color>
+
+    <color name="aegis_background">#121410</color>
+    <color name="aegis_surface">#1A1D16</color>
+    <color name="aegis_surface_container">#262A20</color>
+    <color name="aegis_surface_container_high">#31352A</color>
+    <color name="aegis_on_surface">#E4E6DC</color>
+    <color name="aegis_on_surface_variant">#C3C8B4</color>
+    <color name="aegis_outline">#8D927F</color>
+    <color name="aegis_outline_variant">#43483A</color>
+
+    <color name="aegis_error">#F2B8B5</color>
+    <color name="aegis_on_error">#601410</color>
+</resources>

@@ -9,6 +9,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -28,6 +30,14 @@ class MainActivity : AppCompatActivity() {
     // destination is reached. Listings/Hours only make sense for volunteers.
     private var isOrgContext = false
 
+    // Android 15+ draws apps edge-to-edge, so screens would sit underneath the status bar.
+    // Tab screens are padded down by its height; full-bleed screens (splash, login, the green
+    // profile header) and the chat (which handles its own insets) are left alone.
+    private var statusBarHeight = 0
+    private val fullBleedDestinations = setOf(
+        R.id.splashFragment, R.id.loginFragment, R.id.roleSelectionFragment,
+        R.id.profileFragment, R.id.chatFragment
+    )
     private lateinit var navController: NavController
 
     // Opens the right screen when a push notification is tapped.
@@ -41,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
     private val tabDestinations = setOf(
         R.id.mainFragment, R.id.commitmentsFragment, R.id.hoursFragment,
-        R.id.orgHomeFragment, R.id.profileFragment
+        R.id.orgHomeFragment, R.id.profileFragment, R.id.messagesFragment
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +62,13 @@ class MainActivity : AppCompatActivity() {
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        val navHost = findViewById<View>(R.id.nav_host_fragment)
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { _, insets ->
+            statusBarHeight = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+            applyTopInset(navHost, navController.currentDestination?.id)
+            insets
+        }
 
         // Launched by tapping a notification? Only look on a fresh start, not after a rotation.
         if (savedInstanceState == null) notificationRouter.handle(intent)
@@ -71,16 +88,21 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.hoursFragment, null, tabNavOptions(home))
                     true
                 }
+                R.id.nav_messages -> {
+                    navController.navigate(R.id.messagesFragment, null, tabNavOptions(home))
+                    true
+                }
                 R.id.nav_profile -> {
                     navController.navigate(R.id.profileFragment, null, tabNavOptions(home))
                     true
                 }
                 else -> {
-                    Toast.makeText(this, "${item.title} is coming soon", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.coming_soon, item.title), Toast.LENGTH_SHORT).show()
                     false
                 }
             }
         }
+
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
@@ -88,6 +110,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.orgHomeFragment -> isOrgContext = true
             }
 
+            applyTopInset(navHost, destination.id)
             bottomNav.visibility = if (destination.id in tabDestinations) View.VISIBLE else View.GONE
             // Listings/Hours are volunteer-only concepts - an organization already sees its
             // own listings on Home, and doesn't log volunteer hours.
@@ -98,6 +121,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.mainFragment, R.id.orgHomeFragment -> bottomNav.menu.findItem(R.id.nav_home)?.isChecked = true
                 R.id.commitmentsFragment -> bottomNav.menu.findItem(R.id.nav_listings)?.isChecked = true
                 R.id.hoursFragment -> bottomNav.menu.findItem(R.id.nav_hours)?.isChecked = true
+                R.id.messagesFragment -> bottomNav.menu.findItem(R.id.nav_messages)?.isChecked = true
                 R.id.profileFragment -> bottomNav.menu.findItem(R.id.nav_profile)?.isChecked = true
             }
 
@@ -157,5 +181,10 @@ class MainActivity : AppCompatActivity() {
     private fun tabNavOptions(home: Int) = navOptions {
         launchSingleTop = true
         popUpTo(home) { inclusive = false }
+    }
+
+    private fun applyTopInset(navHost: View, destinationId: Int?) {
+        val top = if (destinationId != null && destinationId !in fullBleedDestinations) statusBarHeight else 0
+        navHost.setPadding(0, top, 0, 0)
     }
 }

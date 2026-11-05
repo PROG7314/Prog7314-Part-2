@@ -29,7 +29,7 @@ class VolunteerProfileFragment : Fragment() {
         val currentUser = auth.currentUser
         if (currentUser != null) {
             val txtEmail = view.findViewById<TextView>(R.id.txtVolunteerEmail)
-            txtEmail?.text = currentUser.email ?: "JulieBeckett2@gmail.com"
+            txtEmail?.text = currentUser.email ?: ""
         }
 
         setupClickListeners(view)
@@ -37,36 +37,36 @@ class VolunteerProfileFragment : Fragment() {
 
     private fun setupClickListeners(view: View) {
         view.findViewById<View>(R.id.btnEditProfile)?.setOnClickListener {
-            Toast.makeText(requireContext(), "Edit Profile clicked", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.coming_soon, getString(R.string.edit_profile)), Toast.LENGTH_SHORT).show()
         }
 
         view.findViewById<View>(R.id.rowMyInterests)?.setOnClickListener {
             try {
                 findNavController().navigate(R.id.interestMatchingFragment)
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "My Interests clicked", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.coming_soon, getString(R.string.my_interests)), Toast.LENGTH_SHORT).show()
             }
         }
 
         view.findViewById<View>(R.id.rowMySkills)?.setOnClickListener {
-            Toast.makeText(requireContext(), "My Skills clicked", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.coming_soon, getString(R.string.my_skills)), Toast.LENGTH_SHORT).show()
         }
 
         view.findViewById<View>(R.id.rowLanguageSettings)?.setOnClickListener {
-            Toast.makeText(requireContext(), "Language Settings clicked", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.settingsFragment)
         }
 
         view.findViewById<View>(R.id.rowNotifications)?.setOnClickListener {
-            Toast.makeText(requireContext(), "Notifications clicked", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.settingsFragment)
         }
 
         view.findViewById<View>(R.id.rowBiometricAuth)?.setOnClickListener {
-            Toast.makeText(requireContext(), "Biometric Settings clicked", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.coming_soon, getString(R.string.biometric_auth)), Toast.LENGTH_SHORT).show()
         }
 
         view.findViewById<View>(R.id.rowLogout)?.setOnClickListener {
             auth.signOut()
-            Toast.makeText(requireContext(), "Logged out successfully", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.logged_out), Toast.LENGTH_SHORT).show()
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.aegis.ui.settings
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import com.example.aegis.R
 import com.example.aegis.core.AegisBaseFragment
 import com.example.aegis.data.ServiceLocator
 import com.example.aegis.data.local.UserPreferencesDataStore
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.materialswitch.MaterialSwitch
 import kotlinx.coroutines.launch
 import android.widget.CompoundButton
@@ -25,8 +27,9 @@ class SettingsFragment : AegisBaseFragment() {
 
     private lateinit var viewModel: SettingsViewModel
 
-    private val languageNames = listOf("English", "Afrikaans", "Zulu")
+    private val languageNames = listOf("English", "Afrikaans", "isiZulu")
     private val languageCodes = listOf("en", "af", "zu")
+
 
 
     private val biometricListener = CompoundButton.OnCheckedChangeListener { button, checked ->
@@ -57,6 +60,11 @@ class SettingsFragment : AegisBaseFragment() {
         button.setOnCheckedChangeListener(biometricListener)
     }
 
+    // Last language we know is saved. The Spinner reports its initial position as if the user
+    // picked it, so only a real change away from this is treated as a choice.
+    private var savedLanguage: String? = null
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -68,7 +76,9 @@ class SettingsFragment : AegisBaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val prefsStore = UserPreferencesDataStore(requireContext())
-        viewModel = SettingsViewModel(prefsStore)
+        val systemIsDark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+            Configuration.UI_MODE_NIGHT_YES
+        viewModel = SettingsViewModel(prefsStore, ServiceLocator.userRepository, systemIsDark)
 
         val darkModeSwitch = view.findViewById<MaterialSwitch>(R.id.darkModeSwitch)
         val notificationsSwitch = view.findViewById<MaterialSwitch>(R.id.notificationsSwitch)
@@ -87,7 +97,8 @@ class SettingsFragment : AegisBaseFragment() {
         notificationsSwitch.setOnCheckedChangeListener { _, checked -> viewModel.toggleNotifications(checked) }
         languageSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, itemView: View?, position: Int, id: Long) {
-                viewModel.setLanguage(languageCodes[position])
+                val code = languageCodes[position]
+                if (savedLanguage != null && code != savedLanguage) viewModel.setLanguage(code)
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
@@ -113,7 +124,13 @@ class SettingsFragment : AegisBaseFragment() {
                     }
                 }
                 launch {
+                    viewModel.syncFailed.collect { message ->
+                        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show()
+                    }
+                }
+                launch {
                     viewModel.language.collect { code ->
+                        savedLanguage = code
                         val index = languageCodes.indexOf(code).coerceAtLeast(0)
                         if (languageSpinner.selectedItemPosition != index) {
                             languageSpinner.setSelection(index)

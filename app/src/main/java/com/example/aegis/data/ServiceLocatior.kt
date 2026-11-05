@@ -17,6 +17,8 @@ import com.example.aegis.data.sync.SyncState
 import com.example.aegis.domain.repository.ListingRepository
 import com.example.aegis.domain.repository.SignupRepository
 import com.example.aegis.domain.repository.UserRepository
+import com.example.aegis.data.repository.ApiMessageRepository
+import com.example.aegis.domain.repository.MessageRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -77,4 +79,5 @@ object ServiceLocator {
         OfflineSignupRepository(ApiSignupRepository(api()), database, connectivity, syncState, context())
     }
     val userRepository: UserRepository by lazy { ApiUserRepository(api()) }
+    val messageRepository: MessageRepository by lazy { ApiMessageRepository(api()) }
 }

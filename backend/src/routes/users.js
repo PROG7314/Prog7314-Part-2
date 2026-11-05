@@ -30,7 +30,11 @@ export function usersRouter({ db, cfg }) {
       patch.updatedAt = Timestamp.now();
       await db.collection('users').doc(req.user.id).update(patch);
       const merged = { ...req.user, ...patch };
-      res.json({ preferredLanguage: merged.preferredLanguage, notificationsEnabled: merged.notificationsEnabled });
+      res.json({
+        preferredLanguage: merged.preferredLanguage,
+        notificationsEnabled: merged.notificationsEnabled,
+        darkMode: merged.darkMode ?? false,
+      });
     })
   );
 

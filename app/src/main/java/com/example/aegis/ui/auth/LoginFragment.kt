@@ -19,11 +19,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.aegis.R
+import com.example.aegis.data.local.UserPreferencesDataStore
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import kotlinx.coroutines.launch
-import com.example.aegis.data.local.UserPreferencesDataStore
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
@@ -42,12 +42,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
         googleSignInButton.setOnClickListener { launchGoogleSignIn() }
 
-
         emailSignInButton.setOnClickListener {
             val email = emailInput.text.toString().trim()
             val password = passwordInput.text.toString()
             if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(requireContext(), "Please enter both email and password", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), R.string.login_enter_both, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             if (isSignUpMode) {
@@ -60,11 +59,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         toggleModeText.setOnClickListener {
             isSignUpMode = !isSignUpMode
             if (isSignUpMode) {
-                emailSignInButton.text = "Create account"
-                toggleModeText.text = "Already have an account? Log in"
+                emailSignInButton.setText(R.string.create_account)
+                toggleModeText.setText(R.string.have_account_log_in)
             } else {
-                emailSignInButton.text = "Log in"
-                toggleModeText.text = "New here? Create an account"
+                emailSignInButton.setText(R.string.log_in)
+                toggleModeText.setText(R.string.new_here_create_account)
             }
         }
 
@@ -90,6 +89,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             }
         }
     }
+
     private fun navigateByRole(role: String?) {
         when (role) {
             null -> findNavController().navigate(R.id.action_loginFragment_to_roleSelectionFragment)
@@ -131,6 +131,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 .show()
         }
     }
+
     private fun launchGoogleSignIn() {
         val credentialManager = CredentialManager.create(requireContext())
 
@@ -161,43 +162,43 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
             authViewModel.firebaseAuthWithGoogle(googleIdTokenCredential.idToken)
         } else {
-            authViewModel.reportError("Sign-in failed — please try again")
+            authViewModel.reportError(getString(R.string.sign_in_failed))
         }
     }
 
     private fun mapCredentialError(e: GetCredentialException): String = when (e) {
-        is GetCredentialCancellationException -> "Sign-in was cancelled"
-        is NoCredentialException -> "No Google account found on this device. Try email sign-in instead."
-        else -> "Sign-in failed — please try again"
+        is GetCredentialCancellationException -> getString(R.string.sign_in_cancelled)
+        is NoCredentialException -> getString(R.string.no_google_account)
+        else -> getString(R.string.sign_in_failed)
     }
 
     private fun showForgotPasswordDialog() {
         val input = EditText(requireContext()).apply {
-            hint = "Email"
+            hint = getString(R.string.email_hint)
             inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
         }
 
         AlertDialog.Builder(requireContext())
-            .setTitle("Reset password")
-            .setMessage("Enter your account email and we'll send a reset link.")
+            .setTitle(R.string.reset_password_title)
+            .setMessage(R.string.reset_password_message)
             .setView(input)
-            .setPositiveButton("Send") { _, _ ->
+            .setPositiveButton(R.string.reset_send) { _, _ ->
                 val email = input.text.toString().trim()
                 if (email.isEmpty()) {
-                    Toast.makeText(requireContext(), "Please enter an email", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), R.string.reset_enter_email, Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
                 }
                 viewLifecycleOwner.lifecycleScope.launch {
                     val result = authViewModel.sendPasswordReset(email)
                     val message = if (result.isSuccess) {
-                        "Reset link sent — check your inbox"
+                        getString(R.string.reset_link_sent)
                     } else {
-                        result.exceptionOrNull()?.message ?: "Could not send reset email"
+                        result.exceptionOrNull()?.message ?: getString(R.string.reset_failed)
                     }
                     Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
                 }
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(android.R.string.cancel, null)
             .show()
     }
 }

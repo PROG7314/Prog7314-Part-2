@@ -1,6 +1,7 @@
 package com.example.aegis.ui.listing
 
 import android.content.res.ColorStateList
+import java.text.NumberFormat
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -27,26 +28,26 @@ class OrgListingAdapter(
         val listing = getItem(position)
         with(holder.binding) {
             listingTitle.text = listing.title
-            signupCountNumber.text = (listing.signupCount ?: 0).toString()
+            signupCountNumber.text = NumberFormat.getInstance().format(listing.signupCount ?: 0)
 
             if (listing.isEnded()) {
                 statusBadge.text = root.context.getString(R.string.status_ended)
                 statusBadge.backgroundTintList =
                     ColorStateList.valueOf(
-                        ContextCompat.getColor(root.context, R.color.aegis_badge_ended)
+                        ContextCompat.getColor(root.context, R.color.badge_ended_background)
                     )
             } else {
                 statusBadge.text = root.context.getString(R.string.status_upcoming)
                 statusBadge.backgroundTintList =
                     ColorStateList.valueOf(
-                        ContextCompat.getColor(root.context, R.color.aegis_badge_background)
+                        ContextCompat.getColor(root.context, R.color.badge_background)
                     )
             }
 
             if (listing.images.isNotEmpty()) {
                 listingImage.load(listing.images.first()) {
-                    placeholder(R.color.aegis_green)
-                    error(R.color.aegis_green)
+                    placeholder(R.drawable.bg_image_placeholder)
+                    error(R.drawable.bg_image_placeholder)
                 }
             } else {
                 listingImage.setImageDrawable(null)
