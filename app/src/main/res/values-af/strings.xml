@@ -186,4 +186,35 @@
         <item quantity="one">%d verandering wat jy vanlyn gemaak het, is nog nie na die bediener gestuur nie. As jy nou uitteken, sal dit verlore gaan.</item>
         <item quantity="other">%d veranderinge wat jy vanlyn gemaak het, is nog nie na die bediener gestuur nie. As jy nou uitteken, sal dit verlore gaan.</item>
     </plurals>
+
+    <string name="biometric_title">Ontsluit Aegis</string>
+    <string name="biometric_subtitle">Bevestig dat dit jy is om voort te gaan</string>
+    <string name="biometric_use_password">Meld weer aan</string>
+    <string name="biometric_setting_label">Vingerafdruk-/gesigontsluiting</string>
+    <string name="biometric_unavailable">Geen vingerafdruk- of gesigontsluiting is op hierdie toestel opgestel nie</string>
+    <string name="biometric_enable_title">Skakel vingerafdrukontsluiting aan?</string>
+    <string name="biometric_enable_message">Gebruik jou vingerafdruk of gesig om Aegis die volgende keer oop te maak.</string>
+    <string name="biometric_yes">Skakel aan</string>
+    <string name="biometric_not_now">Nie nou nie</string>
+
+    <string name="error_wrong_credentials">Verkeerde e-pos of wagwoord. Probeer asseblief weer.</string>
+    <string name="error_user_not_found">Ons kon nie \'n rekening met daardie e-pos vind nie.</string>
+    <string name="error_email_in_use">\'n Rekening bestaan reeds met daardie e-pos.</string>
+    <string name="error_weak_password">Kies asseblief \'n sterker wagwoord (ten minste 6 karakters).</string>
+    <string name="no_google_account">Geen Google-rekening op hierdie toestel gevind nie. Probeer eerder met e-pos aanmeld.</string>
+    <string name="login_enter_both">Voer asseblief beide e-pos en wagwoord in</string>
+    <string name="log_in">Meld aan</string>
+    <string name="create_account">Skep rekening</string>
+    <string name="have_account_log_in">Het jy reeds \'n rekening? Meld aan</string>
+    <string name="new_here_create_account">Nuut hier? Skep \'n rekening</string>
+    <string name="forgot_password">Wagwoord vergeet?</string>
+    <string name="email_hint">E-pos</string>
+    <string name="password_hint">Wagwoord</string>
+    <string name="or_divider">— of —</string>
+    <string name="reset_password_title">Herstel wagwoord</string>
+    <string name="reset_password_message">Voer jou rekening se e-pos in en ons sal \'n herstelskakel stuur.</string>
+    <string name="reset_send">Stuur</string>
+    <string name="reset_enter_email">Voer asseblief \'n e-pos in</string>
+    <string name="reset_link_sent">Herstelskakel gestuur — kyk in jou inkassie</string>
+    <string name="reset_failed">Kon nie herstel-e-pos stuur nie</string>
 </resources>

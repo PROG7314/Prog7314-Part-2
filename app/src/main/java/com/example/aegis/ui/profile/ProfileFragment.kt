@@ -23,7 +23,9 @@ import com.google.android.material.chip.ChipGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
+import android.util.Log
 import com.example.aegis.core.Taxonomy
+
 
 class ProfileFragment : AegisBaseFragment() {
 
@@ -137,7 +139,6 @@ class ProfileFragment : AegisBaseFragment() {
             }
         }
     }
-
     private fun showUnsyncedWarning(count: Int) {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.logout_unsynced_title)
@@ -158,6 +159,12 @@ class ProfileFragment : AegisBaseFragment() {
         TokenStore.clear(requireContext())
         ServiceLocator.clearUserData() // cached listings/commitments + the offline queue
         FirebaseAuth.getInstance().signOut()
+        try {
+            androidx.credentials.CredentialManager.create(requireContext())
+                .clearCredentialState(androidx.credentials.ClearCredentialStateRequest())
+        } catch (e: Exception) {
+            Log.w("ProfileFragment", "Could not clear credential state: ${e.message}")
+        }
 
         findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
     }

@@ -202,4 +202,35 @@
 
     <string name="photo_count_add">Add up to 3 photos</string>
     <string name="hint_skills_pick">Tap to choose skills</string>
+
+    <string name="biometric_title">Unlock Aegis</string>
+    <string name="biometric_subtitle">Confirm it\'s you to continue</string>
+    <string name="biometric_use_password">Sign in again</string>
+    <string name="biometric_setting_label">Fingerprint / face unlock</string>
+    <string name="biometric_unavailable">No fingerprint or face unlock is set up on this device</string>
+    <string name="biometric_enable_title">Turn on fingerprint unlock?</string>
+    <string name="biometric_enable_message">Use your fingerprint or face to open Aegis next time.</string>
+    <string name="biometric_yes">Turn on</string>
+    <string name="biometric_not_now">Not now</string>
+
+    <string name="error_wrong_credentials">Incorrect email or password. Please try again.</string>
+    <string name="error_user_not_found">We couldn\'t find an account with that email.</string>
+    <string name="error_email_in_use">An account already exists with that email.</string>
+    <string name="error_weak_password">Please choose a stronger password (at least 6 characters).</string>
+    <string name="no_google_account">No Google account found on this device. Try email sign-in instead.</string>
+    <string name="login_enter_both">Please enter both email and password</string>
+    <string name="log_in">Log in</string>
+    <string name="create_account">Create account</string>
+    <string name="have_account_log_in">Already have an account? Log in</string>
+    <string name="new_here_create_account">New here? Create an account</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="or_divider">— or —</string>
+    <string name="reset_password_title">Reset password</string>
+    <string name="reset_password_message">Enter your account email and we\'ll send a reset link.</string>
+    <string name="reset_send">Send</string>
+    <string name="reset_enter_email">Please enter an email</string>
+    <string name="reset_link_sent">Reset link sent — check your inbox</string>
+    <string name="reset_failed">Could not send reset email</string>
 </resources>

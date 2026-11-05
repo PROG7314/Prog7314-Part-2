@@ -8,6 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.aegis.R
+import androidx.lifecycle.lifecycleScope
+import com.example.aegis.data.local.TokenStore
+import com.example.aegis.data.local.UserPreferencesDataStore
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class SplashFragment : Fragment(R.layout.fragment_splash) {
 
@@ -39,6 +45,28 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
             }
         }
 
-        authViewModel.checkExistingSession()
+        viewLifecycleOwner.lifecycleScope.launch {
+            val enabled = UserPreferencesDataStore(requireContext()).biometricEnabledFlow.first()
+            val signedIn = FirebaseAuth.getInstance().currentUser != null
+            if (signedIn && enabled && BiometricHelper.isAvailable(requireContext())) {
+                // Nothing loads from the backend until the scan succeeds.
+                BiometricHelper.prompt(
+                    requireActivity(),
+                    getString(R.string.biometric_title),
+                    getString(R.string.biometric_subtitle),
+                    getString(R.string.biometric_use_password),
+                    onSuccess = { if (isAdded) authViewModel.checkExistingSession() },
+                    onFailure = {
+                        if (isAdded) {
+                            TokenStore.clear(requireContext())
+                            FirebaseAuth.getInstance().signOut()
+                            findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
+                        }
+                    }
+                )
+            } else {
+                authViewModel.checkExistingSession()
+            }
+        }
     }
 }

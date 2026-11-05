@@ -186,4 +186,35 @@
         <item quantity="one">Ushintsho olu-%d owalwenza ungaxhumekile alukathunyelwa kuseva. Uma uphuma manje, luzolahleka.</item>
         <item quantity="other">Izinguquko ezingu-%d owazenza ungaxhumekile azikathunyelwa kuseva. Uma uphuma manje, zizolahleka.</item>
     </plurals>
+
+    <string name="biometric_title">Vula i-Aegis</string>
+    <string name="biometric_subtitle">Qinisekisa ukuthi nguwe ukuze uqhubeke</string>
+    <string name="biometric_use_password">Ngena futhi</string>
+    <string name="biometric_setting_label">Ukuvula ngezigxivizo zeminwe / ubuso</string>
+    <string name="biometric_unavailable">Akukho ukuvula ngezigxivizo zeminwe noma ubuso okusethiwe kule divayisi</string>
+    <string name="biometric_enable_title">Vula ukuvula ngezigxivizo zeminwe?</string>
+    <string name="biometric_enable_message">Sebenzisa isigxivizo seminwe noma ubuso bakho ukuvula i-Aegis ngokulandelayo.</string>
+    <string name="biometric_yes">Vula</string>
+    <string name="biometric_not_now">Hhayi manje</string>
+
+    <string name="error_wrong_credentials">I-imeyili noma iphasiwedi akulungile. Sicela uzame futhi.</string>
+    <string name="error_user_not_found">Asikwazanga ukuthola i-akhawunti enale imeyili.</string>
+    <string name="error_email_in_use">Sekukhona i-akhawunti enale imeyili.</string>
+    <string name="error_weak_password">Sicela ukhethe iphasiwedi eqinile (okungenani izinhlamvu eziyi-6).</string>
+    <string name="no_google_account">Ayikho i-akhawunti ye-Google etholakele kule divayisi. Zama ukungena nge-imeyili esikhundleni salokho.</string>
+    <string name="login_enter_both">Sicela ufake i-imeyili nephasiwedi</string>
+    <string name="log_in">Ngena</string>
+    <string name="create_account">Dala i-akhawunti</string>
+    <string name="have_account_log_in">Usunayo i-akhawunti? Ngena</string>
+    <string name="new_here_create_account">Umusha lapha? Dala i-akhawunti</string>
+    <string name="forgot_password">Ukhohlwe iphasiwedi?</string>
+    <string name="email_hint">I-imeyili</string>
+    <string name="password_hint">Iphasiwedi</string>
+    <string name="or_divider">— noma —</string>
+    <string name="reset_password_title">Setha kabusha iphasiwedi</string>
+    <string name="reset_password_message">Faka imeyili ye-akhawunti yakho futhi sizothumela isixhumanisi sokusetha kabusha.</string>
+    <string name="reset_send">Thumela</string>
+    <string name="reset_enter_email">Sicela ufake i-imeyili</string>
+    <string name="reset_link_sent">Isixhumanisi sokusetha kabusha sithunyelwe — hlola ibhokisi lakho</string>
+    <string name="reset_failed">Ayikwazanga ukuthumela i-imeyili yokusetha kabusha</string>
 </resources>

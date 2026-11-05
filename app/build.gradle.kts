@@ -82,6 +82,13 @@ dependencies {
     implementation("io.coil-kt:coil:2.7.0")
     implementation("androidx.cardview:cardview:1.0.0")
 
+    implementation("androidx.credentials:credentials:1.5.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
+
     ksp(libs.androidx.room3.compiler)
     implementation(libs.androidx.work.runtime)
+
+    implementation("androidx.biometric:biometric:1.1.0")
 }

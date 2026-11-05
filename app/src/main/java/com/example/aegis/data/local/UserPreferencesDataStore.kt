@@ -16,7 +16,18 @@ class UserPreferencesDataStore(private val context: Context) {
         val LANGUAGE = stringPreferencesKey("language")
         val SELECTED_CAUSES = stringSetPreferencesKey("selected_causes")
         val SELECTED_SKILLS = stringSetPreferencesKey("selected_skills")
+
+        val BIOMETRIC_ENABLED = booleanPreferencesKey("biometric_enabled")
+
+        val BIOMETRIC_ASKED = booleanPreferencesKey("biometric_asked")
     }
+
+    val biometricEnabledFlow: Flow<Boolean> = context.dataStore.data
+        .map { prefs -> prefs[BIOMETRIC_ENABLED] ?: false }
+
+    val biometricAskedFlow: Flow<Boolean> = context.dataStore.data
+        .map { prefs -> prefs[BIOMETRIC_ASKED] ?: false }
+
 
     val darkModeFlow: Flow<Boolean> = context.dataStore.data
         .map { prefs -> prefs[DARK_MODE] ?: false }
@@ -59,5 +70,13 @@ class UserPreferencesDataStore(private val context: Context) {
 
     suspend fun setSelectedSkills(skills: Set<String>) {
         context.dataStore.edit { it[SELECTED_SKILLS] = skills }
+    }
+
+    suspend fun setBiometricEnabled(enabled: Boolean) {
+        context.dataStore.edit { it[BIOMETRIC_ENABLED] = enabled }
+    }
+
+    suspend fun setBiometricAsked(asked: Boolean) {
+        context.dataStore.edit { it[BIOMETRIC_ASKED] = asked }
     }
 }

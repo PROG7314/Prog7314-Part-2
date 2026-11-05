@@ -19,6 +19,9 @@ import com.example.aegis.data.local.UserPreferencesDataStore
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.materialswitch.MaterialSwitch
 import kotlinx.coroutines.launch
+import android.widget.CompoundButton
+import android.widget.Toast
+import com.example.aegis.ui.auth.BiometricHelper
 
 class SettingsFragment : AegisBaseFragment() {
 
@@ -27,9 +30,40 @@ class SettingsFragment : AegisBaseFragment() {
     private val languageNames = listOf("English", "Afrikaans", "isiZulu")
     private val languageCodes = listOf("en", "af", "zu")
 
+
+
+    private val biometricListener = CompoundButton.OnCheckedChangeListener { button, checked ->
+        val prefs = UserPreferencesDataStore(requireContext())
+        if (!checked) {
+            viewLifecycleOwner.lifecycleScope.launch { prefs.setBiometricEnabled(false) }
+            return@OnCheckedChangeListener
+        }
+        if (!BiometricHelper.isAvailable(requireContext())) {
+            Toast.makeText(requireContext(), R.string.biometric_unavailable, Toast.LENGTH_LONG).show()
+            setBiometricSwitch(button, false)
+            return@OnCheckedChangeListener
+        }
+        // Confirm with a scan before enabling, so the user can't lock themselves out.
+        BiometricHelper.prompt(
+            requireActivity(),
+            getString(R.string.biometric_title),
+            getString(R.string.biometric_subtitle),
+            getString(android.R.string.cancel),
+            onSuccess = { viewLifecycleOwner.lifecycleScope.launch { prefs.setBiometricEnabled(true) } },
+            onFailure = { setBiometricSwitch(button, false) }
+        )
+    }
+
+    private fun setBiometricSwitch(button: CompoundButton, checked: Boolean) {
+        button.setOnCheckedChangeListener(null)
+        button.isChecked = checked
+        button.setOnCheckedChangeListener(biometricListener)
+    }
+
     // Last language we know is saved. The Spinner reports its initial position as if the user
     // picked it, so only a real change away from this is treated as a choice.
     private var savedLanguage: String? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,6 +84,8 @@ class SettingsFragment : AegisBaseFragment() {
         val notificationsSwitch = view.findViewById<MaterialSwitch>(R.id.notificationsSwitch)
         val languageSpinner = view.findViewById<Spinner>(R.id.languageSpinner)
         val lastSyncText = view.findViewById<TextView>(R.id.lastSyncText)
+        val biometricSwitch = view.findViewById<MaterialSwitch>(R.id.biometricSwitch)
+        biometricSwitch.setOnCheckedChangeListener(biometricListener)
 
         languageSpinner.adapter = ArrayAdapter(
             requireContext(),
@@ -107,7 +143,14 @@ class SettingsFragment : AegisBaseFragment() {
                         lastSyncText.text = ServiceLocator.syncState.lastSyncLabel(requireContext())
                     }
                 }
+
+                launch {
+                    prefsStore.biometricEnabledFlow.collect { enabled ->
+                        if (biometricSwitch.isChecked != enabled) setBiometricSwitch(biometricSwitch, enabled)
+                    }
+                }
             }
+
         }
     }
 }
