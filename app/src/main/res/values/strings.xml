@@ -233,4 +233,11 @@
     <string name="reset_enter_email">Please enter an email</string>
     <string name="reset_link_sent">Reset link sent — check your inbox</string>
     <string name="reset_failed">Could not send reset email</string>
+
+
+    <string name="profile_name_hint">Name</string>
+    <string name="error_name_required">Please enter a name</string>
+    <string name="error_name_too_long">Name must be %1$d characters or fewer</string>
+    <string name="error_about_too_long">Please keep this to %1$d characters or fewer</string>
+    <string name="profile_saved">Profile saved</string>
 </resources>

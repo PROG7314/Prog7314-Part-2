@@ -137,6 +137,11 @@
         android:label="Settings" />
 
     <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.aegis.ui.profile.EditProfileFragment"
+        android:label="@string/edit_profile" />
+
+    <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.aegis.ui.profile.ProfileFragment"
         android:label="Profile">
@@ -177,5 +182,10 @@
     <action
         android:id="@+id/action_global_settingsFragment"
         app:destination="@id/settingsFragment" />
+
+    <!-- Global: the Edit profile button on ProfileFragment opens the edit screen -->
+    <action
+        android:id="@+id/action_global_editProfileFragment"
+        app:destination="@id/editProfileFragment" />
 
 </navigation>

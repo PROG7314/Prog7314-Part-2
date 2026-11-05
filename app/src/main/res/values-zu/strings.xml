@@ -217,4 +217,10 @@
     <string name="reset_enter_email">Sicela ufake i-imeyili</string>
     <string name="reset_link_sent">Isixhumanisi sokusetha kabusha sithunyelwe — hlola ibhokisi lakho</string>
     <string name="reset_failed">Ayikwazanga ukuthumela i-imeyili yokusetha kabusha</string>
+
+    <string name="profile_name_hint">Igama</string>
+    <string name="error_name_required">Sicela ufake igama</string>
+    <string name="error_name_too_long">Igama akufanele libe ngaphezu kwezinhlamvu eziyi-%1$d</string>
+    <string name="error_about_too_long">Sicelaugcine lokhu ngaphansi kwezinhlamvu eziyi-%1$d noma ngaphansi</string>
+    <string name="profile_saved">Iphrofayili igcinwe</string>
 </resources>

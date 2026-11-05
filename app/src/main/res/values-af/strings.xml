@@ -217,4 +217,10 @@
     <string name="reset_enter_email">Voer asseblief \'n e-pos in</string>
     <string name="reset_link_sent">Herstelskakel gestuur — kyk in jou inkassie</string>
     <string name="reset_failed">Kon nie herstel-e-pos stuur nie</string>
+
+    <string name="profile_name_hint">Naam</string>
+    <string name="error_name_required">Voer asseblief \'n naam in</string>
+    <string name="error_name_too_long">Naam mag hoogstens %1$d karakters wees</string>
+    <string name="error_about_too_long">Hou dit asseblief by hoogstens %1$d karakters</string>
+    <string name="profile_saved">Profiel gestoor</string>
 </resources>
