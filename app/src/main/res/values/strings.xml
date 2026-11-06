@@ -243,4 +243,7 @@
 
     <string name="change_photo">Change photo</string>
     <string name="profile_photo_upload_failed">Couldn\'t upload the photo. Check your connection and try again.</string>
+    <string name="onboarding_save_failed_title">Couldn\'t save your choices</string>
+    <string name="onboarding_save_failed_message">%1$s\n\nYou can change your interests later in Edit profile.</string>
+    <string name="onboarding_continue_anyway">Continue anyway</string>
 </resources>
