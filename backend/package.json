@@ -16,6 +16,7 @@
     "node": ">=20.6"
   },
   "dependencies": {
+    "@google-cloud/firestore": "^9.4.0",
     "express": "^5.2.1",
     "firebase-admin": "^14.4.0",
     "jsonwebtoken": "^9.0.3"
