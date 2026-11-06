@@ -33,6 +33,10 @@ object Taxonomy {
         "First Aid" to R.string.skill_first_aid
     )
 
+    /** The API values for causes and skills, in display order (first 11 are causes). */
+    val causes: List<String> = labels.keys.take(11)
+    val skills: List<String> = labels.keys.drop(11)
+
     /** The on-screen label for an API value; unknown values are shown as they came. */
     fun label(context: Context, apiValue: String): String =
         labels[apiValue]?.let(context::getString) ?: apiValue

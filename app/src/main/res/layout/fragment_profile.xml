@@ -215,11 +215,21 @@
                 </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/settingsButton"
+                    android:id="@+id/editProfileButton"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="28dp"
+                    android:text="@string/edit_profile"
+                    android:textColor="?attr/colorPrimary"
+                    app:strokeColor="?attr/colorPrimary" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/settingsButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
                     android:text="@string/settings"
                     android:textColor="?attr/colorPrimary"
                     app:strokeColor="?attr/colorPrimary" />

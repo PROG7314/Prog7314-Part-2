@@ -96,6 +96,23 @@ class ApiUserRepository(private val api: AegisApi) : UserRepository {
             api.updateMe(UpdateProfileRequest(interests = interests, skills = skills)).toDomain()
         }
 
+    override suspend fun updateProfile(
+        name: String?,
+        bio: String?,
+        description: String?,
+        profileImageUrl: String?,
+        interests: List<String>?,
+        skills: List<String>?
+    ): ApiResult<UserProfile> =
+        safeApiCall(TAG) {
+            api.updateMe(
+                UpdateProfileRequest(
+                    name = name, profileImageUrl = profileImageUrl, bio = bio,
+                    description = description, interests = interests, skills = skills
+                )
+            ).toDomain()
+        }
+
     override suspend fun updateSettings(
         preferredLanguage: String?,
         notificationsEnabled: Boolean?,

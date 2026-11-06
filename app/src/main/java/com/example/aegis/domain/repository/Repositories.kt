@@ -55,6 +55,17 @@ interface UserRepository {
     // Sends the volunteer's selected causes and skills to the API (Custom Feature #1).
     suspend fun updateInterests(interests: List<String>, skills: List<String>): ApiResult<UserProfile>
 
+    // Edits the signed-in user's own profile. Send only fields the role may change (the API rejects
+    // the rest): volunteers name/bio/interests/skills, organisations name/description. Nulls are omitted.
+    suspend fun updateProfile(
+        name: String? = null,
+        bio: String? = null,
+        description: String? = null,
+        profileImageUrl: String? = null,
+        interests: List<String>? = null,
+        skills: List<String>? = null
+    ): ApiResult<UserProfile>
+
     suspend fun updateSettings(
         preferredLanguage: String? = null,
         notificationsEnabled: Boolean? = null,

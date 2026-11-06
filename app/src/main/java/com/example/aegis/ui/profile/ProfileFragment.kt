@@ -50,6 +50,19 @@ class ProfileFragment : AegisBaseFragment() {
         binding.settingsButton.setOnClickListener {
             findNavController().navigate(R.id.action_global_settingsFragment)
         }
+
+        binding.editProfileButton.setOnClickListener {
+            findNavController().navigate(R.id.action_global_editProfileFragment)
+        }
+        findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<Boolean>(EditProfileFragment.PROFILE_UPDATED)
+            ?.observe(viewLifecycleOwner) { updated ->
+                if (updated == true) {
+                    viewModel.load()
+                    findNavController().currentBackStackEntry?.savedStateHandle
+                        ?.remove<Boolean>(EditProfileFragment.PROFILE_UPDATED)
+                }
+            }
         binding.logoutButton.setOnClickListener { logout() }
 
         viewLifecycleOwner.lifecycleScope.launch {
