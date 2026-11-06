@@ -223,4 +223,7 @@
     <string name="error_name_too_long">Igama akufanele libe ngaphezu kwezinhlamvu eziyi-%1$d</string>
     <string name="error_about_too_long">Sicelaugcine lokhu ngaphansi kwezinhlamvu eziyi-%1$d noma ngaphansi</string>
     <string name="profile_saved">Iphrofayili igcinwe</string>
+
+    <string name="change_photo">Shintsha isithombe</string>
+    <string name="profile_photo_upload_failed">Asikwazanga ukulayisha isithombe. Hlola uxhumano lwakho bese uzama futhi.</string>
 </resources>

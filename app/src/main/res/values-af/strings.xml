@@ -223,4 +223,7 @@
     <string name="error_name_too_long">Naam mag hoogstens %1$d karakters wees</string>
     <string name="error_about_too_long">Hou dit asseblief by hoogstens %1$d karakters</string>
     <string name="profile_saved">Profiel gestoor</string>
+
+    <string name="change_photo">Verander foto</string>
+    <string name="profile_photo_upload_failed">Kon nie die foto oplaai nie. Kontroleer jou verbinding en probeer weer.</string>
 </resources>
