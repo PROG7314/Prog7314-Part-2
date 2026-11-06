@@ -1,13 +1,19 @@
 # Aegis API (backend)
 
-Node.js + Express + Firestore, deployed on Render. Implements the Part 1 endpoint spec (Tables 1-4) under `/api/v1`.
-Push notifications (FCM) are built: see section 6b. Not built yet (POE): `/translate`, `/sync/signups`.
+Node.js + Express + Firestore, deployed on Render. Implements the Part 1 endpoint spec (Tables 1-4) under `/api/v1`, plus
+offline sync and direct messaging added for the Final POE. Push notifications (FCM) are built: see section 6b. Offline sync
+(`POST /sync/signups`) is built: see section 6c. Messaging (conversations) is built: see section 5.
+
+Not built, by design: `/translate`. The Part 1 doc specified a server-side Google Cloud Translation API for dynamic runtime
+translation; the team replaced it with standard Android string resources (`values-af/`, `values-zu/` +
+`AppCompatDelegate.setApplicationLocales()`) instead — see the root README's "Multi-language" section for why.
 
 ```
 backend/
-  src/         app.js (wiring) · routes/ (auth, users, listings, signups) · middleware/ · validators.js · constants.js
+  src/         app.js (wiring) · routes/ (auth, users, listings, signups, messages) · middleware/ · validators.js · constants.js
+               devTools.js (seed helpers) · notifications.js (FCM) · tokens.js · serialize.js · lookups.js
   scripts/     make-test-token.js · seed.js
-  test/        api.test.js   (12 end-to-end scenarios)
+  test/        api.test.js
   testutils/   fakeFirestore.js  (in-memory stand-in used by the tests)
 ```
 
@@ -77,6 +83,12 @@ user, so keep it out of GitHub and rotate it if it leaks (that logs everyone out
 | PATCH | `/signups/{id}` | volunteer (own) | cancel ("Dismiss") |
 | PATCH | `/signups/{id}/complete` | organization (owner) | `{ hoursCompleted? }`, writes the hours log |
 | GET | `/users/me/hours-log` | volunteer | `{ entries, totalHours }` |
+| POST | `/sync/signups` | volunteer | offline queue, see section 6c |
+| POST | `/listings/{id}/conversations` | either role | open (or fetch) the thread about a listing — 201 new / 200 existing |
+| GET | `/conversations` | either role | my conversations, most recently active first, with my unread count |
+| GET | `/conversations/{id}/messages?since=` | either role (participant) | messages oldest-first; `since` (ISO) returns only newer ones |
+| POST | `/conversations/{id}/messages` | either role (participant) | `{ text }` → 201 with the message |
+| PATCH | `/conversations/{id}/read` | either role (participant) | 204; clears my unread count on that thread |
 
 Errors always look like `{ "error": { "code", "message", "field"? } }`. Codes: `validation_error` (400) · `unauthorized` (401) ·
 `forbidden`, `role_required` (403) · `not_found` (404) · `role_already_set`, `listing_full`, `already_signed_up`, `listing_ended`,
@@ -98,8 +110,9 @@ Errors always look like `{ "error": { "code", "message", "field"? } }`. Codes: `
   app should show the confirmed ones, and handle `listing: null` for deleted listings.
 - **Accounts:** the `users` document id is the Firebase uid. The JWT only carries that id; the role is read from Firestore on
   each request (one extra read), so it is correct straight after `POST /auth/role`. Logout is stateless apart from clearing the FCM token: the app just discards the JWT.
-- **Fixed lists:** causes, skills and interests are checked against `src/constants.js`. **The team must agree the exact wording**
-  (the mockups say "Children & Youth", the design doc says "Children"). Set `ENFORCE_FIXED_LISTS=false` to switch the check off meanwhile.
+- **Fixed lists:** causes, skills and interests are checked against `src/constants.js`, using the mockups' wording (e.g.
+  "Children & Youth", not the design doc's shorter "Children") — `devTools.js`'s seed data was reconciled to match. Set
+  `ENFORCE_FIXED_LISTS=false` to switch the check off meanwhile.
 
 ## 6b. Push notifications (FCM)
 
@@ -147,7 +160,7 @@ Conflict rules:
 
 ## 7. Firestore
 
-Collections: `users`, `listings`, `signups`, `hoursLog` (fields as in the Part 1 data model). No composite indexes are needed:
+Collections: `users`, `listings`, `signups`, `hoursLog`, `conversations`, `messages`. No composite indexes are needed:
 queries only use equality filters, and sorting/filtering is done in code. That is fine at prototype scale.
 
 ## Listing images: Cloudinary instead of Firebase Storage
@@ -165,9 +178,10 @@ queries only use equality filters, and sorting/filtering is done in code. That i
 
 ## 8. Tests
 
-`npm test` runs 17 scenarios (auth, roles, validation, filtering, sign-up race, cancel, complete, hours, delete, push notifications) against an
-in-memory Firestore stand-in, so it needs no Firebase account and works in GitHub Actions (`working-directory: backend`,
-Node 22, `npm ci`, `npm test`). It has not been run against real Firestore, so do one manual pass on Render.
+`npm test` runs 29 scenarios (auth, roles, validation, filtering, sign-up race, cancel, complete, hours, delete, push
+notifications, offline sync, messaging) against an in-memory Firestore stand-in, so it needs no Firebase account and works in
+GitHub Actions (`.github/workflows/android.yml`, `working-directory: backend`, Node 20, `npm ci`, `npm test`), alongside the
+Android unit tests in the same workflow run. It has not been run against real Firestore, so do one manual pass on Render.
 
 ## 9. Known
 
