@@ -226,4 +226,8 @@
 
     <string name="change_photo">Verander foto</string>
     <string name="profile_photo_upload_failed">Kon nie die foto oplaai nie. Kontroleer jou verbinding en probeer weer.</string>
+
+    <string name="onboarding_save_failed_title">Kon nie jou keuses stoor nie</string>
+    <string name="onboarding_save_failed_message">%1$s\n\nJy kan jou belangstellings later in Wysig profiel verander.</string>
+    <string name="onboarding_continue_anyway">Gaan in elk geval voort</string>
 </resources>

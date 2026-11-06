@@ -226,4 +226,8 @@
 
     <string name="change_photo">Shintsha isithombe</string>
     <string name="profile_photo_upload_failed">Asikwazanga ukulayisha isithombe. Hlola uxhumano lwakho bese uzama futhi.</string>
+
+    <string name="onboarding_save_failed_title">Asikwazanga ukugcina ukhetho lwakho</string>
+    <string name="onboarding_save_failed_message">%1$s\n\nUngashintsha izintshisekelo zakho kamuva ku-Hlela iphrofayili.</string>
+    <string name="onboarding_continue_anyway">Qhubeka noma kunjalo</string>
 </resources>
