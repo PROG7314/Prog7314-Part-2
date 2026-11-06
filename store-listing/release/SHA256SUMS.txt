@@ -1,0 +1,2 @@
+ac6c30342301379d55d87b43e81dd8a9341d44227ecc6ad94f0e8fc5c89e4272  Aegis-v1.0.0-release.apk
+8871e3b39ccd9d50d4a9b81a7fcb650d1dee00711adba72ec8af14979f773238  Aegis-v1.0.0-release.aab

@@ -43,7 +43,7 @@
     <string name="label_cause_category">Doelwitkategorie *</string>
     <string name="label_area">Gebied / Voorstad *</string>
     <string name="hint_area">bv. Wynberg, Kaapstad</string>
-    <string name="label_skills_required">Vaardighede Benodig (kommageskei)</string>
+    <string name="label_skills_required">Vaardighede Benodig</string>
     <string name="hint_skills">bv. Onderrig, Noodhulp, Handearbeid</string>
     <string name="label_date_time">Datum &amp; Tyd *</string>
     <string name="hint_select_date">Kies Datum</string>
@@ -230,4 +230,61 @@
     <string name="onboarding_save_failed_title">Kon nie jou keuses stoor nie</string>
     <string name="onboarding_save_failed_message">%1$s\n\nJy kan jou belangstellings later in Wysig profiel verander.</string>
     <string name="onboarding_continue_anyway">Gaan in elk geval voort</string>
+
+    <!-- Listing create/edit/detail screens (draft translations - need a native-speaker review) -->
+    <string name="cancel">Kanselleer</string>
+    <string name="done">Klaar</string>
+    <string name="edit">Wysig</string>
+    <string name="delete">Vee uit</string>
+    <string name="keep_it">Behou dit</string>
+    <string name="tab_edit_listing">Wysig lys</string>
+    <string name="skills_required_title">Vereiste vaardighede</string>
+    <string name="photo_count_add_n">Voeg tot %d foto\'s by</string>
+    <string name="photo_count_saved">%d gestoor - tik om te vervang</string>
+    <string name="saving">Stoor tans…</string>
+    <string name="save_changes">Stoor veranderinge</string>
+    <string name="listing_updated">Lys opgedateer</string>
+    <string name="error_title_too_long">Titel moet %d karakters of minder wees</string>
+    <string name="error_description_too_long">Beskrywing moet %d karakters of minder wees</string>
+    <string name="error_area_too_long">Area moet %d karakters of minder wees</string>
+    <string name="error_date_future">Kies \'n datum en tyd in die toekoms</string>
+    <string name="error_spaces_invalid">Voer \'n heelgetal plekke in (1 of meer)</string>
+    <string name="error_spaces_max">Hoogstens %d plekke</string>
+    <string name="error_hours_required">Voer die minimum ure in (bv. 2)</string>
+    <string name="error_hours_negative">Ure kan nie negatief wees nie</string>
+    <string name="error_hours_max">Ure moet %d of minder wees</string>
+    <string name="error_photo_upload_network">Kon nie jou foto\'s oplaai nie. Kontroleer jou verbinding en probeer weer.</string>
+    <string name="error_photo_upload_failed">Foto-oplaai het misluk: %1$s</string>
+    <string name="detail_hours_min">Minimum %s u</string>
+    <string name="detail_no_skills">Geen nodig nie</string>
+    <string name="detail_ongoing_no_date">Deurlopend - geen vaste datum</string>
+    <string name="detail_spaces_filled">%1$d van %2$d plekke gevul</string>
+    <string name="detail_signed_up_no_cap">%d ingeskryf (geen limiet)</string>
+    <string name="delete_listing_title">Vee hierdie lys uit?</string>
+    <string name="delete_listing_message">\"%1$s\" sal vir almal verwyder word. Dit kan nie ongedaan gemaak word nie.%2$s</string>
+    <string name="listing_deleted">Lys uitgevee</string>
+    <string name="detail_label_when">Wanneer</string>
+    <string name="detail_label_where">Waar</string>
+    <string name="detail_label_spaces">Plekke</string>
+    <string name="detail_label_cause">Saak</string>
+    <string name="detail_label_skills">Vereiste vaardighede</string>
+    <string name="detail_label_hours">Ure</string>
+    <string name="detail_label_about">Oor</string>
+    <string name="view_signups">Bekyk inskrywings</string>
+    <string name="listing_photo">Lysfoto</string>
+    <string name="signed_up_success">Jy is ingeskryf!</string>
+    <string name="translations_title">Vertalings (opsioneel)</string>
+    <string name="translations_hint">Voeg jou lys in Afrikaans of isiZulu by sodat vrywilligers wat daardie tale gebruik dit kan lees. Wat leeg gelaat word, verskyn in Engels.</string>
+    <string name="translation_af_title">Afrikaanse titel</string>
+    <string name="translation_af_description">Afrikaanse beskrywing</string>
+    <string name="translation_zu_title">isiZulu-titel</string>
+    <string name="translation_zu_description">isiZulu-beskrywing</string>
+    <plurals name="photo_count_new">
+        <item quantity="one">%d nuwe foto</item>
+        <item quantity="other">%d nuwe foto\'s</item>
+    </plurals>
+    <plurals name="delete_signups_warning">
+        <item quantity="one">%d vrywilliger is ingeskryf. Hul inskrywings sal gekanselleer word.</item>
+        <item quantity="other">%d vrywilligers is ingeskryf. Hul inskrywings sal gekanselleer word.</item>
+    </plurals>
 </resources>

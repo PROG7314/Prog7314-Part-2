@@ -36,4 +36,10 @@
     </style>
 
     <style name="Theme.Aegis" parent="Base.Theme.Aegis" />
+
+    <!-- Bottom-bar labels in the app font, so they match the rest of the screen for both roles. -->
+    <style name="TextAppearance.Aegis.NavLabel" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:fontFamily">@font/plus_jakarta_sans</item>
+        <item name="android:textSize">12sp</item>
+    </style>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.aegis.ui.listing
 
+import com.example.aegis.domain.model.ListingTranslation
 import com.example.aegis.domain.model.ListingType
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -101,5 +102,24 @@ class ListingFormValidatorTest {
         val moved = input.copy(date = LocalDate.of(2026, 10, 21))
         val r = ListingFormValidator.validate(moved, now, zone, original) as FormResult.Invalid
         assertEquals(FormField.DATE_TIME, r.field)
+    }
+
+    @Test
+    fun translationsAreTrimmedAndBlankOnesDropped() {
+        val input = scheduled().copy(
+            translations = mapOf(
+                "af" to ListingTranslation("  Lees vir kinders ", " Kom lees. "),
+                "zu" to ListingTranslation("   ", "")
+            )
+        )
+        val draft = (ListingFormValidator.validate(input, now, zone) as FormResult.Valid).draft
+        assertEquals(mapOf("af" to ListingTranslation("Lees vir kinders", "Kom lees.")), draft.translations)
+    }
+
+    @Test
+    fun failedRulesReportWhichRuleSoTheScreenCanTranslateIt() {
+        assertEquals(FormProblem.TITLE_REQUIRED, invalid(scheduled().copy(title = " ")).error)
+        assertEquals(FormProblem.SPACES_TOO_MANY, invalid(scheduled().copy(spacesText = "10001")).error)
+        assertEquals(FormProblem.HOURS_REQUIRED, invalid(scheduled().copy(minHoursText = "abc")).error)
     }
 }

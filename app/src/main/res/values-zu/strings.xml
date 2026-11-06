@@ -43,7 +43,7 @@
     <string name="label_cause_category">Isigaba Senjongo *</string>
     <string name="label_area">Indawo / Isifunda *</string>
     <string name="hint_area">isb. eWynberg, eKapa</string>
-    <string name="label_skills_required">Amakhono Adingekayo (ahlukaniswe ngokhefana)</string>
+    <string name="label_skills_required">Amakhono Adingekayo</string>
     <string name="hint_skills">isb. Ukufundisa, Usizo Lokuqala, Umsebenzi Wezandla</string>
     <string name="label_date_time">Usuku &amp; Isikhathi *</string>
     <string name="hint_select_date">Khetha Usuku</string>
@@ -230,4 +230,61 @@
     <string name="onboarding_save_failed_title">Asikwazanga ukugcina ukhetho lwakho</string>
     <string name="onboarding_save_failed_message">%1$s\n\nUngashintsha izintshisekelo zakho kamuva ku-Hlela iphrofayili.</string>
     <string name="onboarding_continue_anyway">Qhubeka noma kunjalo</string>
+
+    <!-- Listing create/edit/detail screens (draft translations - need a native-speaker review) -->
+    <string name="cancel">Khansela</string>
+    <string name="done">Kwenziwe</string>
+    <string name="edit">Hlela</string>
+    <string name="delete">Susa</string>
+    <string name="keep_it">Yigcine</string>
+    <string name="tab_edit_listing">Hlela uhlu</string>
+    <string name="skills_required_title">Amakhono adingekayo</string>
+    <string name="photo_count_add_n">Engeza izithombe ezifika kwezi-%d</string>
+    <string name="photo_count_saved">%d zilondoloziwe - thinta ukuze ushintshe</string>
+    <string name="saving">Iyalondoloza…</string>
+    <string name="save_changes">Londoloza izinguquko</string>
+    <string name="listing_updated">Uhlu luvuselelwe</string>
+    <string name="error_title_too_long">Isihloko kufanele sibe nezinhlamvu ezingu-%d noma ngaphansi</string>
+    <string name="error_description_too_long">Incazelo kufanele ibe nezinhlamvu ezingu-%d noma ngaphansi</string>
+    <string name="error_area_too_long">Indawo kufanele ibe nezinhlamvu ezingu-%d noma ngaphansi</string>
+    <string name="error_date_future">Khetha usuku nesikhathi esizayo</string>
+    <string name="error_spaces_invalid">Faka inombolo ephelele yezindawo (1 noma ngaphezulu)</string>
+    <string name="error_spaces_max">Okungenani izindawo ezingu-%d</string>
+    <string name="error_hours_required">Faka amahora aphansi (isb. 2)</string>
+    <string name="error_hours_negative">Amahora awakwazi ukuba ngaphansi kuka-0</string>
+    <string name="error_hours_max">Amahora kufanele abe ngu-%d noma ngaphansi</string>
+    <string name="error_photo_upload_network">Asikwazanga ukulayisha izithombe zakho. Hlola uxhumano lwakho uzame futhi.</string>
+    <string name="error_photo_upload_failed">Ukulayisha isithombe kuhlulekile: %1$s</string>
+    <string name="detail_hours_min">Okungenani amahora angu-%s</string>
+    <string name="detail_no_skills">Akukho okudingekayo</string>
+    <string name="detail_ongoing_no_date">Iqhubekayo - akukho suku olusethiwe</string>
+    <string name="detail_spaces_filled">%1$d kwezindawo ezingu-%2$d zigcwele</string>
+    <string name="detail_signed_up_no_cap">abangu-%d babhalisile (akukho mkhawulo)</string>
+    <string name="delete_listing_title">Susa lolu hlu?</string>
+    <string name="delete_listing_message">\"%1$s\" lizosuswa kubo bonke. Lokhu akunakuhlehliswa.%2$s</string>
+    <string name="listing_deleted">Uhlu lususiwe</string>
+    <string name="detail_label_when">Nini</string>
+    <string name="detail_label_where">Kuphi</string>
+    <string name="detail_label_spaces">Izindawo</string>
+    <string name="detail_label_cause">Isizathu</string>
+    <string name="detail_label_skills">Amakhono adingekayo</string>
+    <string name="detail_label_hours">Amahora</string>
+    <string name="detail_label_about">Mayelana</string>
+    <string name="view_signups">Buka abangenile</string>
+    <string name="listing_photo">Isithombe soluhlu</string>
+    <string name="signed_up_success">Ubhalisile!</string>
+    <string name="translations_title">Ukuhumusha (okungakhethwa)</string>
+    <string name="translations_hint">Engeza uhlu lwakho nge-Afrikaans noma isiZulu ukuze izikhonzi ezisebenzisa lezo zilimi zikwazi ukuluzifundela. Okushiywe kungenalutho kuboniswa ngesiNgisi.</string>
+    <string name="translation_af_title">Isihloko se-Afrikaans</string>
+    <string name="translation_af_description">Incazelo ye-Afrikaans</string>
+    <string name="translation_zu_title">Isihloko sesiZulu</string>
+    <string name="translation_zu_description">Incazelo yesiZulu</string>
+    <plurals name="photo_count_new">
+        <item quantity="one">%d isithombe esisha</item>
+        <item quantity="other">%d izithombe ezintsha</item>
+    </plurals>
+    <plurals name="delete_signups_warning">
+        <item quantity="one">%d isikhonzi sibhalisile. Ukubhalisa kwaso kuzokhanselwa.</item>
+        <item quantity="other">%d izikhonzi zibhalisile. Ukubhalisa kwazo kuzokhanselwa.</item>
+    </plurals>
 </resources>

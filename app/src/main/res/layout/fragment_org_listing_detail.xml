@@ -22,7 +22,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginStart="8dp"
-            android:contentDescription="Back"
+            android:contentDescription="@string/signups_back"
             android:gravity="center"
             android:text="&#8249;"
             android:textColor="?attr/colorOnPrimary"
@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="serif"
-            android:text="Aegis"
+            android:text="@string/app_name"
             android:textColor="?attr/colorOnPrimary"
             android:textSize="32sp"
             android:textStyle="bold|italic"
@@ -81,7 +81,7 @@
             android:id="@+id/btn_retry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Retry"
+            android:text="@string/retry"
             android:textAllCaps="false"
             app:backgroundTint="?attr/colorPrimary" />
     </LinearLayout>
@@ -131,7 +131,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="?attr/colorSurfaceContainerHigh"
-                            android:contentDescription="Listing photo"
+                            android:contentDescription="@string/listing_photo"
                             android:scaleType="centerCrop" />
 
                         <TextView
@@ -169,25 +169,25 @@
                         android:textStyle="bold"
                         tools:text="Soup kitchen shift" />
 
-                    <TextView style="@style/OrgDetailLabel" android:text="When" />
+                    <TextView style="@style/OrgDetailLabel" android:text="@string/detail_label_when" />
                     <TextView android:id="@+id/tv_date" style="@style/OrgDetailValue" tools:text="Sat, 5 Nov 2026 at 09:00" />
 
-                    <TextView style="@style/OrgDetailLabel" android:text="Where" />
+                    <TextView style="@style/OrgDetailLabel" android:text="@string/detail_label_where" />
                     <TextView android:id="@+id/tv_area" style="@style/OrgDetailValue" tools:text="Wynberg, Cape Town" />
 
-                    <TextView style="@style/OrgDetailLabel" android:text="Spaces" />
+                    <TextView style="@style/OrgDetailLabel" android:text="@string/detail_label_spaces" />
                     <TextView android:id="@+id/tv_spaces" style="@style/OrgDetailValue" tools:text="3 of 10 spaces filled" />
 
-                    <TextView style="@style/OrgDetailLabel" android:text="Cause" />
+                    <TextView style="@style/OrgDetailLabel" android:text="@string/detail_label_cause" />
                     <TextView android:id="@+id/tv_category" style="@style/OrgDetailValue" tools:text="Soup Kitchens" />
 
-                    <TextView style="@style/OrgDetailLabel" android:text="Skills required" />
+                    <TextView style="@style/OrgDetailLabel" android:text="@string/detail_label_skills" />
                     <TextView android:id="@+id/tv_skills" style="@style/OrgDetailValue" tools:text="Cooking or Food Prep" />
 
-                    <TextView style="@style/OrgDetailLabel" android:text="Hours" />
+                    <TextView style="@style/OrgDetailLabel" android:text="@string/detail_label_hours" />
                     <TextView android:id="@+id/tv_hours" style="@style/OrgDetailValue" tools:text="Minimum 2 h" />
 
-                    <TextView style="@style/OrgDetailLabel" android:text="About" />
+                    <TextView style="@style/OrgDetailLabel" android:text="@string/detail_label_about" />
                     <TextView
                         android:id="@+id/tv_description"
                         style="@style/OrgDetailValue"
@@ -203,7 +203,7 @@
                 android:layout_marginBottom="10dp"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
-                android:text="View sign-ups"
+                android:text="@string/view_signups"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 app:backgroundTint="?attr/colorPrimary"
@@ -223,7 +223,7 @@
                     android:layout_weight="1"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
-                    android:text="Edit"
+                    android:text="@string/edit"
                     android:textAllCaps="false"
                     android:textColor="?attr/colorPrimary"
                     app:cornerRadius="12dp"
@@ -239,7 +239,7 @@
                     android:layout_weight="1"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
-                    android:text="Delete"
+                    android:text="@string/delete"
                     android:textAllCaps="false"
                     android:textColor="?attr/colorError"
                     app:cornerRadius="12dp"

@@ -20,6 +20,12 @@ object Strings {
 
     fun get(@StringRes id: Int, vararg args: Any): String = localizedContext().getString(id, *args)
 
+    /** The language the app is showing right now: "en", "af" or "zu". */
+    fun languageCode(): String {
+        val locales = AppCompatDelegate.getApplicationLocales()
+        return if (locales.isEmpty) app.resources.configuration.locales[0].language else locales[0]!!.language
+    }
+
     private fun localizedContext(): Context {
         val locales = AppCompatDelegate.getApplicationLocales()
         if (locales.isEmpty) return app

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.aegis.R
+import com.example.aegis.core.Strings
 import com.example.aegis.databinding.ItemOrgListingCardBinding
 import com.example.aegis.domain.model.Listing
 
@@ -27,7 +28,7 @@ class OrgListingAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val listing = getItem(position)
         with(holder.binding) {
-            listingTitle.text = listing.title
+            listingTitle.text = listing.titleFor(Strings.languageCode())
             signupCountNumber.text = NumberFormat.getInstance().format(listing.signupCount ?: 0)
 
             if (listing.isEnded()) {

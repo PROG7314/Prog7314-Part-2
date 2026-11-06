@@ -13,6 +13,8 @@ import com.example.aegis.data.storage.CloudinaryImageUploader
 import com.example.aegis.data.storage.ImageUploader
 import com.example.aegis.domain.model.ApiResult
 import com.example.aegis.domain.model.Listing
+import com.example.aegis.R
+import com.example.aegis.core.Strings
 import com.example.aegis.domain.model.ListingDraft
 import com.example.aegis.domain.repository.ListingRepository
 import kotlinx.coroutines.CancellationException
@@ -36,7 +38,7 @@ class CreateListingViewModel(
     private val uploader: ImageUploader
 ) : ViewModel() {
 
-    data class FormError(val field: FormField, val message: String)
+    data class FormError(val field: FormField, val message: String, val problem: FormProblem)
 
     // Picked in dialogs, so the Fragment's text boxes can't hold them across a rotation.
     var date: LocalDate? = null
@@ -117,7 +119,7 @@ class CreateListingViewModel(
     fun save(input: ListingFormInput) {
         if (_saving.value || _loading.value) return // double tap, or the listing hasn't loaded yet
         when (val result = ListingFormValidator.validate(input, originalDateTime = original?.dateTime)) {
-            is FormResult.Invalid -> _formErrors.tryEmit(FormError(result.field, result.message))
+            is FormResult.Invalid -> _formErrors.tryEmit(FormError(result.field, result.message, result.error))
             is FormResult.Valid -> submit(result.draft)
         }
     }
@@ -167,8 +169,8 @@ class CreateListingViewModel(
                         e is java.net.SocketTimeoutException ||
                         e is java.net.ConnectException
                 _messages.emit(
-                    if (noNetwork) "Couldn't upload your photos. Check your connection and try again."
-                    else "Photo upload failed: ${e.message?.take(160)}"
+                    if (noNetwork) Strings.get(R.string.error_photo_upload_network)
+                    else Strings.get(R.string.error_photo_upload_failed, e.message?.take(160).orEmpty())
                 )
                 return null
             }

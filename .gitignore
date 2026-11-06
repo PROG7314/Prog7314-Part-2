@@ -16,3 +16,8 @@ local.properties
 .env
 node_modules
 .idea/
+
+# Release signing - never commit these
+keystore.properties
+*.jks
+*.keystore

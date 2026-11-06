@@ -50,12 +50,23 @@ data class Listing(
     val signupCount: Int?,
     val area: String,
     val minHours: Double,
-    val images: List<String>
+    val images: List<String>,
+    /** Optional Afrikaans / isiZulu text keyed by language code ("af", "zu"); English is [title]/[description]. */
+    val translations: Map<String, ListingTranslation> = emptyMap()
 ) {
+
+    /** The title in [language], or the original title when no translation was written. */
+    fun titleFor(language: String): String =
+        translations[language]?.title?.takeIf { it.isNotBlank() } ?: title
+
+    fun descriptionFor(language: String): String =
+        translations[language]?.description?.takeIf { it.isNotBlank() } ?: description
 
     fun isEnded(now: Instant = Instant.now()): Boolean =
         type == ListingType.SCHEDULED && dateTime != null && dateTime.isBefore(now)
 }
+
+data class ListingTranslation(val title: String = "", val description: String = "")
 
 // What the create/edit listing form produces.
 data class ListingDraft(
@@ -68,7 +79,8 @@ data class ListingDraft(
     val spacesTotal: Int?,      // required if SCHEDULED
     val area: String,
     val minHours: Double,
-    val images: List<String> = emptyList()
+    val images: List<String> = emptyList(),
+    val translations: Map<String, ListingTranslation> = emptyMap()
 )
 
 // ---------- Sign-ups & hours ----------

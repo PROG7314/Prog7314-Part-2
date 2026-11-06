@@ -28,6 +28,8 @@
         android:background="?attr/colorSurface"
         app:itemIconTint="@color/bottom_nav_item_color"
         app:itemTextColor="@color/bottom_nav_item_color"
+        app:itemTextAppearanceActive="@style/TextAppearance.Aegis.NavLabel"
+        app:itemTextAppearanceInactive="@style/TextAppearance.Aegis.NavLabel"
         app:menu="@menu/bottom_nav_menu"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

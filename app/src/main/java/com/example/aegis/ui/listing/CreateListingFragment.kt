@@ -16,6 +16,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import coil.load
 import com.example.aegis.R
+import com.example.aegis.domain.model.ListingTranslation
+import com.example.aegis.core.Taxonomy
 import com.example.aegis.core.AegisBaseFragment
 import com.example.aegis.databinding.FragmentCreateListingBinding
 import com.example.aegis.domain.model.Listing
@@ -67,22 +69,26 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
         // Opened from a listing's Edit button: load it and switch the screen to edit mode.
         arguments?.getString(ARG_LISTING_ID)?.let { id ->
             viewModel.startEdit(id)
-            binding.btnTabCreate.text = "Edit Listing"
-            binding.btnDiscard.text = "Cancel"
+            binding.btnTabCreate.setText(R.string.tab_edit_listing)
+            binding.btnDiscard.setText(R.string.cancel)
         }
         collectViewModel()
     }
 
     // ------------------------------------------------------------------ setup
     private fun setupSpinners() {
+        // The API values stay English; the spinners only show their translation.
         binding.spinnerCategory.adapter = ArrayAdapter(
-            requireContext(), android.R.layout.simple_spinner_dropdown_item, categories
+            requireContext(), android.R.layout.simple_spinner_dropdown_item,
+            categories.map { Taxonomy.label(requireContext(), it) }
         )
 
         binding.spinnerListingType.adapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
-            ListingType.values().map { it.apiValue }
+            ListingType.values().map {
+                getString(if (it == ListingType.SCHEDULED) R.string.listing_type_scheduled else R.string.listing_type_ongoing)
+            }
         )
         binding.spinnerListingType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -106,17 +112,19 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
 
     private fun showSkillsDialog() {
         val items = availableSkills.toTypedArray()
+        val labels = items.map { Taxonomy.label(requireContext(), it) }.toTypedArray()
         val checked = BooleanArray(items.size) { items[it] in viewModel.skills }
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Skills required")
-            .setMultiChoiceItems(items, checked) { _, which, isChecked ->
+            .setTitle(R.string.skills_required_title)
+            .setMultiChoiceItems(labels, checked) { _, which, isChecked ->
                 if (isChecked) viewModel.skills.add(items[which]) else viewModel.skills.remove(items[which])
             }
-            .setPositiveButton("Done") { _, _ -> binding.etSkills.setText(skillsText()) }
+            .setPositiveButton(R.string.done) { _, _ -> binding.etSkills.setText(skillsText()) }
             .show()
     }
 
-    private fun skillsText() = availableSkills.filter { it in viewModel.skills }.joinToString(", ")
+    private fun skillsText() = availableSkills.filter { it in viewModel.skills }
+        .joinToString(", ") { Taxonomy.label(requireContext(), it) }
 
     private fun setupDateTimePickers() {
         binding.tvDate.setOnClickListener {
@@ -187,11 +195,15 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
         area = binding.etArea.text.toString(),
         minHoursText = binding.etHours.text.toString(),
         type = ListingType.values()[binding.spinnerListingType.selectedItemPosition],
-        category = binding.spinnerCategory.selectedItem.toString(),
+        category = categories[binding.spinnerCategory.selectedItemPosition],
         skills = availableSkills.filter { it in viewModel.skills },
         date = viewModel.date,
         time = viewModel.time,
-        spacesText = binding.etSpaces.text.toString()
+        spacesText = binding.etSpaces.text.toString(),
+        translations = mapOf(
+            "af" to ListingTranslation(binding.etTitleAf.text.toString(), binding.etDescriptionAf.text.toString()),
+            "zu" to ListingTranslation(binding.etTitleZu.text.toString(), binding.etDescriptionZu.text.toString())
+        )
     )
 
     // ------------------------------------------------------------------ ViewModel -> screen
@@ -218,15 +230,15 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
         when {
             picked.isNotEmpty() -> {
                 binding.ivListingCover.load(picked.first())
-                binding.tvPhotoCount.text = if (picked.size == 1) "1 new photo" else "${picked.size} new photos"
+                binding.tvPhotoCount.text = resources.getQuantityString(R.plurals.photo_count_new, picked.size, picked.size)
             }
             saved.isNotEmpty() -> {
                 binding.ivListingCover.load(saved.first())
-                binding.tvPhotoCount.text = "${saved.size} saved - tap to replace"
+                binding.tvPhotoCount.text = getString(R.string.photo_count_saved, saved.size)
             }
             else -> {
                 binding.ivListingCover.setImageDrawable(null)
-                binding.tvPhotoCount.text = "Add up to ${CreateListingViewModel.MAX_IMAGES} photos"
+                binding.tvPhotoCount.text = getString(R.string.photo_count_add_n, CreateListingViewModel.MAX_IMAGES)
             }
         }
     }
@@ -236,9 +248,9 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
         binding.btnSave.isEnabled = !busy
         binding.btnDiscard.isEnabled = !viewModel.saving.value
         binding.btnSave.text = when {
-            viewModel.saving.value -> "Saving..."
-            viewModel.editingId != null -> "Save changes"
-            else -> "Save"
+            viewModel.saving.value -> getString(R.string.saving)
+            viewModel.editingId != null -> getString(R.string.save_changes)
+            else -> getString(R.string.save)
         }
     }
 
@@ -248,6 +260,8 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
         viewModel.prefillApplied = true
         binding.etTitle.setText(listing.title)
         binding.etDescription.setText(listing.description)
+        listing.translations["af"]?.let { binding.etTitleAf.setText(it.title); binding.etDescriptionAf.setText(it.description) }
+        listing.translations["zu"]?.let { binding.etTitleZu.setText(it.title); binding.etDescriptionZu.setText(it.description) }
         binding.etArea.setText(listing.area)
         binding.etHours.setText(formatHours(listing.minHours))
         binding.etSpaces.setText(listing.spacesTotal?.toString().orEmpty())
@@ -259,6 +273,24 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
     private fun formatHours(hours: Double) =
         if (hours % 1.0 == 0.0) hours.toInt().toString() else hours.toString()
 
+    // The validator reports which rule failed; the wording comes from the string files.
+    private fun formMessage(problem: FormProblem): String = when (problem) {
+        FormProblem.TITLE_REQUIRED -> getString(R.string.error_title_required)
+        FormProblem.TITLE_TOO_LONG -> getString(R.string.error_title_too_long, ListingFormValidator.MAX_TITLE)
+        FormProblem.DESCRIPTION_REQUIRED -> getString(R.string.error_description_required)
+        FormProblem.DESCRIPTION_TOO_LONG -> getString(R.string.error_description_too_long, ListingFormValidator.MAX_DESCRIPTION)
+        FormProblem.AREA_REQUIRED -> getString(R.string.error_area_required)
+        FormProblem.AREA_TOO_LONG -> getString(R.string.error_area_too_long, ListingFormValidator.MAX_AREA)
+        FormProblem.DATE_TIME_REQUIRED -> getString(R.string.error_date_time_required)
+        FormProblem.DATE_IN_PAST -> getString(R.string.error_date_future)
+        FormProblem.SPACES_REQUIRED -> getString(R.string.error_spaces_required)
+        FormProblem.SPACES_INVALID -> getString(R.string.error_spaces_invalid)
+        FormProblem.SPACES_TOO_MANY -> getString(R.string.error_spaces_max, ListingFormValidator.MAX_SPACES)
+        FormProblem.HOURS_REQUIRED -> getString(R.string.error_hours_required)
+        FormProblem.HOURS_NEGATIVE -> getString(R.string.error_hours_negative)
+        FormProblem.HOURS_TOO_MANY -> getString(R.string.error_hours_max, ListingFormValidator.MAX_HOURS.toInt())
+    }
+
     private fun showFormError(error: CreateListingViewModel.FormError) {
         val box = when (error.field) {
             FormField.TITLE -> binding.etTitle
@@ -268,17 +300,18 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
             FormField.HOURS -> binding.etHours
             FormField.DATE_TIME -> null // plain text rows, not boxes: a Toast says it best
         }
+        val message = formMessage(error.problem)
         if (box == null) {
-            toast(error.message)
+            toast(message)
         } else {
-            box.error = error.message
+            box.error = message
             box.requestFocus() // also scrolls it into view
         }
     }
 
     private fun onCreated() {
         val editing = viewModel.editingId != null
-        toast(if (editing) "Listing updated" else "Listing created!")
+        toast(getString(if (editing) R.string.listing_updated else R.string.listing_created))
         // Tell Org Home to reload, so the change is there when we land on it.
         runCatching {
             findNavController().getBackStackEntry(R.id.orgHomeFragment).savedStateHandle[LISTING_CHANGED] = true
@@ -300,6 +333,7 @@ class CreateListingFragment : AegisBaseFragment(R.layout.fragment_create_listing
     private fun clearFields() {
         binding.etTitle.text?.clear()
         binding.etDescription.text?.clear()
+        listOf(binding.etTitleAf, binding.etDescriptionAf, binding.etTitleZu, binding.etDescriptionZu).forEach { it.text?.clear() }
         binding.etArea.text?.clear()
         binding.etSkills.text?.clear()
         binding.etSpaces.text?.clear()

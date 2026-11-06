@@ -1,6 +1,7 @@
 package com.example.aegis.data.local.db
 
 import com.example.aegis.domain.model.Listing
+import com.example.aegis.domain.model.ListingTranslation
 import com.example.aegis.domain.model.ListingType
 import com.example.aegis.domain.model.Signup
 import com.example.aegis.domain.model.SignupStatus
@@ -26,7 +27,9 @@ internal data class ListingSnapshot(
     val signupCount: Int?,
     val area: String,
     val minHours: Double,
-    val images: List<String>
+    val images: List<String>,
+    // Missing on rows cached before translations existed; Gson leaves it null.
+    val translations: Map<String, ListingTranslation>? = null
 )
 
 private val gson = Gson()
@@ -47,7 +50,8 @@ fun Listing.toSnapshotJson(): String = gson.toJson(
         signupCount = signupCount,
         area = area,
         minHours = minHours,
-        images = images
+        images = images,
+        translations = translations
     )
 )
 
@@ -71,7 +75,8 @@ fun listingFromSnapshotJson(json: String?): Listing? {
             signupCount = s.signupCount,
             area = s.area,
             minHours = s.minHours,
-            images = s.images
+            images = s.images,
+            translations = s.translations.orEmpty()
         )
     } catch (e: Exception) {
         // Gson throws JsonSyntaxException / NullPointerException-style errors on damaged rows.

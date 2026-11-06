@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Release builds only talk to the hosted API, over HTTPS. Plain-text traffic is refused.
+     The debug variant (app/src/debug/res/xml) keeps its own, more relaxed file for local testing. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+</network-security-config>

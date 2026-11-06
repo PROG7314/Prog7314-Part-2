@@ -1,6 +1,7 @@
 package com.example.aegis.ui.listing
 
 import com.example.aegis.domain.model.ListingDraft
+import com.example.aegis.domain.model.ListingTranslation
 import com.example.aegis.domain.model.ListingType
 import java.time.Instant
 import java.time.LocalDate
@@ -17,6 +18,13 @@ import java.time.temporal.ChronoUnit
 
 enum class FormField { TITLE, DESCRIPTION, AREA, DATE_TIME, SPACES, HOURS }
 
+/** Which rule failed. The screen turns this into text in the user's language; `message` stays English for logs and tests. */
+enum class FormProblem {
+    TITLE_REQUIRED, TITLE_TOO_LONG, DESCRIPTION_REQUIRED, DESCRIPTION_TOO_LONG, AREA_REQUIRED, AREA_TOO_LONG,
+    DATE_TIME_REQUIRED, DATE_IN_PAST, SPACES_REQUIRED, SPACES_INVALID, SPACES_TOO_MANY,
+    HOURS_REQUIRED, HOURS_NEGATIVE, HOURS_TOO_MANY
+}
+
 /** The raw values on screen. Numbers are still text, exactly as typed. */
 data class ListingFormInput(
     val title: String,
@@ -28,7 +36,9 @@ data class ListingFormInput(
     val skills: List<String>,
     val date: LocalDate?,
     val time: LocalTime?,
-    val spacesText: String
+    val spacesText: String,
+    /** Optional Afrikaans / isiZulu text keyed by language code; blank entries are ignored. */
+    val translations: Map<String, ListingTranslation> = emptyMap()
 )
 
 sealed interface FormResult {
@@ -36,7 +46,7 @@ sealed interface FormResult {
     data class Valid(val draft: ListingDraft) : FormResult
 
     /** The first problem found, top of the form first. */
-    data class Invalid(val field: FormField, val message: String) : FormResult
+    data class Invalid(val field: FormField, val message: String, val error: FormProblem) : FormResult
 }
 
 object ListingFormValidator {
@@ -58,45 +68,45 @@ object ListingFormValidator {
         val description = input.description.trim()
         val area = input.area.trim()
 
-        if (title.isEmpty()) return invalid(FormField.TITLE, "Title is required")
-        if (title.length > MAX_TITLE) return invalid(FormField.TITLE, "Title must be $MAX_TITLE characters or fewer")
-        if (description.isEmpty()) return invalid(FormField.DESCRIPTION, "Description is required")
+        if (title.isEmpty()) return invalid(FormProblem.TITLE_REQUIRED, FormField.TITLE, "Title is required")
+        if (title.length > MAX_TITLE) return invalid(FormProblem.TITLE_TOO_LONG, FormField.TITLE, "Title must be $MAX_TITLE characters or fewer")
+        if (description.isEmpty()) return invalid(FormProblem.DESCRIPTION_REQUIRED, FormField.DESCRIPTION, "Description is required")
         if (description.length > MAX_DESCRIPTION) {
-            return invalid(FormField.DESCRIPTION, "Description must be $MAX_DESCRIPTION characters or fewer")
+            return invalid(FormProblem.DESCRIPTION_TOO_LONG, FormField.DESCRIPTION, "Description must be $MAX_DESCRIPTION characters or fewer")
         }
-        if (area.isEmpty()) return invalid(FormField.AREA, "Area is required")
-        if (area.length > MAX_AREA) return invalid(FormField.AREA, "Area must be $MAX_AREA characters or fewer")
+        if (area.isEmpty()) return invalid(FormProblem.AREA_REQUIRED, FormField.AREA, "Area is required")
+        if (area.length > MAX_AREA) return invalid(FormProblem.AREA_TOO_LONG, FormField.AREA, "Area must be $MAX_AREA characters or fewer")
 
         var dateTime: Instant? = null
         var spacesTotal: Int? = null
         if (input.type == ListingType.SCHEDULED) {
             if (input.date == null || input.time == null) {
-                return invalid(FormField.DATE_TIME, "Pick both a date and a time")
+                return invalid(FormProblem.DATE_TIME_REQUIRED, FormField.DATE_TIME, "Pick both a date and a time")
             }
             dateTime = LocalDateTime.of(input.date, input.time).atZone(zone).toInstant()
             // A listing in the past counts as ended, so volunteers would never see it.
             val unchanged = originalDateTime != null && dateTime == originalDateTime.truncatedTo(ChronoUnit.MINUTES)
             if (!dateTime.isAfter(now) && !unchanged) {
-                return invalid(FormField.DATE_TIME, "Pick a date and time in the future")
+                return invalid(FormProblem.DATE_IN_PAST, FormField.DATE_TIME, "Pick a date and time in the future")
             }
 
             val spacesText = input.spacesText.trim()
-            if (spacesText.isEmpty()) return invalid(FormField.SPACES, "Enter how many volunteers you need")
+            if (spacesText.isEmpty()) return invalid(FormProblem.SPACES_REQUIRED, FormField.SPACES, "Enter how many volunteers you need")
             val spaces = spacesText.toIntOrNull()
             if (spaces == null || spaces < 1) {
-                return invalid(FormField.SPACES, "Enter a whole number of spaces (1 or more)")
+                return invalid(FormProblem.SPACES_INVALID, FormField.SPACES, "Enter a whole number of spaces (1 or more)")
             }
-            if (spaces > MAX_SPACES) return invalid(FormField.SPACES, "At most $MAX_SPACES spaces")
+            if (spaces > MAX_SPACES) return invalid(FormProblem.SPACES_TOO_MANY, FormField.SPACES, "At most $MAX_SPACES spaces")
             spacesTotal = spaces
         }
 
         // Some keyboards type a comma as the decimal point ("2,5").
         val minHours = input.minHoursText.trim().replace(',', '.').toDoubleOrNull()
         if (minHours == null || !minHours.isFinite()) {
-            return invalid(FormField.HOURS, "Enter the minimum hours (e.g. 2)")
+            return invalid(FormProblem.HOURS_REQUIRED, FormField.HOURS, "Enter the minimum hours (e.g. 2)")
         }
-        if (minHours < 0) return invalid(FormField.HOURS, "Hours can't be negative")
-        if (minHours > MAX_HOURS) return invalid(FormField.HOURS, "Hours must be ${MAX_HOURS.toInt()} or less")
+        if (minHours < 0) return invalid(FormProblem.HOURS_NEGATIVE, FormField.HOURS, "Hours can't be negative")
+        if (minHours > MAX_HOURS) return invalid(FormProblem.HOURS_TOO_MANY, FormField.HOURS, "Hours must be ${MAX_HOURS.toInt()} or less")
 
         return FormResult.Valid(
             ListingDraft(
@@ -109,10 +119,13 @@ object ListingFormValidator {
                 spacesTotal = spacesTotal,
                 area = area,
                 minHours = minHours,
-                images = emptyList()
+                images = emptyList(),
+                translations = input.translations
+                    .mapValues { (_, t) -> ListingTranslation(t.title.trim(), t.description.trim()) }
+                    .filterValues { it.title.isNotEmpty() || it.description.isNotEmpty() }
             )
         )
     }
 
-    private fun invalid(field: FormField, message: String) = FormResult.Invalid(field, message)
+    private fun invalid(error: FormProblem, field: FormField, message: String) = FormResult.Invalid(field, message, error)
 }

@@ -681,3 +681,34 @@ scenario('sync: changes apply oldest-first, one rejection never fails the batch,
   const steal = await api('POST', '/sync/signups', { token: thief.token, body: { changes: [{ id: live.id, action: 'cancel', updatedAt: at() }] } });
   assert.equal(steal.body.results[0].code, 'forbidden');
 });
+// ------------------------------------------------------------------ listing translations
+scenario('listings can carry optional Afrikaans / isiZulu text, validated and returned with the listing', async ({ api, makeUser, createListing }) => {
+  const org = await makeUser('organization');
+  const vol = await makeUser('volunteer');
+
+  // Without translations the field is just an empty object.
+  const plain = await createListing(org);
+  assert.deepEqual(plain.translations, {});
+
+  const translations = {
+    af: { title: 'Lees vir kinders', description: 'Kom lees stories vir kinders.' },
+    zu: { title: 'Funda nezingane', description: '' },
+  };
+  const made = await api('POST', '/listings', { token: org.token, body: listingBody({ translations }) });
+  assert.equal(made.status, 201, JSON.stringify(made.body));
+  assert.deepEqual(made.body.translations, { af: translations.af, zu: { title: 'Funda nezingane', description: '' } });
+
+  // A volunteer sees them on the single-listing fetch too.
+  const fetched = await api('GET', `/listings/${made.body.id}`, { token: vol.token });
+  assert.equal(fetched.body.translations.af.title, 'Lees vir kinders');
+
+  // Update replaces the translations; blank entries are dropped.
+  const edited = await api('PUT', `/listings/${made.body.id}`, { token: org.token, body: { translations: { af: { title: '', description: '' }, zu: { title: 'Funda', description: 'Ukufunda' } } } });
+  assert.equal(edited.status, 200, JSON.stringify(edited.body));
+  assert.deepEqual(edited.body.translations, { zu: { title: 'Funda', description: 'Ukufunda' } });
+
+  // Only af and zu are accepted, and the same length limits apply.
+  errorShape(await api('PUT', `/listings/${made.body.id}`, { token: org.token, body: { translations: { fr: { title: 'x' } } } }), 400, 'validation_error', 'translations');
+  errorShape(await api('PUT', `/listings/${made.body.id}`, { token: org.token, body: { translations: { af: { title: 'x'.repeat(121) } } } }), 400, 'validation_error');
+  errorShape(await api('PUT', `/listings/${made.body.id}`, { token: org.token, body: { translations: 'nope' } }), 400, 'validation_error', 'translations');
+});

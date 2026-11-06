@@ -67,8 +67,12 @@ data class ListingDto(
     val signupCount: Int? = null,
     val area: String? = null,
     val minHours: Double? = null,
-    val images: List<String>? = null       // Firebase Storage URLs, max 3
+    val images: List<String>? = null,      // Firebase Storage URLs, max 3
+    val translations: Map<String, ListingTranslationDto>? = null
 )
+
+// Optional Afrikaans / isiZulu text for a listing, keyed by language code.
+data class ListingTranslationDto(val title: String? = null, val description: String? = null)
 
 data class CreateListingRequest(
     val title: String,
@@ -80,7 +84,8 @@ data class CreateListingRequest(
     val spacesTotal: Int?,      // required if Scheduled
     val area: String,
     val minHours: Double,
-    val images: List<String>
+    val images: List<String>,
+    val translations: Map<String, ListingTranslationDto> = emptyMap()
 )
 
 // Any subset of the fields above.
@@ -94,7 +99,8 @@ data class UpdateListingRequest(
     val spacesTotal: Int? = null,
     val area: String? = null,
     val minHours: Double? = null,
-    val images: List<String>? = null
+    val images: List<String>? = null,
+    val translations: Map<String, ListingTranslationDto>? = null
 )
 
 // ---------- Sign-ups & hours ----------

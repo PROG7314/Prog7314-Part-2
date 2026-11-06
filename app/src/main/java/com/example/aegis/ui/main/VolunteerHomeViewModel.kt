@@ -1,5 +1,7 @@
 package com.example.aegis.ui.main
 
+import com.example.aegis.core.Strings
+import com.example.aegis.R
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -89,8 +91,8 @@ class VolunteerHomeViewModel(
             when (val result = signups.signUp(listingId)) {
                 is ApiResult.Success -> {
                     _messages.emit(
-                        if (result.data.pendingSync) "You're offline. We'll sign you up as soon as you reconnect."
-                        else "You're signed up!"
+                        if (result.data.pendingSync) Strings.get(R.string.offline_signed_up_queued)
+                        else Strings.get(R.string.signed_up_success)
                     )
                     loadFeed()
                 }

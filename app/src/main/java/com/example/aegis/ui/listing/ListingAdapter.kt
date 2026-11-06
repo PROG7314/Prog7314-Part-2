@@ -26,8 +26,9 @@ class ListingAdapter(
         val listing = getItem(position)
         with(holder.binding) {
             orgName.text = listing.organizationName ?: ""
-            listingTitle.text = listing.title
-            listingDescription.text = listing.description
+            val language = Strings.languageCode()
+            listingTitle.text = listing.titleFor(language)
+            listingDescription.text = listing.descriptionFor(language)
             hoursBadge.text = formatHoursBadge(listing.minHours)
 
             if (listing.images.isNotEmpty()) {

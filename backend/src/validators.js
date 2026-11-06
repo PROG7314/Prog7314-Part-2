@@ -88,6 +88,25 @@ export function requireImageList(v, field) {
   });
 }
 
+// Optional per-language versions of a listing's title and description, so the app can show them in
+// the user's language: { af: { title, description }, zu: { ... } }. English is the listing's own
+// title/description. Blank entries are dropped, and a missing language just falls back to English.
+export const TRANSLATION_LANGUAGES = ['af', 'zu'];
+export function requireTranslations(v, field) {
+  if (!isObject(v)) throw badRequest(`${field} must be an object.`, field);
+  const out = {};
+  for (const [lang, t] of Object.entries(v)) {
+    if (!TRANSLATION_LANGUAGES.includes(lang)) {
+      throw badRequest(`${field} can only contain: ${TRANSLATION_LANGUAGES.join(', ')}.`, field);
+    }
+    if (!isObject(t)) throw badRequest(`${field}.${lang} must be an object.`, field);
+    const title = optionalString(t.title, `${field}.${lang}.title`, { max: 120 });
+    const description = optionalString(t.description, `${field}.${lang}.description`, { max: 2000 });
+    if (title || description) out[lang] = { title: title ?? '', description: description ?? '' };
+  }
+  return out;
+}
+
 const causeList = (cfg) => (cfg.enforceFixedLists ? CAUSE_CATEGORIES : null);
 const skillList = (cfg) => (cfg.enforceFixedLists ? SKILLS : null);
 
@@ -105,6 +124,7 @@ export function parseListingCreate(body, cfg) {
     area: requireString(body.area, 'area', { max: 200 }),
     minHours: requireNumber(body.minHours, 'minHours', { min: 0, max: 1000 }),
     images: requireImageList(body.images ?? [], 'images'),
+    translations: requireTranslations(body.translations ?? {}, 'translations'),
   };
   if (type === 'Scheduled') {
     data.dateTime = requireIsoDate(body.dateTime, 'dateTime');
@@ -127,6 +147,7 @@ export function parseListingUpdate(body, existing, cfg) {
   if ('area' in body) patch.area = requireString(body.area, 'area', { max: 200 });
   if ('minHours' in body) patch.minHours = requireNumber(body.minHours, 'minHours', { min: 0, max: 1000 });
   if ('images' in body) patch.images = requireImageList(body.images, 'images');
+  if ('translations' in body) patch.translations = requireTranslations(body.translations, 'translations');
 
   const type = 'type' in body ? requireEnum(body.type, 'type', LISTING_TYPES) : existing.type;
   patch.type = type;

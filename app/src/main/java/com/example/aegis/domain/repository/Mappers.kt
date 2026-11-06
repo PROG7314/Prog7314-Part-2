@@ -11,7 +11,9 @@ import com.example.aegis.domain.model.HoursEntry
 import com.example.aegis.domain.model.HoursSummary
 import com.example.aegis.domain.model.Listing
 import com.example.aegis.domain.model.ListingDraft
+import com.example.aegis.domain.model.ListingTranslation
 import com.example.aegis.domain.model.ListingType
+import com.example.aegis.data.remote.dto.ListingTranslationDto
 import com.example.aegis.domain.model.Signup
 import com.example.aegis.domain.model.SignupStatus
 import com.example.aegis.domain.model.UserProfile
@@ -42,7 +44,8 @@ internal fun ListingDto.toDomain() = Listing(
     signupCount = signupCount,
     area = area.orEmpty(),
     minHours = minHours ?: 0.0,
-    images = images.orEmpty()
+    images = images.orEmpty(),
+    translations = translations.orEmpty().mapValues { (_, t) -> ListingTranslation(t.title.orEmpty(), t.description.orEmpty()) }
 )
 
 internal fun SignupDto.toDomain() = Signup(
@@ -92,7 +95,8 @@ internal fun ListingDraft.toCreateRequest() = CreateListingRequest(
     spacesTotal = spacesTotal,
     area = area,
     minHours = minHours,
-    images = images
+    images = images,
+    translations = translations.toDto()
 )
 
 internal fun ListingDraft.toUpdateRequest() = UpdateListingRequest(
@@ -105,8 +109,13 @@ internal fun ListingDraft.toUpdateRequest() = UpdateListingRequest(
     spacesTotal = spacesTotal,
     area = area,
     minHours = minHours,
-    images = images
+    images = images,
+    translations = translations.toDto()
 )
+
+private fun Map<String, ListingTranslation>.toDto() =
+    mapValues { (_, t) -> ListingTranslationDto(t.title, t.description) }
+
 internal fun ConversationDto.toDomain() = Conversation(
     id = id,
     listingId = listingId,

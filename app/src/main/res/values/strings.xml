@@ -48,7 +48,7 @@
     <string name="label_cause_category">Cause Category *</string>
     <string name="label_area">Area / Suburb *</string>
     <string name="hint_area">e.g. Wynberg, Cape Town</string>
-    <string name="label_skills_required">Skills Required (comma separated)</string>
+    <string name="label_skills_required">Skills Required</string>
     <string name="hint_skills">e.g. Tutoring, First Aid, Manual Labour</string>
     <string name="label_date_time">Date &amp; Time *</string>
     <string name="hint_select_date">Select Date</string>
@@ -246,4 +246,61 @@
     <string name="onboarding_save_failed_title">Couldn\'t save your choices</string>
     <string name="onboarding_save_failed_message">%1$s\n\nYou can change your interests later in Edit profile.</string>
     <string name="onboarding_continue_anyway">Continue anyway</string>
+
+    <!-- Listing create/edit/detail screens, validation and listing translations -->
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="keep_it">Keep it</string>
+    <string name="tab_edit_listing">Edit Listing</string>
+    <string name="skills_required_title">Skills required</string>
+    <string name="photo_count_add_n">Add up to %d photos</string>
+    <string name="photo_count_saved">%d saved - tap to replace</string>
+    <string name="saving">Saving…</string>
+    <string name="save_changes">Save changes</string>
+    <string name="listing_updated">Listing updated</string>
+    <string name="error_title_too_long">Title must be %d characters or fewer</string>
+    <string name="error_description_too_long">Description must be %d characters or fewer</string>
+    <string name="error_area_too_long">Area must be %d characters or fewer</string>
+    <string name="error_date_future">Pick a date and time in the future</string>
+    <string name="error_spaces_invalid">Enter a whole number of spaces (1 or more)</string>
+    <string name="error_spaces_max">At most %d spaces</string>
+    <string name="error_hours_required">Enter the minimum hours (e.g. 2)</string>
+    <string name="error_hours_negative">Hours can\'t be negative</string>
+    <string name="error_hours_max">Hours must be %d or less</string>
+    <string name="error_photo_upload_network">Couldn\'t upload your photos. Check your connection and try again.</string>
+    <string name="error_photo_upload_failed">Photo upload failed: %1$s</string>
+    <string name="detail_hours_min">Minimum %s h</string>
+    <string name="detail_no_skills">None needed</string>
+    <string name="detail_ongoing_no_date">Ongoing - no set date</string>
+    <string name="detail_spaces_filled">%1$d of %2$d spaces filled</string>
+    <string name="detail_signed_up_no_cap">%d signed up (no cap)</string>
+    <string name="delete_listing_title">Delete this listing?</string>
+    <string name="delete_listing_message">\"%1$s\" will be removed for everyone. This can\'t be undone.%2$s</string>
+    <string name="listing_deleted">Listing deleted</string>
+    <string name="detail_label_when">When</string>
+    <string name="detail_label_where">Where</string>
+    <string name="detail_label_spaces">Spaces</string>
+    <string name="detail_label_cause">Cause</string>
+    <string name="detail_label_skills">Skills required</string>
+    <string name="detail_label_hours">Hours</string>
+    <string name="detail_label_about">About</string>
+    <string name="view_signups">View sign-ups</string>
+    <string name="listing_photo">Listing photo</string>
+    <string name="signed_up_success">You\'re signed up!</string>
+    <string name="translations_title">Translations (optional)</string>
+    <string name="translations_hint">Add your listing in Afrikaans or isiZulu so volunteers who use those languages can read it. Anything left blank shows in English.</string>
+    <string name="translation_af_title">Afrikaans title</string>
+    <string name="translation_af_description">Afrikaans description</string>
+    <string name="translation_zu_title">isiZulu title</string>
+    <string name="translation_zu_description">isiZulu description</string>
+    <plurals name="photo_count_new">
+        <item quantity="one">%d new photo</item>
+        <item quantity="other">%d new photos</item>
+    </plurals>
+    <plurals name="delete_signups_warning">
+        <item quantity="one">%d volunteer is signed up. Their sign-ups will be cancelled.</item>
+        <item quantity="other">%d volunteers are signed up. Their sign-ups will be cancelled.</item>
+    </plurals>
 </resources>

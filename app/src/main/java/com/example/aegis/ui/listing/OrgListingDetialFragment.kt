@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import coil.load
 import com.example.aegis.R
 import com.example.aegis.core.AegisBaseFragment
+import com.example.aegis.core.Strings
 import com.example.aegis.databinding.FragmentOrgListingDetailBinding
 import com.example.aegis.domain.model.Listing
 import com.example.aegis.domain.model.ListingType
@@ -85,29 +86,29 @@ class OrgListingDetailFragment : AegisBaseFragment(R.layout.fragment_org_listing
         showPhoto(listing)
 
         binding.tvStatus.text = when {
-            listing.isEnded() -> "ENDED"
-            listing.type == ListingType.SCHEDULED -> "UPCOMING"
-            else -> "ONGOING"
+            listing.isEnded() -> getString(R.string.status_ended)
+            listing.type == ListingType.SCHEDULED -> getString(R.string.status_upcoming)
+            else -> getString(R.string.badge_ongoing)
         }
-        binding.tvTitle.text = listing.title
+        binding.tvTitle.text = listing.titleFor(Strings.languageCode())
         binding.tvCategory.text = listing.causeCategories.joinToString(", ").ifBlank { "-" }
         binding.tvArea.text = listing.area
         binding.tvDate.text = listing.dateTime
             ?.atZone(ZoneId.systemDefault())
             ?.format(DATE_FORMAT)
-            ?: "Ongoing - no set date"
+            ?: getString(R.string.detail_ongoing_no_date)
         binding.tvSpaces.text = spacesText(listing)
-        binding.tvHours.text = "Minimum ${formatHours(listing.minHours)} h"
-        binding.tvSkills.text = listing.skillsRequired.joinToString(", ").ifBlank { "None needed" }
-        binding.tvDescription.text = listing.description
+        binding.tvHours.text = getString(R.string.detail_hours_min, formatHours(listing.minHours))
+        binding.tvSkills.text = listing.skillsRequired.joinToString(", ").ifBlank { getString(R.string.detail_no_skills) }
+        binding.tvDescription.text = listing.descriptionFor(Strings.languageCode())
     }
 
     private fun spacesText(l: Listing): String {
         val signed = l.signupCount ?: 0
         return if (l.type == ListingType.SCHEDULED && l.spacesTotal != null) {
-            "$signed of ${l.spacesTotal} spaces filled"
+            getString(R.string.detail_spaces_filled, signed, l.spacesTotal)
         } else {
-            "$signed signed up (no cap)"
+            getString(R.string.detail_signed_up_no_cap, signed)
         }
     }
 
@@ -136,7 +137,7 @@ class OrgListingDetailFragment : AegisBaseFragment(R.layout.fragment_org_listing
             R.id.orgSignupsFragment,
             bundleOf(
                 OrgSignupsFragment.ARG_LISTING_ID to listing.id,
-                OrgSignupsFragment.ARG_LISTING_TITLE to listing.title,
+                OrgSignupsFragment.ARG_LISTING_TITLE to listing.titleFor(Strings.languageCode()),
                 OrgSignupsFragment.ARG_MIN_HOURS to listing.minHours
             )
         )
@@ -152,18 +153,18 @@ class OrgListingDetailFragment : AegisBaseFragment(R.layout.fragment_org_listing
     private fun confirmDelete(listing: Listing) {
         val signed = listing.signupCount ?: 0
         val warning = if (signed > 0) {
-            "\n\n$signed volunteer${if (signed == 1) " is" else "s are"} signed up. Their sign-ups will be cancelled."
+            "\n\n" + resources.getQuantityString(R.plurals.delete_signups_warning, signed, signed)
         } else ""
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Delete this listing?")
-            .setMessage("\"${listing.title}\" will be removed for everyone. This can't be undone.$warning")
-            .setPositiveButton("Delete") { _, _ -> viewModel.delete() }
-            .setNegativeButton("Keep it", null)
+            .setTitle(R.string.delete_listing_title)
+            .setMessage(getString(R.string.delete_listing_message, listing.titleFor(Strings.languageCode()), warning))
+            .setPositiveButton(R.string.delete) { _, _ -> viewModel.delete() }
+            .setNegativeButton(R.string.keep_it, null)
             .show()
     }
 
     private fun onDeleted() {
-        toast("Listing deleted")
+        toast(getString(R.string.listing_deleted))
         runCatching {
             findNavController().getBackStackEntry(R.id.orgHomeFragment)
                 .savedStateHandle[CreateListingFragment.LISTING_CHANGED] = true

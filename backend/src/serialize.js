@@ -51,6 +51,7 @@ export function listingResponse(
     area: l.area,
     minHours: l.minHours,
     images: l.images ?? [],
+    translations: l.translations ?? {},
     // Only set on the GET /listings feed, and only when a cause/skill filter was sent - null
     // elsewhere (a single listing fetch, create, update) because there's nothing to explain there.
     matchedCauses,

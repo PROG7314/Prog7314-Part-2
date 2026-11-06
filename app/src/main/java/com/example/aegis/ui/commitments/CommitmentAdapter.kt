@@ -33,7 +33,7 @@ class CommitmentAdapter(
         val signup = getItem(position)
         val listing = signup.listing
         with(holder.binding) {
-            commitmentTitle.text = listing?.title ?: root.context.getString(R.string.listing_unavailable)
+            commitmentTitle.text = listing?.titleFor(Strings.languageCode()) ?: root.context.getString(R.string.listing_unavailable)
             commitmentArea.text = listing?.area ?: ""
             dateBadge.text = formatDateBadge(listing?.dateTime)
             timeBadge.text = formatTime(listing?.dateTime)
