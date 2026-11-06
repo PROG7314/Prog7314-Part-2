@@ -5,7 +5,7 @@
 
 
 GitHub Link: https://github.com/PROG7314/Prog7314-Part-2
-Demonstration video link: TODO — add the unlisted YouTube link before submission
+Demonstration video link: (https://canva.link/gkxjfrfe58nml2j)
 
 ===============================================================================
 **Project Overview & Target Audience**
